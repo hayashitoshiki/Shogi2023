@@ -15,4 +15,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Shogi2023"
 include(":app")
- 
+include(":domain:entity")
+include(":domain:service")
+include(":application:usecase")
+include(":presentation:core")
+include(":presentation:home")
