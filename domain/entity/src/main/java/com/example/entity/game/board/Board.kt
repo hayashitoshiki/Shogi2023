@@ -8,8 +8,8 @@ import com.example.entity.game.rule.Turn
  * @param size 将棋盤のマス目
  */
 data class Board(val size: Size = Size(9, 9)) {
-    private val board: List<List<Cell>> = List(size.row - 1) {
-        List(size.column - 1) {
+    private val board: List<List<Cell>> = List(size.row) {
+        List(size.column) {
             Cell()
         }
     }
@@ -31,6 +31,14 @@ data class Board(val size: Size = Size(9, 9)) {
      * @return マス目の情報
      */
     fun getCellByPosition(position: Position): Cell = board[position.row - 1][position.column - 1]
+
+    fun getAllCells(): Map<Position, Cell> {
+        return board.flatMapIndexed { row, cells ->
+            cells.mapIndexed { column, cell ->
+                Position(row + 1, column + 1) to cell
+            }
+        }.toMap()
+    }
 
     /**
      * 盤面クリア
