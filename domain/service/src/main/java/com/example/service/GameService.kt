@@ -1,7 +1,10 @@
 package com.example.service
 
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.Position
 import com.example.entity.game.rule.PieceSetUpRule
+import com.example.entity.game.rule.Turn
+import com.example.extention.searchMoveBy
 import com.example.extention.setUp
 
 /**
@@ -9,6 +12,18 @@ import com.example.extention.setUp
  *
  */
 class GameService {
+
+    /**
+     * 指定したマスの駒の動かせる場所を検索
+     *
+     * @param board 将棋盤
+     * @param position 指定するマス
+     * @param turn 手番
+     * @return 動かせるマスのリスト
+     */
+    fun searchMoveBy(board: Board, position: Position, turn: Turn): List<Position> {
+        return board.searchMoveBy(position, turn)
+    }
 
     /**
      * 将棋盤の初期設定

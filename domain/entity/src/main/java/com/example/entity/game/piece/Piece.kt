@@ -30,7 +30,7 @@ sealed interface Piece {
          */
         data object Fu : Surface {
 
-            override val moves: Set<Move> = setOf(Move.Front.One)
+            override val moves: Set<Move> = setOf(Move.One.Front)
 
             override fun evolution(): Reverse = Reverse.To
         }
@@ -41,8 +41,8 @@ sealed interface Piece {
         data object Keima : Surface {
 
             override val moves: Set<Move> = setOf(
-                Move.FrontRightKei,
-                Move.FrontLeftKei,
+                Move.One.FrontRightKei,
+                Move.One.FrontLeftKei,
             )
 
             override fun evolution(): Reverse = Reverse.Narikei
@@ -53,7 +53,7 @@ sealed interface Piece {
          */
         data object Kyosya : Surface {
 
-            override val moves: Set<Move> = setOf(Move.Front.Endless)
+            override val moves: Set<Move> = setOf(Move.Endless.Front)
 
             override fun evolution(): Reverse = Reverse.Narikyo
         }
@@ -64,11 +64,11 @@ sealed interface Piece {
         data object Gin : Surface {
 
             override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-                Move.BackLeft.One,
-                Move.BackRight.One,
+                Move.One.Front,
+                Move.One.FrontLeft,
+                Move.One.FrontRight,
+                Move.One.BackLeft,
+                Move.One.BackRight,
             )
 
             override fun evolution(): Reverse = Reverse.Narigin
@@ -80,12 +80,12 @@ sealed interface Piece {
         data object Kin : Surface {
 
             override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
+                Move.One.Front,
+                Move.One.Back,
+                Move.One.Left,
+                Move.One.Right,
+                Move.One.FrontLeft,
+                Move.One.FrontRight,
             )
 
             override fun evolution(): Reverse? = null
@@ -97,10 +97,10 @@ sealed interface Piece {
         data object Kaku : Surface {
 
             override val moves: Set<Move> = setOf(
-                Move.FrontLeft.Endless,
-                Move.FrontRight.Endless,
-                Move.BackLeft.Endless,
-                Move.BackRight.Endless,
+                Move.Endless.FrontLeft,
+                Move.Endless.FrontRight,
+                Move.Endless.BackLeft,
+                Move.Endless.BackRight,
             )
 
             override fun evolution(): Reverse = Reverse.Uma
@@ -112,10 +112,10 @@ sealed interface Piece {
         data object Hisya : Surface {
 
             override val moves: Set<Move> = setOf(
-                Move.Front.Endless,
-                Move.Back.Endless,
-                Move.Left.Endless,
-                Move.Right.Endless,
+                Move.Endless.Front,
+                Move.Endless.Back,
+                Move.Endless.Left,
+                Move.Endless.Right,
             )
 
             override fun evolution(): Reverse = Reverse.Ryu
@@ -127,14 +127,14 @@ sealed interface Piece {
         data object Ou : Surface {
 
             override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-                Move.BackLeft.One,
-                Move.BackRight.One,
+                Move.One.Front,
+                Move.One.Back,
+                Move.One.Left,
+                Move.One.Right,
+                Move.One.FrontLeft,
+                Move.One.FrontRight,
+                Move.One.BackLeft,
+                Move.One.BackRight,
             )
 
             override fun evolution(): Reverse? = null
@@ -145,16 +145,7 @@ sealed interface Piece {
          */
         data object Gyoku : Surface {
 
-            override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-                Move.BackLeft.One,
-                Move.BackRight.One,
-            )
+            override val moves: Set<Move> = Ou.moves
 
             override fun evolution(): Reverse? = null
         }
@@ -179,14 +170,7 @@ sealed interface Piece {
          */
         data object To : Reverse {
 
-            override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-            )
+            override val moves: Set<Move> = Surface.Kin.moves
 
             override fun degeneracy(): Surface = Surface.Fu
         }
@@ -196,14 +180,7 @@ sealed interface Piece {
          */
         data object Narikei : Reverse {
 
-            override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-            )
+            override val moves: Set<Move> = Surface.Kin.moves
 
             override fun degeneracy(): Surface = Surface.Keima
         }
@@ -213,14 +190,7 @@ sealed interface Piece {
          */
         data object Narikyo : Reverse {
 
-            override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-            )
+            override val moves: Set<Move> = Surface.Kin.moves
 
             override fun degeneracy(): Surface = Surface.Kyosya
         }
@@ -230,14 +200,7 @@ sealed interface Piece {
          */
         data object Narigin : Reverse {
 
-            override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-            )
+            override val moves: Set<Move> = Surface.Kin.moves
 
             override fun degeneracy(): Surface = Surface.Gin
         }
@@ -248,14 +211,14 @@ sealed interface Piece {
         data object Uma : Reverse {
 
             override val moves: Set<Move> = setOf(
-                Move.Front.One,
-                Move.Back.One,
-                Move.Left.One,
-                Move.Right.One,
-                Move.FrontLeft.Endless,
-                Move.FrontRight.Endless,
-                Move.BackLeft.Endless,
-                Move.BackRight.Endless,
+                Move.One.Front,
+                Move.One.Back,
+                Move.One.Left,
+                Move.One.Right,
+                Move.Endless.FrontLeft,
+                Move.Endless.FrontRight,
+                Move.Endless.BackLeft,
+                Move.Endless.BackRight,
             )
 
             override fun degeneracy(): Surface = Surface.Kaku
@@ -267,14 +230,14 @@ sealed interface Piece {
         data object Ryu : Reverse {
 
             override val moves: Set<Move> = setOf(
-                Move.Front.Endless,
-                Move.Back.Endless,
-                Move.Left.Endless,
-                Move.Right.Endless,
-                Move.FrontLeft.One,
-                Move.FrontRight.One,
-                Move.BackLeft.One,
-                Move.BackRight.One,
+                Move.Endless.Front,
+                Move.Endless.Back,
+                Move.Endless.Left,
+                Move.Endless.Right,
+                Move.One.FrontLeft,
+                Move.One.FrontRight,
+                Move.One.BackLeft,
+                Move.One.BackRight,
             )
 
             override fun degeneracy(): Surface = Surface.Hisya

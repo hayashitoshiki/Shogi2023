@@ -11,4 +11,8 @@ data class Position(val row: Int, val column: Int) {
     fun add(position: Position): Position {
         return this.copy(row = row + position.row, column = column + position.column)
     }
+
+    fun minus(position: Position): Position {
+        return this.copy(row = row - position.row, column = column - position.column)
+    }
 }
