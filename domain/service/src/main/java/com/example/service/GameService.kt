@@ -18,6 +18,66 @@ import com.example.extention.setUp
 class GameService {
 
     /**
+     * 駒を持ち駒から打てる場所を探す
+     *
+     * @param board 将棋盤
+     * @param piece 駒
+     */
+    fun searchPutBy(board: Board, piece: Piece, turn: Turn): List<Position> {
+        val emptyCells = board.getCellsFromEmpty()
+        val boardMaxColumn = board.size.column
+        return when (piece) {
+            Piece.Reverse.Narigin,
+            Piece.Reverse.Narikei,
+            Piece.Reverse.Narikyo,
+            Piece.Reverse.Ryu,
+            Piece.Reverse.To,
+            Piece.Reverse.Uma,
+            Piece.Surface.Gin,
+            Piece.Surface.Gyoku,
+            Piece.Surface.Hisya,
+            Piece.Surface.Kaku,
+            Piece.Surface.Kin,
+            Piece.Surface.Ou -> emptyCells
+
+            Piece.Surface.Keima -> {
+                emptyCells.filter {
+                    when (turn) {
+                        Turn.Normal.Black -> it.column !in 1..2
+                        Turn.Normal.White -> it.column !in boardMaxColumn - 1..boardMaxColumn
+                    }
+                }
+            }
+
+            Piece.Surface.Fu -> {
+                val allCells = board.getAllCells().keys.toList()
+                val filterRows = allCells.filter {
+                    when (val cell = board.getCellByPosition(it).getStatus()) {
+                        CellStatus.Empty -> false
+                        is CellStatus.Fill.FromPiece -> cell.piece == Piece.Surface.Fu && cell.turn == turn
+                    }
+                }.map { it.row }
+                emptyCells.filter { emptyCell ->
+                    val end = when (turn) {
+                        Turn.Normal.Black -> 1
+                        Turn.Normal.White -> boardMaxColumn
+                    }
+                    !(emptyCell.column == end || filterRows.contains(emptyCell.row))
+                }
+            }
+
+            Piece.Surface.Kyosya -> {
+                emptyCells.filter {
+                    when (turn) {
+                        Turn.Normal.Black -> it.column != 1
+                        Turn.Normal.White -> it.column != boardMaxColumn
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 駒が成れるか判別
      *
      * @param board 将棋盤

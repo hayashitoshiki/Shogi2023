@@ -835,4 +835,138 @@ class GameServiceTest {
             assertEquals(expected, it.result)
         }
     }
+
+    @Test
+    fun `持ち駒を打てる場所の判定`() {
+        data class Param(
+            val casePiece: Piece,
+            val caseTurn: Turn,
+            val result: Set<Position>,
+        )
+
+        // data
+        val resultPositionList = (1..9).flatMap { row ->
+            (1..9).map { column ->
+                Position(row, column)
+            }
+        }.toMutableSet()
+        val fuRow = 5
+        val resultRow1PositionList = (1..9).map { row -> Position(row, 1) }.toSet()
+        val resultRow2PositionList = (1..9).map { row -> Position(row, 2) }.toSet()
+        val resultRow9PositionList = (1..9).map { row -> Position(row, 9) }.toSet()
+        val resultRow8PositionList = (1..9).map { row -> Position(row, 8) }.toSet()
+        val resultColumnFuPositionList = (1..9).map { column -> Position(fuRow, column) }.toSet()
+
+
+        val params = listOf(
+            // 制限のない駒
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Ou,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Gyoku,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Kin,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Gyoku,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Hisya,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Kaku,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Reverse.Narigin,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Reverse.Narikei,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Reverse.Narikyo,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Reverse.Uma,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Reverse.Ryu,
+                result = resultPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Reverse.To,
+                result = resultPositionList,
+            ),
+            // 歩
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Fu,
+                result = resultPositionList - resultRow1PositionList - resultColumnFuPositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Fu,
+                result = resultPositionList - resultRow9PositionList - resultColumnFuPositionList,
+            ),
+            // 香車
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Kyosya,
+                result = resultPositionList - resultRow1PositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Kyosya,
+                result = resultPositionList - resultRow9PositionList,
+            ),
+            // 桂馬
+            Param(
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Keima,
+                result = resultPositionList - resultRow1PositionList - resultRow2PositionList,
+            ),
+            Param(
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Keima,
+                result = resultPositionList - resultRow9PositionList - resultRow8PositionList,
+            ),
+        )
+
+        // result
+        params.forEach {
+            val board = Board().apply {
+                if (it.casePiece == Piece.Surface.Fu) {
+                    update(
+                        Position(fuRow, 5),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, it.caseTurn)
+                    )
+                }
+            }
+            val expected = gameService.searchPutBy(board, it.casePiece, it.caseTurn)
+            assertEquals(expected.toSet(), it.result)
+        }
+    }
 }

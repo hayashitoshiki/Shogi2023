@@ -82,8 +82,10 @@ data class Board(val size: Size = Size(9, 9)) {
      * @return 条件に一致したマス目一覧
      */
     private fun getCellsBy(param: SearchParam): List<Position> {
-        return board.flatMapIndexed { row, list ->
-            list.mapIndexedNotNull { column, cell ->
+        return board.flatMapIndexed { rowIndex, list ->
+            val row = rowIndex + 1
+            list.mapIndexedNotNull { columnIndex, cell ->
+                val column = columnIndex + 1
                 when (val cellInfo = cell.getStatus()) {
                     CellStatus.Empty -> when (param) {
                         SearchParam.Empty,
