@@ -643,7 +643,6 @@ class GameServiceTest {
         }
     }
 
-
     @Test
     fun `盤上の駒を動かす`() {
         data class Param(
@@ -685,7 +684,6 @@ class GameServiceTest {
             val position2 = Position(5, 5)
             stand.clear()
             val board = Board().apply {
-                clear()
                 update(position2, CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black))
                 update(position1, it.case)
             }
@@ -695,6 +693,146 @@ class GameServiceTest {
                 it.resultBoard.getAllCells().toList().toSet()
             )
             assertEquals(expected.second.pieces, it.resultStand.pieces)
+        }
+    }
+
+    @Test
+    fun `駒が成れるか判定`() {
+        data class Param(
+            val caseBeforePosition: Position,
+            val caseAfterPosition: Position,
+            val caseTurn: Turn,
+            val casePiece: Piece,
+            val result: Boolean,
+        )
+
+        // data
+        val params = listOf(
+            // 先手_縦１〜３以内での移動
+            Param(
+                caseBeforePosition = Position(1, 1),
+                caseAfterPosition = Position(2, 3),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Gin,
+                result = true,
+            ),
+            // 先手_縦１〜３以外での移動
+            Param(
+                caseBeforePosition = Position(5, 5),
+                caseAfterPosition = Position(5, 6),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Gin,
+                result = false,
+            ),
+            // 先手_縦１〜３以内→１〜３以外への移動
+            Param(
+                caseBeforePosition = Position(5, 3),
+                caseAfterPosition = Position(5, 4),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Gin,
+                result = true,
+            ),
+            // 先手_縦１〜３以外→１〜３以内への移動
+            Param(
+                caseBeforePosition = Position(5, 4),
+                caseAfterPosition = Position(5, 3),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Gin,
+                result = true,
+            ),
+            // 先手_範囲内だが裏がない駒の判定
+            Param(
+                caseBeforePosition = Position(5, 4),
+                caseAfterPosition = Position(5, 3),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Kin,
+                result = false,
+            ),
+            // 先手_縦7 〜９以内での移動
+            Param(
+                caseBeforePosition = Position(5, 7),
+                caseAfterPosition = Position(5, 8),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Gin,
+                result = false,
+            ),
+            // 先手_範囲内だが既に成っている駒の判定
+            Param(
+                caseBeforePosition = Position(5, 4),
+                caseAfterPosition = Position(5, 3),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Reverse.Narigin,
+                result = false,
+            ),
+            // 後手_縦７〜９以内での移動
+            Param(
+                caseBeforePosition = Position(1, 7),
+                caseAfterPosition = Position(2, 8),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Gin,
+                result = true,
+            ),
+            // 後手_縦７〜８以外での移動
+            Param(
+                caseBeforePosition = Position(5, 5),
+                caseAfterPosition = Position(5, 6),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Gin,
+                result = false,
+            ),
+            // 後手_縦７〜９以内→７〜９以外への移動
+            Param(
+                caseBeforePosition = Position(5, 7),
+                caseAfterPosition = Position(5, 6),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Gin,
+                result = true,
+            ),
+            // 後手_縦７〜９以外→７〜９以内への移動
+            Param(
+                caseBeforePosition = Position(5, 6),
+                caseAfterPosition = Position(5, 7),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Gin,
+                result = true,
+            ),
+            // 後手_範囲内だが裏がない駒の判定
+            Param(
+                caseBeforePosition = Position(5, 7),
+                caseAfterPosition = Position(5, 8),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Kin,
+                result = false,
+            ),
+            // 後手_縦１〜３以内での移動
+            Param(
+                caseBeforePosition = Position(5, 1),
+                caseAfterPosition = Position(5, 3),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Gin,
+                result = false,
+            ),
+            // 後手_範囲内だが既に成っている駒の判定
+            Param(
+                caseBeforePosition = Position(5, 7),
+                caseAfterPosition = Position(5, 8),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Reverse.Narigin,
+                result = false,
+            ),
+        )
+
+        // result
+        params.forEach {
+            val board = Board().apply {
+                update(it.caseBeforePosition, CellStatus.Fill.FromPiece(it.casePiece, it.caseTurn))
+            }
+            val expected = gameService.checkPieceEvolution(
+                board,
+                it.caseBeforePosition,
+                it.caseAfterPosition
+            )
+            assertEquals(expected, it.result)
         }
     }
 }

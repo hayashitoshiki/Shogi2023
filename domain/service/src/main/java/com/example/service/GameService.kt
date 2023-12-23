@@ -18,6 +18,30 @@ import com.example.extention.setUp
 class GameService {
 
     /**
+     * 駒が成れるか判別
+     *
+     * @param board 将棋盤
+     * @param beforePosition 動かす前のマス
+     * @param afterPosition 動かした後のマス
+     * @return 判定結果
+     */
+    fun checkPieceEvolution(
+        board: Board,
+        beforePosition: Position,
+        afterPosition: Position,
+    ): Boolean {
+        val cellStatus = board.getCellByPosition(beforePosition).getStatus()
+        if (cellStatus !is CellStatus.Fill.FromPiece) return false
+        val piece = cellStatus.piece as? Piece.Surface ?: return false
+        if (piece.evolution() == null) return false
+
+        return when (cellStatus.turn) {
+            Turn.Normal.Black -> beforePosition.column <= 3 || afterPosition.column <= 3
+            Turn.Normal.White -> beforePosition.column > board.size.column - 3 || afterPosition.column > board.size.column - 3
+        }
+    }
+
+    /**
      * 指定したマスに駒を動かす
      *
      * @param board 将棋盤
