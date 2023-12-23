@@ -22,6 +22,20 @@ internal fun Board.Companion.setUp(pieceSetUpRule: PieceSetUpRule): Board {
 }
 
 /**
+ * 駒を動かす
+ *
+ * @param beforePosition 動かしたい駒のマス目
+ * @param afterPosition 動かす先のマス目
+ * @return　動かした後の将棋盤
+ */
+internal fun Board.movePieceByPosition(beforePosition: Position, afterPosition: Position): Board {
+    val beforePositionCell = this.getCellByPosition(beforePosition)
+    this.update(afterPosition, beforePositionCell.getStatus())
+    this.update(beforePosition, CellStatus.Empty)
+    return this
+}
+
+/**
  * 指定したマスの駒が動かせるマスを返却
  *
  * @param position 動かしたい駒のマス目

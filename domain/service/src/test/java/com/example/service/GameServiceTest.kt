@@ -5,6 +5,7 @@ import com.example.entity.game.board.Cell
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Size
+import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
@@ -639,6 +640,61 @@ class GameServiceTest {
             )
             val expected = gameService.searchMoveBy(board, position, Turn.Normal.Black)
             assertEquals(expected.toSet(), it.result.toSet())
+        }
+    }
+
+
+    @Test
+    fun `盤上の駒を動かす`() {
+        data class Param(
+            val case: CellStatus,
+            val resultBoard: Board,
+            val resultStand: Stand,
+        )
+
+        // data
+        val stand = Stand()
+        val position1 = Position(5, 4)
+        val resultBoard = Board().apply {
+            update(position1, CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black))
+        }
+        val standAddFu = Stand().apply { add(Piece.Surface.Fu) }
+        val params = listOf(
+            // 空のマス目に移動
+            Param(
+                case = CellStatus.Empty,
+                resultBoard = resultBoard,
+                resultStand = stand,
+            ),
+            // 相手の駒のマスに移動
+            Param(
+                case = CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+                resultBoard = resultBoard,
+                resultStand = standAddFu,
+            ),
+            // 相手の成り駒のマスに移動
+            Param(
+                case = CellStatus.Fill.FromPiece(Piece.Reverse.To, Turn.Normal.White),
+                resultBoard = resultBoard,
+                resultStand = standAddFu,
+            )
+        )
+
+        // result
+        params.forEach {
+            val position2 = Position(5, 5)
+            stand.clear()
+            val board = Board().apply {
+                clear()
+                update(position2, CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black))
+                update(position1, it.case)
+            }
+            val expected = gameService.movePieceByPosition(board, stand, position2, position1)
+            assertEquals(
+                expected.first.getAllCells().toList().toSet(),
+                it.resultBoard.getAllCells().toList().toSet()
+            )
+            assertEquals(expected.second.pieces, it.resultStand.pieces)
         }
     }
 }
