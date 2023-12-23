@@ -18,6 +18,27 @@ import com.example.extention.setUp
 class GameService {
 
     /**
+     * 持ち駒の駒を打つ
+     *
+     * @param board 将棋盤
+     * @param stand 持ち駒
+     * @param turn 手番
+     * @param piece 打つ駒
+     * @param position 打つ場所
+     */
+    fun putPieceByStand(
+        board: Board,
+        stand: Stand,
+        turn: Turn,
+        piece: Piece,
+        position: Position,
+    ): Pair<Board, Stand> {
+        board.update(position, CellStatus.Fill.FromPiece(piece, turn))
+        stand.remove(piece)
+        return Pair(board, stand)
+    }
+
+    /**
      * 駒を持ち駒から打てる場所を探す
      *
      * @param board 将棋盤
