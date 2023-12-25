@@ -24,4 +24,6 @@ sealed interface Turn {
          */
         data object White : Normal
     }
+
+    companion object
 }
