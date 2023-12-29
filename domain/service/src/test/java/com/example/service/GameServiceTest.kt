@@ -969,4 +969,451 @@ class GameServiceTest {
             assertEquals(expected.toSet(), it.result)
         }
     }
+
+    @Test
+    fun `王手の判定`() {
+        data class Opponent(
+            val position: Position,
+        )
+
+        data class Param(
+            val casePiece: Piece,
+            val casePosition: Position,
+            val caseOpponent: Opponent?,
+            val caseTurn: Turn,
+            val result: Boolean,
+        )
+
+
+        val params = listOf(
+            // 先手番
+            // １マスずつで王手になっているマス
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(4, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(5, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(6, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(4, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(6, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Gin,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(5, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Gin,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            // １マスずつで王手になっていないマス
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(5, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(6, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(6, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(5, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            // 桂馬の動き
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 7),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(6, 7),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            // 飛車角で途中で防がれている時
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(5, 9),
+                caseOpponent = Opponent(
+                    position = Position(5, 7),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(5, 1),
+                caseOpponent = Opponent(
+                    position = Position(5, 3),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(9, 5),
+                caseOpponent = Opponent(
+                    position = Position(7, 5),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(1, 5),
+                caseOpponent = Opponent(
+                    position = Position(3, 5),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(5, 9),
+                caseOpponent = Opponent(
+                    position = Position(5, 7),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kaku,
+                casePosition = Position(1, 1),
+                caseOpponent = Opponent(
+                    position = Position(3, 3),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kaku,
+                casePosition = Position(9, 1),
+                caseOpponent = Opponent(
+                    position = Position(7, 3),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kaku,
+                casePosition = Position(1, 9),
+                caseOpponent = Opponent(
+                    position = Position(3, 7),
+                ),
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            // ご手番
+            // １マスずつで王手になっているマス
+            Param(
+                casePiece = Piece.Surface.Gin,
+                casePosition = Position(4, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(5, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Gin,
+                casePosition = Position(6, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(4, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(6, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(5, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kin,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            // １マスずつで王手になっていないマス
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(5, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(6, 6),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(6, 5),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(5, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 4),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            // 桂馬の動き
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(4, 3),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            Param(
+                casePiece = Piece.Surface.Keima,
+                casePosition = Position(6, 3),
+                caseOpponent = null,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            // 飛車角で途中で防がれている時
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(5, 9),
+                caseOpponent = Opponent(
+                    position = Position(5, 7),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(5, 1),
+                caseOpponent = Opponent(
+                    position = Position(5, 3),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(9, 5),
+                caseOpponent = Opponent(
+                    position = Position(7, 5),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(1, 5),
+                caseOpponent = Opponent(
+                    position = Position(3, 5),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Hisya,
+                casePosition = Position(5, 9),
+                caseOpponent = Opponent(
+                    position = Position(5, 7),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kaku,
+                casePosition = Position(1, 1),
+                caseOpponent = Opponent(
+                    position = Position(3, 3),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kaku,
+                casePosition = Position(9, 1),
+                caseOpponent = Opponent(
+                    position = Position(7, 3),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            Param(
+                casePiece = Piece.Surface.Kaku,
+                casePosition = Position(1, 9),
+                caseOpponent = Opponent(
+                    position = Position(3, 7),
+                ),
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+        )
+
+        // result
+        params.forEach {
+            val opponentTun = when (it.caseTurn) {
+                Turn.Normal.Black -> Turn.Normal.White
+                Turn.Normal.White -> Turn.Normal.Black
+            }
+            val board = Board().apply {
+
+                val king = when (opponentTun) {
+                    Turn.Normal.Black -> Piece.Surface.Gyoku
+                    Turn.Normal.White -> Piece.Surface.Ou
+                }
+
+                update(Position(5, 5), CellStatus.Fill.FromPiece(king, opponentTun))
+                update(it.casePosition, CellStatus.Fill.FromPiece(it.casePiece, it.caseTurn))
+                val opponent = it.caseOpponent ?: return@apply
+                update(opponent.position, CellStatus.Fill.FromPiece(Piece.Surface.Fu, opponentTun))
+            }
+            val expected = gameService.isCheckByTurn(board, opponentTun)
+            assertEquals(expected, it.result)
+        }
+    }
 }

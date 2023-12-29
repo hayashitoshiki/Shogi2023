@@ -18,6 +18,43 @@ import com.example.extention.setUp
 class GameService {
 
     /**
+     * 指定した手番が王手されているか判定
+     *
+     * @param board 将棋盤
+     * @param turn 王手されているか判定する手番
+     * @return 王手しているかの判定結果
+     */
+    fun isCheckByTurn(board: Board, turn: Turn): Boolean {
+        val opponentTurn = when (turn) {
+            Turn.Normal.Black -> Turn.Normal.White
+            Turn.Normal.White -> Turn.Normal.Black
+        }
+
+        return board.getCellsFromTurn(opponentTurn).any { position ->
+            searchMoveBy(board, position, opponentTurn).any { movePosition ->
+                board.isKingCellBy(movePosition, turn)
+            }
+        }
+    }
+
+    /**
+     * 王様のいるマスか判定
+     *
+     * @param position 指定したマス
+     * @param turn 手番
+     * @return 王様がいるか
+     */
+    private fun Board.isKingCellBy(position: Position, turn: Turn): Boolean {
+        val cellStatus = getCellByPosition(position).getStatus()
+        if (cellStatus !is CellStatus.Fill.FromPiece) return false
+
+        return when (turn) {
+            Turn.Normal.Black -> cellStatus.piece == Piece.Surface.Gyoku
+            Turn.Normal.White -> cellStatus.piece == Piece.Surface.Ou
+        }
+    }
+
+    /**
      * 持ち駒の駒を打つ
      *
      * @param board 将棋盤
