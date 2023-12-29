@@ -79,6 +79,7 @@ internal fun Board.searchMoveBy(position: Position, turn: Turn): List<Position> 
 }
 
 private fun Board.checkOnMovePiece(position: Position, turn: Turn): Boolean {
+    if (position !in this.size) return false
     return when (val cellStatus = this.getCellByPosition(position).getStatus()) {
         CellStatus.Empty -> true
         is CellStatus.Fill.FromPiece -> cellStatus.turn != turn

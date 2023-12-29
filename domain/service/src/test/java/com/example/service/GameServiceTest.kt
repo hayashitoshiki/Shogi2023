@@ -1416,4 +1416,322 @@ class GameServiceTest {
             assertEquals(expected, it.result)
         }
     }
+
+    @Test
+    fun `詰み判定`() {
+        data class Param(
+            val caseCellPattern: List<Pair<Position, CellStatus>>,
+            val caseUseStandPiece: Boolean,
+            val caseTurn: Turn,
+            val result: Boolean,
+        )
+
+        val params = listOf(
+            // 先手
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(5, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(5, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(5, 7),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            // 逃げ場あり & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(5, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(5, 7),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(5, 6),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            // 逃げ場なし & 取れる駒あり & 動かして防げる駒なし & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(5, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(5, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(5, 7),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(4, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.Black)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒あり & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(1, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(1, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                    ),
+                ),
+                caseUseStandPiece = false,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態あり
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(1, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(1, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            // 動かして（とって）防ごうとすると王手になるから詰み
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(1, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(1, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 7),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(9, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.White)
+                    ),
+                ),
+                caseUseStandPiece = false,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            // 後手
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(5, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(5, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(5, 3),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+            // 逃げ場あり & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(5, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(5, 3),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(5, 4),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            // 逃げ場なし & 取れる駒あり & 動かして防げる駒なし & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(5, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(5, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(5, 3),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(4, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒あり & 打って防げる状態なし
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(1, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(1, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                    ),
+                ),
+                caseUseStandPiece = false,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態あり
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(1, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(1, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.White,
+                result = false,
+            ),
+            // 動かして（とって）防ごうとすると王手になるから詰み
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(1, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(1, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 3),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(9, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.Black)
+                    ),
+                ),
+                caseUseStandPiece = false,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
+        )
+
+        // result
+        params.forEach {
+            val board = Board().apply {
+                it.caseCellPattern.forEach { (position, cellStatus) ->
+                    update(position, cellStatus)
+                }
+            }
+            val stand = Stand().apply {
+                if (!it.caseUseStandPiece) return@apply
+                add(Piece.Surface.Kin)
+            }
+            val expected = gameService.isCheckmate(board, stand, it.caseTurn)
+            assertEquals(expected, it.result)
+        }
+    }
 }

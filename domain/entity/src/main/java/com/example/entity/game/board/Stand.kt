@@ -44,4 +44,10 @@ class Stand {
     fun clear() {
         pieceList.clear()
     }
+
+    fun copy(): Stand {
+        val copiedStand = Stand()
+        copiedStand.pieceList.addAll(this.pieceList)
+        return copiedStand
+    }
 }

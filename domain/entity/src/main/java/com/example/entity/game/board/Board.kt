@@ -152,5 +152,19 @@ data class Board(val size: Size = Size(9, 9)) {
         }
     }
 
+    /**
+     * Boardのcopy()
+     *
+     * listが値わたしできないため拡張
+     */
+    fun copy(): Board {
+        val copiedBoard = Board(size)
+        // リストの内容を手動でコピーする
+        this.getAllCells().forEach { (position, cell) ->
+            copiedBoard.update(position, cell.getStatus())
+        }
+        return copiedBoard
+    }
+
     companion object
 }

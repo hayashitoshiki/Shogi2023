@@ -18,6 +18,34 @@ import com.example.extention.setUp
 class GameService {
 
     /**
+     * 詰んでいるか判定
+     *
+     * @param board 将棋盤
+     * @param stand 持ち駒
+     * @param turn 手番
+     * @return 詰んでいるか
+     */
+    fun isCheckmate(board: Board, stand: Stand, turn: Turn): Boolean {
+        val isNotCheckmateByNotStandPiece = board.getCellsFromTurn(turn).any { position ->
+            searchMoveBy(board, position, turn).any innerLoop@{ afterPosition ->
+                val newBoard = movePieceByPosition(board, stand, position, afterPosition).first
+                return@innerLoop !isCheckByTurn(newBoard, turn)
+            }
+        }
+        if (isNotCheckmateByNotStandPiece) return false
+
+        val isNotCheckmateByUseStandPiece = stand.pieces.any { piece ->
+            searchPutBy(board, piece, turn).any { position ->
+                val newBoard = putPieceByStand(board, stand, turn, piece, position).first
+                !isCheckByTurn(newBoard, turn)
+            }
+        }
+        if (isNotCheckmateByUseStandPiece) return false
+
+        return true
+    }
+
+    /**
      * 指定した手番が王手されているか判定
      *
      * @param board 将棋盤
@@ -29,7 +57,6 @@ class GameService {
             Turn.Normal.Black -> Turn.Normal.White
             Turn.Normal.White -> Turn.Normal.Black
         }
-
         return board.getCellsFromTurn(opponentTurn).any { position ->
             searchMoveBy(board, position, opponentTurn).any { movePosition ->
                 board.isKingCellBy(movePosition, turn)
@@ -70,9 +97,11 @@ class GameService {
         piece: Piece,
         position: Position,
     ): Pair<Board, Stand> {
-        board.update(position, CellStatus.Fill.FromPiece(piece, turn))
-        stand.remove(piece)
-        return Pair(board, stand)
+        val newBoard = board.copy()
+        val newStand = stand.copy()
+        newBoard.update(position, CellStatus.Fill.FromPiece(piece, turn))
+        newStand.remove(piece)
+        return Pair(board, newStand)
     }
 
     /**
@@ -174,8 +203,9 @@ class GameService {
         beforePosition: Position,
         afterPosition: Position,
     ): Pair<Board, Stand> {
-        val afterPositionCellCash = board.getCellByPosition(afterPosition).getStatus()
-        board.movePieceByPosition(beforePosition, afterPosition)
+        val newBoard = board.copy()
+        val afterPositionCellCash = newBoard.getCellByPosition(afterPosition).getStatus()
+        newBoard.movePieceByPosition(beforePosition, afterPosition)
         if (afterPositionCellCash is CellStatus.Fill.FromPiece) {
             val holdPiece = when (val piece = afterPositionCellCash.piece) {
                 is Piece.Reverse -> piece.degeneracy()
@@ -183,7 +213,7 @@ class GameService {
             }
             stand.add(holdPiece)
         }
-        return Pair(board, stand)
+        return Pair(newBoard, stand)
     }
 
     /**
