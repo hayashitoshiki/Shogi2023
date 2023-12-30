@@ -165,6 +165,65 @@ class GameService {
     }
 
     /**
+     * 指定したますの駒を成らせる
+     *
+     * @param board 将棋盤
+     * @param position マス目
+     * @return 適用した将棋盤
+     */
+    fun pieceEvolution(
+        board: Board,
+        position: Position,
+    ): Board {
+        val cellStatus = board.getCellByPosition(position).getStatus()
+        if (cellStatus !is CellStatus.Fill.FromPiece) return board
+        val piece = cellStatus.piece as? Piece.Surface ?: return board
+        piece.evolution()?.also {
+            board.update(position, cellStatus.copy(piece = it))
+        }
+        return board
+    }
+
+    /**
+     * 駒が強制的にならないといけないなら成る
+     *
+     * @param board 将棋盤
+     * @param beforePosition 動かす前のマス
+     * @param afterPosition 動かした後のマス
+     * @return 判定結果
+     */
+    fun shouldPieceEvolution(
+        board: Board,
+        beforePosition: Position,
+        afterPosition: Position,
+    ): Boolean {
+        if (!checkPieceEvolution(board, beforePosition, afterPosition)) return false
+        val cellStatus = board.getCellByPosition(beforePosition).getStatus()
+        if (cellStatus !is CellStatus.Fill.FromPiece) return false
+        val piece = cellStatus.piece as? Piece.Surface ?: return false
+
+        return when (piece) {
+            Piece.Surface.Fu,
+            Piece.Surface.Kyosya -> when (cellStatus.turn) {
+                Turn.Normal.Black -> afterPosition.column == 1
+                Turn.Normal.White -> afterPosition.column == board.size.column
+            }
+
+            Piece.Surface.Keima -> when (cellStatus.turn) {
+                Turn.Normal.Black -> afterPosition.column <= 2
+                Turn.Normal.White -> afterPosition.column >= board.size.column - 1
+            }
+
+            Piece.Surface.Gin,
+            Piece.Surface.Gyoku,
+            Piece.Surface.Hisya,
+            Piece.Surface.Kaku,
+            Piece.Surface.Kin,
+            Piece.Surface.Ou -> false
+        }
+    }
+
+    /**
      * 駒が成れるか判別
      *
      * @param board 将棋盤
