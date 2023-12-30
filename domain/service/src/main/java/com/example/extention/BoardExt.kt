@@ -4,6 +4,7 @@ import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.piece.Move
+import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 
@@ -83,5 +84,22 @@ private fun Board.checkOnMovePiece(position: Position, turn: Turn): Boolean {
     return when (val cellStatus = this.getCellByPosition(position).getStatus()) {
         CellStatus.Empty -> true
         is CellStatus.Fill.FromPiece -> cellStatus.turn != turn
+    }
+}
+
+/**
+ * 王様のいるマスか判定
+ *
+ * @param position 指定したマス
+ * @param turn 手番
+ * @return 王様がいるか
+ */
+fun Board.isKingCellBy(position: Position, turn: Turn): Boolean {
+    val cellStatus = getCellByPosition(position).getStatus()
+    if (cellStatus !is CellStatus.Fill.FromPiece) return false
+
+    return when (turn) {
+        Turn.Normal.Black -> cellStatus.piece == Piece.Surface.Gyoku
+        Turn.Normal.White -> cellStatus.piece == Piece.Surface.Ou
     }
 }

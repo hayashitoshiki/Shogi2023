@@ -7,6 +7,7 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
+import com.example.extention.isKingCellBy
 import com.example.extention.movePieceByPosition
 import com.example.extention.searchMoveBy
 import com.example.extention.setUp
@@ -61,23 +62,6 @@ class GameService {
             searchMoveBy(board, position, opponentTurn).any { movePosition ->
                 board.isKingCellBy(movePosition, turn)
             }
-        }
-    }
-
-    /**
-     * 王様のいるマスか判定
-     *
-     * @param position 指定したマス
-     * @param turn 手番
-     * @return 王様がいるか
-     */
-    private fun Board.isKingCellBy(position: Position, turn: Turn): Boolean {
-        val cellStatus = getCellByPosition(position).getStatus()
-        if (cellStatus !is CellStatus.Fill.FromPiece) return false
-
-        return when (turn) {
-            Turn.Normal.Black -> cellStatus.piece == Piece.Surface.Gyoku
-            Turn.Normal.White -> cellStatus.piece == Piece.Surface.Ou
         }
     }
 

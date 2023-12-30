@@ -6,6 +6,7 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 import com.example.extention.changeNextTurn
+import com.example.extention.isKingCellBy
 import com.example.service.GameService
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.MoveUseCaseModel
@@ -92,6 +93,11 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         turn: Turn,
         hold: TouchActionUseCaseModel,
     ): NextResult {
+        val opponentTurn = when (turn) {
+            Turn.Normal.Black -> Turn.Normal.White
+            Turn.Normal.White -> Turn.Normal.Black
+        }
+        val isGetKing = board.isKingCellBy(position, opponentTurn)
         val (newBoard, newStand) = when (hold) {
             is TouchActionUseCaseModel.Board -> {
                 gameService.movePieceByPosition(board, stand, hold.position, position)
@@ -101,8 +107,15 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
                 gameService.putPieceByStand(board, stand, turn, hold.piece, position)
             }
         }
-
         val nextTurn = turn.changeNextTurn()
+        if (isGetKing) {
+            return NextResult.Move.Win(
+                board = newBoard,
+                stand = newStand,
+                nextTurn = nextTurn,
+            )
+        }
+
         if (hold is TouchActionUseCaseModel.Board) {
             if (gameService.shouldPieceEvolution(board, hold.position, position)) {
                 gameService.pieceEvolution(newBoard, position)
