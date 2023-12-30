@@ -8,7 +8,7 @@ import com.example.entity.game.board.Position
  * @property hold 動かそうとしている駒
  * @property hintList 置ける場所リスト
  */
-data class MoveUseCaseModel(
+data class ReadyMoveInfoUseCaseModel(
     val hold: TouchActionUseCaseModel,
     val hintList: List<Position>,
 )

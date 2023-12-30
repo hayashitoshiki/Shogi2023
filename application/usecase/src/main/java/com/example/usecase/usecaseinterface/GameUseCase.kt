@@ -5,7 +5,7 @@ import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
-import com.example.usecase.usecaseinterface.model.MoveUseCaseModel
+import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.TouchActionUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
@@ -39,7 +39,7 @@ interface GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: TouchActionUseCaseModel,
-        holdMove: MoveUseCaseModel?,
+        holdMove: ReadyMoveInfoUseCaseModel?,
     ): NextResult
 
     /**

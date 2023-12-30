@@ -9,7 +9,7 @@ import com.example.extention.changeNextTurn
 import com.example.extention.isKingCellBy
 import com.example.service.GameService
 import com.example.usecase.usecaseinterface.GameUseCase
-import com.example.usecase.usecaseinterface.model.MoveUseCaseModel
+import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.TouchActionUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
@@ -36,7 +36,7 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: TouchActionUseCaseModel,
-        holdMove: MoveUseCaseModel?,
+        holdMove: ReadyMoveInfoUseCaseModel?,
     ): NextResult {
         return when (touchAction) {
             is TouchActionUseCaseModel.Board -> {
