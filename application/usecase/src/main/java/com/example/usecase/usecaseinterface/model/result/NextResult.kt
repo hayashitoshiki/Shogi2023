@@ -27,35 +27,37 @@ sealed interface NextResult {
      * @property stand 持ち駒
      * @property nextTurn 次の手番
      */
-    data class Move(
-        val board: Board,
-        val stand: Stand,
-        val nextTurn: Turn,
-    ) : NextResult
+    sealed interface Move : NextResult {
+        val board: Board
+        val stand: Stand
+        val nextTurn: Turn
 
-    /**
-     * 成るか選択
-     *
-     * @property board 将棋盤
-     * @property stand 持ち駒
-     * @property nextTurn 次の手番
-     */
-    data class ChooseEvolution(
-        val board: Board,
-        val stand: Stand,
-        val nextTurn: Turn,
-    ) : NextResult
+        /**
+         * 駒を動かすのみ
+         */
+        data class Only(
+            override val board: Board,
+            override val stand: Stand,
+            override val nextTurn: Turn,
+        ) : Move
 
-    /**
-     * 勝ち
-     *
-     * @property board 将棋盤
-     * @property stand 持ち駒
-     * @property nextTurn 次の手番
-     */
-    data class Win(
-        val board: Board,
-        val stand: Stand,
-        val nextTurn: Turn,
-    ) : NextResult
+        /**
+         * 成るか選択
+         */
+        data class ChooseEvolution(
+            override val board: Board,
+            override val stand: Stand,
+            override val nextTurn: Turn,
+        ) : Move
+
+        /**
+         * 勝ち
+         */
+        data class Win(
+            override val board: Board,
+            override val stand: Stand,
+            override val nextTurn: Turn,
+        ) : Move
+    }
+
 }

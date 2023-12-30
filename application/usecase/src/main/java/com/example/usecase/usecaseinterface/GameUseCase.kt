@@ -1,6 +1,7 @@
 package com.example.usecase.usecaseinterface
 
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
@@ -40,4 +41,13 @@ interface GameUseCase {
         touchAction: TouchActionUseCaseModel,
         holdMove: MoveUseCaseModel?,
     ): NextResult
+
+    /**
+     * 指定したマスの駒を成らせる
+     *
+     * @param board 将棋盤
+     * @param position 駒
+     * @return 更新後の将棋盤
+     */
+    fun setEvolution(board: Board, position: Position): Board
 }

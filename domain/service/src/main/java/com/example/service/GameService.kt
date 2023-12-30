@@ -101,7 +101,7 @@ class GameService {
         val newStand = stand.copy()
         newBoard.update(position, CellStatus.Fill.FromPiece(piece, turn))
         newStand.remove(piece)
-        return Pair(board, newStand)
+        return Pair(newBoard, newStand)
     }
 
     /**

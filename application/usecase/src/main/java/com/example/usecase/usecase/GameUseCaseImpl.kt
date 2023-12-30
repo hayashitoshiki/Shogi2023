@@ -57,6 +57,14 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         }
     }
 
+    override fun setEvolution(
+        board: Board,
+        position: Position,
+    ): Board {
+        gameService.pieceEvolution(board, position)
+        return board
+    }
+
     private fun setHintPosition(
         board: Board,
         touchAction: TouchActionUseCaseModel,
@@ -99,7 +107,7 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
             if (gameService.shouldPieceEvolution(board, hold.position, position)) {
                 gameService.pieceEvolution(newBoard, position)
             } else if (gameService.checkPieceEvolution(board, hold.position, position)) {
-                return NextResult.ChooseEvolution(
+                return NextResult.Move.ChooseEvolution(
                     board = newBoard,
                     stand = newStand,
                     nextTurn = nextTurn,
@@ -108,13 +116,13 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         }
 
         return if (gameService.isCheckmate(newBoard, stand, nextTurn)) {
-            NextResult.Win(
+            NextResult.Move.Win(
                 board = newBoard,
                 stand = newStand,
                 nextTurn = nextTurn,
             )
         } else {
-            NextResult.Move(
+            NextResult.Move.Only(
                 board = newBoard,
                 stand = newStand,
                 nextTurn = nextTurn,
