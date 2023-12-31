@@ -80,11 +80,12 @@ class GameViewModel @Inject constructor(
             Turn.Normal.Black -> uiState.value.blackStand
             Turn.Normal.White -> uiState.value.whiteStand
         }
+        val turn = uiState.value.turn
         val result = useCase.next(
             board = uiState.value.board,
             stand = stand,
             touchAction = touchAction.toUseCaseModel(),
-            turn = uiState.value.turn,
+            turn = turn,
             holdMove = uiState.value.readyMoveInfo?.toUseCaseModel(),
         )
 
@@ -113,7 +114,7 @@ class GameViewModel @Inject constructor(
             is NextResult.Move.Win -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    mutableGameEndEffect.emit(Effect.GameEnd)
+                    mutableGameEndEffect.emit(Effect.GameEnd (turn))
                 }
             }
         }
@@ -170,7 +171,7 @@ class GameViewModel @Inject constructor(
         /**
          * ゲーム終了
          */
-        data object GameEnd : Effect
+        data class GameEnd(val turn: Turn) : Effect
 
         /**
          * 成り判定

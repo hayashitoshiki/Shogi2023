@@ -1,0 +1,18 @@
+<resources>
+    <!-- ダイアログ -->
+    <string name="dialog_text_yes">はい</string>
+    <string name="dialog_text_no">いいえ</string>
+    <!-- 成り判定ダイアログ -->
+    <string name="dialog_evolution_title">成り判定</string>
+    <string name="dialog_evolution_body">成りますか？</string>
+
+    <!-- 成り判定ダイアログ -->
+    <string name="dialog_game_end_title">対局終了</string>
+    <string name="dialog_game_end_body">勝者：%s</string>
+    <string name="dialog_game_end_confirm">ホームへ</string>
+    <string name="dialog_game_end_dismiss">感想戦へ</string>
+
+    <!-- 手番 -->
+    <string name="turn_black_name">先手</string>
+    <string name="turn_white_name">後手</string>
+</resources>
