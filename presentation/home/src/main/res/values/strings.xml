@@ -13,6 +13,9 @@
     <!-- 投了ダイアログ -->
     <string name="dialog_confirm_lose_title">投了</string>
     <string name="dialog_confirm_lose_body">本当に負けで良いですか？</string>
+    <!-- 初期化ダイアログ -->
+    <string name="dialog_confirm_restart_title">初期化</string>
+    <string name="dialog_confirm_restart_body">本当に初期化しますか？</string>
 
     <!-- 手番 -->
     <string name="turn_black_name">先手</string>
