@@ -25,7 +25,12 @@ import com.example.home.R
 import com.example.shogi2023.ui.theme.Shogi2023Theme
 
 @Composable
-fun BoardBox(modifier: Modifier = Modifier, board: Board, onClick: () -> Unit) {
+fun BoardBox(
+    modifier: Modifier = Modifier,
+    board: Board,
+    onClick: (Position) -> Unit,
+    hintList: List<Position>
+) {
 
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val widthPadding = 4
@@ -37,11 +42,15 @@ fun BoardBox(modifier: Modifier = Modifier, board: Board, onClick: () -> Unit) {
             Row {
                 for (row in boardSizeWidth downTo 1) {
                     val cellSize = (screenWidthDp - widthPadding * 2) / boardSizeWidth
-                    val cell = board.getCellByPosition(Position(row, column))
+                    val position = Position(row, column)
+                    val cell = board.getCellByPosition(position)
+                    val isHint = hintList.contains(position)
+
                     CellBox(
                         size = cellSize,
                         cell = cell,
-                        onClick = onClick,
+                        isHint = isHint,
+                        onClick = { onClick(position) },
                     )
                 }
             }
@@ -50,7 +59,7 @@ fun BoardBox(modifier: Modifier = Modifier, board: Board, onClick: () -> Unit) {
 }
 
 @Composable
-fun CellBox(size: Int, cell: Cell, onClick: () -> Unit) {
+fun CellBox(size: Int, cell: Cell, onClick: () -> Unit, isHint: Boolean) {
     val borderStroke = BorderStroke(0.5.dp, Color.Black)
 
     Box(
@@ -63,11 +72,20 @@ fun CellBox(size: Int, cell: Cell, onClick: () -> Unit) {
             modifier = Modifier.size(size.dp),
             painter = painterResource(R.drawable.ic_backgound_board),
             contentDescription = "",
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
+
         when (val piece = cell.getStatus()) {
             CellStatus.Empty -> Unit
             is CellStatus.Fill.FromPiece -> PieceImage(piece = piece.piece, turn = piece.turn)
+        }
+
+        if (isHint) {
+            Image(
+                modifier = Modifier.size(size.dp).padding(4.dp),
+                painter = painterResource(R.drawable.ic_hint_circle),
+                contentDescription = "",
+            )
         }
     }
 }
@@ -79,6 +97,7 @@ fun BoardBoxPreview() {
         BoardBox(
             board = Board(),
             onClick = { },
+            hintList = listOf(),
         )
     }
 }
