@@ -6,8 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.core.navigation.NavigationScreens
-import com.example.home.game.GameScreen
-import com.example.home.home.HomeScreen
+import com.example.game.GameScreen
+import com.example.home.HomeScreen
 
 /**
  * NavigationHost 画面遷移定義

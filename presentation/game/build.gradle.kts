@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.home"
+    namespace = "com.example.game"
     compileSdk = 34
 
     defaultConfig {
@@ -63,6 +63,8 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     implementation(project(":presentation:core"))
+    implementation(project(":domain:entity"))
+    implementation(project(":application:usecase"))
 }
 
 kapt {

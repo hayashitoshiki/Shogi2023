@@ -79,6 +79,7 @@ dependencies {
 
     implementation(project(":presentation:core"))
     implementation(project(":presentation:home"))
+    implementation(project(":presentation:game"))
     implementation(project(":application:usecase"))
 }
 
