@@ -1,6 +1,6 @@
-package com.example.game.mapper
+package com.example.game.util.mapper
 
-import com.example.game.model.ReadyMoveInfoUiModel
+import com.example.game.util.model.ReadyMoveInfoUiModel
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 
 fun ReadyMoveInfoUiModel.toUseCaseModel(): ReadyMoveInfoUseCaseModel {

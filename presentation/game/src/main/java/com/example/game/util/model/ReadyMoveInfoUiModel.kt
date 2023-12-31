@@ -1,4 +1,4 @@
-package com.example.game.model
+package com.example.game.util.model
 
 import com.example.entity.game.board.Position
 

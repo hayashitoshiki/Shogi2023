@@ -1,4 +1,4 @@
-package com.example.game.compoment
+package com.example.game.util.compoment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.Turn
-import com.example.game.extension.getIcon
+import com.example.game.util.extension.getIcon
 import com.example.shogi2023.ui.theme.Shogi2023Theme
 
 @Composable

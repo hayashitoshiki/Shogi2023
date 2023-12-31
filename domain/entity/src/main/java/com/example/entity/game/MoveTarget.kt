@@ -1,29 +1,29 @@
-package com.example.game.model
+package com.example.entity.game
 
 import com.example.entity.game.board.Position
 import com.example.entity.game.piece.Piece
 
 /**
- * 選択したもの
+ * 動かそうとしている駒
  *
  */
-sealed interface TouchActionUiModel {
+sealed interface MoveTarget {
 
     /**
-     * 将棋盤上
+     * 将棋盤上の駒
      *
      * @property position 座標
      */
     data class Board(
         val position: Position,
-    ) : TouchActionUiModel
+    ) : MoveTarget
 
     /**
-     * 持ち駒台上
+     * 持ち駒台上の駒
      *
      * @property piece 持ち駒
      */
     data class Stand(
-        val piece: Piece
-    ) : TouchActionUiModel
+        val piece: Piece,
+    ) : MoveTarget
 }

@@ -1,4 +1,4 @@
-package com.example.game.extension
+package com.example.game.util.extension
 
 import com.example.entity.game.rule.Turn
 import com.example.game.R

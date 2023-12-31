@@ -6,7 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.core.navigation.NavigationScreens
-import com.example.game.GameScreen
+import com.example.game.feature.game.GameScreen
+import com.example.game.feature.replay.ReplayScreen
 import com.example.home.HomeScreen
 
 /**
@@ -29,6 +30,12 @@ fun AppNavHost(
         }
         composable(route = NavigationScreens.GAME_SCREEN.route) {
             GameScreen(
+                navController = navController,
+                viewModel = hiltViewModel(),
+            )
+        }
+        composable(route = NavigationScreens.REPLAY_SCREEN.route) {
+            ReplayScreen(
                 navController = navController,
                 viewModel = hiltViewModel(),
             )

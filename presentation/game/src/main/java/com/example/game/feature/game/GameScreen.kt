@@ -1,4 +1,4 @@
-package com.example.game
+package com.example.game.feature.game
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
@@ -13,12 +13,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.example.core.navigation.NavigationScreens
 import com.example.entity.game.rule.Turn
-import com.example.game.compoment.BoardBox
-import com.example.game.compoment.StandBox
-import com.example.game.compoment.button.LoseButton
-import com.example.game.compoment.dialog.EvolutionDialog
-import com.example.game.compoment.dialog.GameEndDialog
+import com.example.game.util.compoment.GameBox
+import com.example.game.util.compoment.button.LoseButton
+import com.example.game.util.compoment.dialog.EvolutionDialog
+import com.example.game.util.compoment.dialog.GameEndDialog
 
 @Composable
 fun GameScreen(
@@ -44,7 +44,17 @@ fun GameScreen(
     showGameEndDialog.value?.apply {
         GameEndDialog(
             openDialog = showGameEndDialog,
-            onClick = { navController.popBackStack() },
+            onClickNavigationHome = { navController.popBackStack() },
+            onClickNavigationReplay = {
+                navController.navigate(NavigationScreens.REPLAY_SCREEN.route) {
+                    popUpTo(NavigationScreens.REPLAY_SCREEN.route) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+
+            },
         )
     }
 
@@ -61,20 +71,13 @@ fun GameScreen(
                 turn = Turn.Normal.White,
                 onClick = viewModel::tapLoseButton,
             )
-            StandBox(
-                stand = uiState.value.whiteStand,
-                turn = Turn.Normal.White,
-                onClick = viewModel::tapStand,
-            )
-            BoardBox(
+            GameBox(
+                whiteStand = uiState.value.whiteStand,
+                blackStand = uiState.value.blackStand,
+                onStandClick = viewModel::tapStand,
+                onBoardClick = viewModel::tapBoard,
                 board = uiState.value.board,
-                onClick = viewModel::tapBoard,
-                hintList = uiState.value.readyMoveInfo?.hintList ?: listOf(),
-            )
-            StandBox(
-                stand = uiState.value.blackStand,
-                turn = Turn.Normal.Black,
-                onClick = viewModel::tapStand,
+                hintList = uiState.value.readyMoveInfo?.hintList ?: emptyList(),
             )
             LoseButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),

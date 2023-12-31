@@ -1,4 +1,4 @@
-package com.example.game.compoment
+package com.example.game.util.compoment
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image

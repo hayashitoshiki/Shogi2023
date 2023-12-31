@@ -1,9 +1,7 @@
-package com.example.game.compoment.button
+package com.example.game.util.compoment.button
 
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -11,32 +9,34 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import com.example.entity.game.rule.Turn
 import com.example.game.R
 
-@Composable
-fun ReStartButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
-    val showDialog = remember { mutableStateOf(false) }
 
-    IconButton(
-        modifier = modifier.size(48.dp),
-        onClick = { showDialog.value = true }
-    ) {
-        Icon(
-            modifier = modifier.size(32.dp),
-            painter = painterResource(R.drawable.ic_restart),
-            contentDescription = ""
-        )
+@Composable
+fun LoseButton(modifier: Modifier = Modifier, turn: Turn, onClick: (Turn) -> Unit) {
+    val context = LocalContext.current
+    val showDialog = remember { mutableStateOf(false) }
+    val rotate = when (turn) {
+        Turn.Normal.Black -> 0f
+        Turn.Normal.White -> 180f
+    }
+
+    Button(
+        modifier = modifier.rotate(rotate),
+        onClick = { showDialog.value = true }) {
+        Text(text = context.getString(R.string.button_lose_text))
     }
     if (showDialog.value) {
-        ConfirmReStartDialog(openDialog = showDialog, onClick = onClick)
+        ConfirmLoseDialog(openDialog = showDialog, onClick = { onClick(turn) })
     }
 }
 
+
 @Composable
-fun ConfirmReStartDialog(
+fun ConfirmLoseDialog(
     openDialog: MutableState<Boolean>,
     onClick: () -> Unit
 ) {
@@ -64,10 +64,10 @@ fun ConfirmReStartDialog(
             }
         },
         title = {
-            Text(context.getString(R.string.dialog_confirm_restart_title))
+            Text(context.getString(R.string.dialog_confirm_lose_title))
         },
         text = {
-            Text(context.getString(R.string.dialog_confirm_restart_body))
+            Text(context.getString(R.string.dialog_confirm_lose_body))
         },
     )
 }

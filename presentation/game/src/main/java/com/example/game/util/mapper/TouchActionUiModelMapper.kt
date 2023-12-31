@@ -1,6 +1,6 @@
-package com.example.game.mapper
+package com.example.game.util.mapper
 
-import com.example.game.model.TouchActionUiModel
+import com.example.game.util.model.TouchActionUiModel
 import com.example.usecase.usecaseinterface.model.TouchActionUseCaseModel
 
 fun TouchActionUiModel.toUseCaseModel(): TouchActionUseCaseModel {

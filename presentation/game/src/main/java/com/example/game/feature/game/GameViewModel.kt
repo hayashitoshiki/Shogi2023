@@ -1,4 +1,4 @@
-package com.example.game
+package com.example.game.feature.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,9 +8,9 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
-import com.example.game.mapper.toUseCaseModel
-import com.example.game.model.ReadyMoveInfoUiModel
-import com.example.game.model.TouchActionUiModel
+import com.example.game.util.mapper.toUseCaseModel
+import com.example.game.util.model.ReadyMoveInfoUiModel
+import com.example.game.util.model.TouchActionUiModel
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
