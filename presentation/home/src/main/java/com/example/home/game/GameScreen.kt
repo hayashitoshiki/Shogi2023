@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import com.example.entity.game.rule.Turn
 import com.example.home.game.compoment.BoardBox
 import com.example.home.game.compoment.StandBox
@@ -18,7 +19,11 @@ import com.example.home.game.compoment.dialog.EvolutionDialog
 import com.example.home.game.compoment.dialog.GameEndDialog
 
 @Composable
-fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel) {
+fun GameScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    viewModel: GameViewModel,
+) {
     val uiState = viewModel.uiState.collectAsState()
     val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.Evolution?>(null) }
     val showGameEndDialog = remember { mutableStateOf<GameViewModel.Effect.GameEnd?>(null) }
@@ -37,7 +42,7 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel) {
     showGameEndDialog.value?.apply {
         GameEndDialog(
             openDialog = showGameEndDialog,
-            onClick = { },
+            onClick = { navController.popBackStack() },
         )
     }
 
