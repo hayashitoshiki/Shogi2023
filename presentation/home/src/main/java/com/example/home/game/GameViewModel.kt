@@ -75,6 +75,16 @@ class GameViewModel @Inject constructor(
         tapAction(touchAction)
     }
 
+    fun tapLoseButton(turn: Turn) {
+        val winner = when (turn) {
+            Turn.Normal.Black -> Turn.Normal.White
+            Turn.Normal.White -> Turn.Normal.Black
+        }
+        viewModelScope.launch {
+            mutableGameEndEffect.emit(Effect.GameEnd(winner))
+        }
+    }
+
     private fun tapAction(touchAction: TouchActionUiModel) {
         val stand = when (uiState.value.turn) {
             Turn.Normal.Black -> uiState.value.blackStand
@@ -114,7 +124,7 @@ class GameViewModel @Inject constructor(
             is NextResult.Move.Win -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    mutableGameEndEffect.emit(Effect.GameEnd (turn))
+                    mutableGameEndEffect.emit(Effect.GameEnd(turn))
                 }
             }
         }

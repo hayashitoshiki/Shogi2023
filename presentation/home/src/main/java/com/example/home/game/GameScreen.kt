@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import com.example.entity.game.rule.Turn
 import com.example.home.game.compoment.BoardBox
 import com.example.home.game.compoment.StandBox
+import com.example.home.game.compoment.button.LoseButton
 import com.example.home.game.compoment.dialog.EvolutionDialog
 import com.example.home.game.compoment.dialog.GameEndDialog
 
@@ -45,23 +46,30 @@ fun GameScreen(modifier: Modifier = Modifier, viewModel: GameViewModel) {
         contentAlignment = Alignment.Center,
     ) {
         Column {
+            LoseButton(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                turn = Turn.Normal.White,
+                onClick = viewModel::tapLoseButton,
+            )
             StandBox(
-                modifier = Modifier,
                 stand = uiState.value.whiteStand,
                 turn = Turn.Normal.White,
                 onClick = viewModel::tapStand,
             )
             BoardBox(
-                modifier = Modifier,
                 board = uiState.value.board,
                 onClick = viewModel::tapBoard,
                 hintList = uiState.value.readyMoveInfo?.hintList ?: listOf(),
             )
             StandBox(
-                modifier = Modifier,
                 stand = uiState.value.blackStand,
                 turn = Turn.Normal.Black,
                 onClick = viewModel::tapStand,
+            )
+            LoseButton(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                turn = Turn.Normal.Black,
+                onClick = viewModel::tapLoseButton,
             )
         }
     }
