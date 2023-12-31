@@ -22,4 +22,7 @@
     <string name="turn_white_name">後手</string>
 
     <string name="button_lose_text">投了</string>
+
+    <!-- HOME -->
+    <string name="home_game_start_button">対局</string>
 </resources>
