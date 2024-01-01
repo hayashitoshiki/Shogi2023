@@ -1,5 +1,6 @@
 package com.example.game.util.model
 
+import com.example.entity.game.MoveTarget
 import com.example.entity.game.board.Position
 
 /**
@@ -9,6 +10,6 @@ import com.example.entity.game.board.Position
  * @property hintList 置ける場所リスト
  */
 data class ReadyMoveInfoUiModel(
-    val hold: TouchActionUiModel,
+    val hold: MoveTarget,
     val hintList: List<Position>,
 )

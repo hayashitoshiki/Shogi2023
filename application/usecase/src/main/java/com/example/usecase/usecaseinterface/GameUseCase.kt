@@ -1,12 +1,12 @@
 package com.example.usecase.usecaseinterface
 
+import com.example.entity.game.MoveTarget
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecase.usecaseinterface.model.TouchActionUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
 
@@ -38,7 +38,7 @@ interface GameUseCase {
         board: Board,
         stand: Stand,
         turn: Turn,
-        touchAction: TouchActionUseCaseModel,
+        touchAction: MoveTarget,
         holdMove: ReadyMoveInfoUseCaseModel?,
     ): NextResult
 

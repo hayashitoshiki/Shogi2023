@@ -1,27 +1,36 @@
 package com.example.usecase.usecase
 
+import com.example.entity.game.Log
+import com.example.entity.game.MoveTarget
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
+import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 import com.example.extention.changeNextTurn
 import com.example.extention.isKingCellBy
+import com.example.repository.repositoryinterface.LogRepository
 import com.example.service.GameService
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecase.usecaseinterface.model.TouchActionUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
+import java.time.LocalDateTime
 import javax.inject.Inject
 
-class GameUseCaseImpl @Inject constructor() : GameUseCase {
+class GameUseCaseImpl @Inject constructor(
+    private val logRepository: LogRepository,
+) : GameUseCase {
     private val gameService = GameService()
 
     override fun gameInit(pieceSetUpRule: PieceSetUpRule): GameInitResult {
         val board = gameService.setUpBoard(pieceSetUpRule)
         val blackStand = Stand()
         val whiteStand = Stand()
+        val now = LocalDateTime.now()
+        logRepository.createGameLog(now)
 
         return GameInitResult(
             board = board,
@@ -35,11 +44,11 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         board: Board,
         stand: Stand,
         turn: Turn,
-        touchAction: TouchActionUseCaseModel,
+        touchAction: MoveTarget,
         holdMove: ReadyMoveInfoUseCaseModel?,
     ): NextResult {
         return when (touchAction) {
-            is TouchActionUseCaseModel.Board -> {
+            is MoveTarget.Board -> {
                 if (holdMove?.hold != null) {
                     val nextPosition = touchAction.position
                     if (holdMove.hintList.contains(nextPosition)) {
@@ -52,7 +61,7 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
                 }
             }
 
-            is TouchActionUseCaseModel.Stand -> {
+            is MoveTarget.Stand -> {
                 setHintPosition(board, touchAction, turn)
             }
         }
@@ -63,20 +72,23 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         position: Position,
     ): Board {
         gameService.pieceEvolution(board, position)
+        val key = logRepository.getLatestKey()
+        logRepository.fixLogByEvolution(key)
+
         return board
     }
 
     private fun setHintPosition(
         board: Board,
-        touchAction: TouchActionUseCaseModel,
+        touchAction: MoveTarget,
         turn: Turn
     ): NextResult.Hint {
         val hintPositionList = when (touchAction) {
-            is TouchActionUseCaseModel.Board -> {
+            is MoveTarget.Board -> {
                 gameService.searchMoveBy(board, touchAction.position, turn)
             }
 
-            is TouchActionUseCaseModel.Stand -> {
+            is MoveTarget.Stand -> {
                 gameService.searchPutBy(board, touchAction.piece, turn)
             }
         }
@@ -91,7 +103,7 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         stand: Stand,
         position: Position,
         turn: Turn,
-        hold: TouchActionUseCaseModel,
+        hold: MoveTarget,
     ): NextResult {
         val opponentTurn = when (turn) {
             Turn.Normal.Black -> Turn.Normal.White
@@ -99,15 +111,38 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
         }
         val isGetKing = board.isKingCellBy(position, opponentTurn)
         val (newBoard, newStand) = when (hold) {
-            is TouchActionUseCaseModel.Board -> {
+            is MoveTarget.Board -> {
                 gameService.movePieceByPosition(board, stand, hold.position, position)
             }
 
-            is TouchActionUseCaseModel.Stand -> {
+            is MoveTarget.Stand -> {
                 gameService.putPieceByStand(board, stand, turn, hold.piece, position)
             }
         }
+        val takePiece =
+            (board.getCellByPosition(position).getStatus() as? CellStatus.Fill.FromPiece)?.let {
+                if (it.turn != turn) {
+                    it.piece
+                } else {
+                    null
+                }
+            }
+        val isEvolution =
+            (board.getCellByPosition(position).getStatus() as? CellStatus.Fill.FromPiece)?.let {
+                if (it.turn == turn) {
+                    it.piece is Piece.Reverse
+                } else {
+                    false
+                }
+            } ?: false
         val nextTurn = turn.changeNextTurn()
+        addLog(
+            turn = turn,
+            moveTarget = hold,
+            afterPosition = position,
+            isEvolution = isEvolution,
+            takePiece = takePiece,
+        )
         if (isGetKing) {
             return NextResult.Move.Win(
                 board = newBoard,
@@ -116,7 +151,7 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
             )
         }
 
-        if (hold is TouchActionUseCaseModel.Board) {
+        if (hold is MoveTarget.Board) {
             if (gameService.shouldPieceEvolution(board, hold.position, position)) {
                 gameService.pieceEvolution(newBoard, position)
             } else if (gameService.checkPieceEvolution(board, hold.position, position)) {
@@ -141,5 +176,27 @@ class GameUseCaseImpl @Inject constructor() : GameUseCase {
                 nextTurn = nextTurn,
             )
         }
+    }
+
+    private fun addLog(
+        turn: Turn,
+        moveTarget: MoveTarget,
+        afterPosition: Position,
+        isEvolution: Boolean,
+        takePiece: Piece?,
+    ) {
+        val log = Log(
+            turn = turn,
+            moveTarget = moveTarget,
+            afterPosition = afterPosition,
+            isEvolution = isEvolution,
+            takePiece = takePiece,
+        )
+        val data = logRepository.getLatestKey()
+
+        logRepository.addLog(
+            data,
+            log,
+        )
     }
 }

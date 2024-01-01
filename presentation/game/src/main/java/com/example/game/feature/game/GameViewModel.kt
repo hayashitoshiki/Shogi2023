@@ -2,6 +2,7 @@ package com.example.game.feature.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.entity.game.MoveTarget
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
@@ -10,7 +11,6 @@ import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
-import com.example.game.util.model.TouchActionUiModel
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -60,7 +60,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun tapBoard(position: Position) {
-        val touchAction = TouchActionUiModel.Board(position)
+        val touchAction = MoveTarget.Board(position)
         tapAction(touchAction)
     }
 
@@ -71,7 +71,7 @@ class GameViewModel @Inject constructor(
             )
             return
         }
-        val touchAction = TouchActionUiModel.Stand(piece)
+        val touchAction = MoveTarget.Stand(piece)
         tapAction(touchAction)
     }
 
@@ -85,7 +85,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun tapAction(touchAction: TouchActionUiModel) {
+    private fun tapAction(touchAction: MoveTarget) {
         val stand = when (uiState.value.turn) {
             Turn.Normal.Black -> uiState.value.blackStand
             Turn.Normal.White -> uiState.value.whiteStand
@@ -94,7 +94,7 @@ class GameViewModel @Inject constructor(
         val result = useCase.next(
             board = uiState.value.board,
             stand = stand,
-            touchAction = touchAction.toUseCaseModel(),
+            touchAction = touchAction,
             turn = turn,
             holdMove = uiState.value.readyMoveInfo?.toUseCaseModel(),
         )
@@ -116,7 +116,7 @@ class GameViewModel @Inject constructor(
             is NextResult.Move.ChooseEvolution -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    if (touchAction !is TouchActionUiModel.Board) return@launch
+                    if (touchAction !is MoveTarget.Board) return@launch
                     mutableEvolutionEffect.emit(Effect.Evolution(touchAction.position))
                 }
             }
