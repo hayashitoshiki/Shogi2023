@@ -15,7 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.example.core.navigation.NavigationScreens
 import com.example.game.util.compoment.GameBox
+import com.example.game.util.compoment.button.HomeButton
+import com.example.game.util.compoment.button.ReStartButton
 
 @Composable
 fun ReplayScreen(
@@ -31,6 +34,30 @@ fun ReplayScreen(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
+        Row(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.TopEnd),
+        ) {
+            HomeButton(
+                onClick = {
+                    navController.navigate(NavigationScreens.HOMET_SCREEN.route) {
+                        popUpTo(NavigationScreens.HOMET_SCREEN.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+            ReStartButton(
+                onClick = {
+                    navController.navigate(NavigationScreens.GAME_SCREEN.route) {
+                        popUpTo(NavigationScreens.GAME_SCREEN.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
         Box(
             modifier = modifier.wrapContentSize(),
             contentAlignment = Alignment.Center,

@@ -13,9 +13,12 @@
     <!-- 投了ダイアログ -->
     <string name="dialog_confirm_lose_title">投了</string>
     <string name="dialog_confirm_lose_body">本当に負けで良いですか？</string>
-    <!-- 初期化ダイアログ -->
-    <string name="dialog_confirm_restart_title">初期化</string>
-    <string name="dialog_confirm_restart_body">本当に初期化しますか？</string>
+    <!-- 再対局ダイアログ -->
+    <string name="dialog_confirm_restart_title">再戦</string>
+    <string name="dialog_confirm_restart_body">現状の設定のまま再度対局しますか？</string>
+    <!-- 感想戦終了ダイアログ -->
+    <string name="dialog_confirm_replay_end_title">感想戦を終了</string>
+    <string name="dialog_confirm_replay_end_body">本当に感想戦を終了しますか？</string>
 
     <!-- 手番 -->
     <string name="turn_black_name">先手</string>

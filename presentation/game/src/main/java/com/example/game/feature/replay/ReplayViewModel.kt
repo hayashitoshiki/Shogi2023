@@ -46,7 +46,7 @@ class ReplayViewModel @Inject constructor(
 
     fun tagLeft() {
         val logIndex = uiState.value.logNextIndex - 1
-        if (0 > logIndex) return
+        if (logIndex < 0) return
         val log = uiState.value.log[logIndex]
         val stand = when (log.turn) {
             Turn.Normal.Black -> uiState.value.blackStand
