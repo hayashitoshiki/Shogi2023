@@ -4,7 +4,6 @@ import com.example.entity.game.MoveTarget
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
-import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
@@ -19,10 +18,9 @@ interface GameUseCase {
     /**
      * ゲーム初期化
      *
-     * @param pieceSetUpRule ルール
      * @return 初期設定値
      */
-    fun gameInit(pieceSetUpRule: PieceSetUpRule): GameInitResult
+    fun gameInit(): GameInitResult
 
     /**
      * 将棋を進める

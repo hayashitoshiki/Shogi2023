@@ -222,7 +222,7 @@ sealed interface PieceSetUpRule {
          */
         data object WhiteHandeHisya : Normal {
             override val initPiece: Map<Position, CellStatus>
-                get() = NoHande.initPiece - blackHisya.first
+                get() = NoHande.initPiece - whiteHisya.first
         }
 
         /**
@@ -230,7 +230,7 @@ sealed interface PieceSetUpRule {
          */
         data object WhiteHandeKaku : Normal {
             override val initPiece: Map<Position, CellStatus>
-                get() = NoHande.initPiece - blackKaku.first
+                get() = NoHande.initPiece - whiteKaku.first
         }
 
         /**
@@ -238,7 +238,7 @@ sealed interface PieceSetUpRule {
          */
         data object WhiteHandeHisyaKaku : Normal {
             override val initPiece: Map<Position, CellStatus>
-                get() = NoHande.initPiece - setOf(blackHisya.first, blackKaku.first)
+                get() = NoHande.initPiece - setOf(whiteHisya.first, whiteKaku.first)
         }
 
         /**
@@ -246,7 +246,7 @@ sealed interface PieceSetUpRule {
          */
         data object WhiteHandeFor : Normal {
             override val initPiece: Map<Position, CellStatus>
-                get() = WhiteHandeHisyaKaku.initPiece - blackKyo.entries.map { it.key }.toSet()
+                get() = WhiteHandeHisyaKaku.initPiece - whiteKyo.entries.map { it.key }.toSet()
         }
 
         /**
@@ -254,7 +254,7 @@ sealed interface PieceSetUpRule {
          */
         data object WhiteHandeSix : Normal {
             override val initPiece: Map<Position, CellStatus>
-                get() = WhiteHandeFor.initPiece - blackKei.entries.map { it.key }.toSet()
+                get() = WhiteHandeFor.initPiece - whiteKei.entries.map { it.key }.toSet()
         }
 
         /**
@@ -262,7 +262,7 @@ sealed interface PieceSetUpRule {
          */
         data object WhiteHandeEight : Normal {
             override val initPiece: Map<Position, CellStatus>
-                get() = BlackHandeSix.initPiece - blackGin.map { it.key }.toSet()
+                get() = WhiteHandeSix.initPiece - whiteGin.map { it.key }.toSet()
         }
     }
 }

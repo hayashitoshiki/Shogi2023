@@ -22,7 +22,8 @@ import com.example.home.compoment.HandeSettingBox
 @Composable
 fun NormalShogiSettingCard(
     modifier: Modifier = Modifier,
-    selected: MutableState<PieceSetUpRule.Normal>
+    selected: PieceSetUpRule.Normal,
+    onChange: (PieceSetUpRule.Normal) -> Unit,
 ) {
     Card(modifier = modifier.shadow(8.dp, RoundedCornerShape(8.dp))) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -36,7 +37,10 @@ fun NormalShogiSettingCard(
                 style = MaterialTheme.typography.titleMedium,
                 text = stringResource(id = R.string.title_hande),
             )
-            HandeSettingBox(selected)
+            HandeSettingBox(
+                selected = selected,
+                onChange = onChange,
+            )
         }
     }
 }

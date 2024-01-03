@@ -63,6 +63,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     implementation(project(":presentation:core"))
+    implementation(project(":application:usecase"))
     implementation(project(":domain:entity"))
 }
 

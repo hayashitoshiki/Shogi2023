@@ -22,9 +22,23 @@ interface ReplayUseCase {
      */
     fun replayInit(pieceSetUpRule: PieceSetUpRule): ReplayInitResult
 
-
+    /**
+     * 指定した棋譜を読み込み、局面を進める
+     *
+     * @param board 将棋盤
+     * @param stand 持ち駒
+     * @param log 読み込む棋譜
+     * @return 進めた局面
+     */
     fun goNext(board: Board, stand: Stand, log: Log): ReplayGoNextResult
 
+    /**
+     * 指定した棋譜を読み込み、局面を戻す
+     *
+     * @param board 将棋盤
+     * @param stand 持ち駒
+     * @param log 読み込む棋譜
+     * @return 戻した局面
+     */
     fun goBack(board: Board, stand: Stand, log: Log): ReplayGoBackResult
-
 }

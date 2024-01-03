@@ -7,7 +7,6 @@ import com.example.entity.game.board.Board
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
@@ -48,8 +47,8 @@ class GameViewModel @Inject constructor(
         initBard()
     }
 
-    fun initBard() {
-        val result = useCase.gameInit(PieceSetUpRule.Normal.NoHande)
+    private fun initBard() {
+        val result = useCase.gameInit()
         _uiState.value = UiState(
             board = result.board,
             blackStand = result.blackStand,

@@ -26,6 +26,7 @@ fun AppNavHost(
         composable(route = NavigationScreens.HOMET_SCREEN.route) {
             HomeScreen(
                 navController = navController,
+                viewModel = hiltViewModel(),
             )
         }
         composable(route = NavigationScreens.GAME_SCREEN.route) {

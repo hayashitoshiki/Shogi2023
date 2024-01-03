@@ -13,9 +13,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,36 +25,91 @@ import com.example.home.ext.turnImageRes
 import com.example.core.theme.Shogi2023Theme
 
 @Composable
-fun HandeSettingBox(selected: MutableState<PieceSetUpRule.Normal>) {
+fun HandeSettingBox(
+    selected: PieceSetUpRule.Normal,
+    onChange: (PieceSetUpRule.Normal) -> Unit,
+) {
     Column(modifier = Modifier.padding(8.dp)) {
-        HandeFilterChip(selected, PieceSetUpRule.Normal.NoHande)
+        HandeFilterChip(
+            selected = selected,
+            onChange = onChange,
+            pieceSetUpRule = PieceSetUpRule.Normal.NoHande,
+        )
         Row {
-            HandeFilterChip(selected, PieceSetUpRule.Normal.BlackHandeHisya)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeHisya,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.BlackHandeKaku)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeKaku,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.BlackHandeHisyaKaku)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeHisyaKaku,
+            )
         }
         Row {
-            HandeFilterChip(selected, PieceSetUpRule.Normal.BlackHandeFor)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeFor,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.BlackHandeSix)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeSix,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.BlackHandeEight)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeEight,
+                )
         }
         Row {
-            HandeFilterChip(selected, PieceSetUpRule.Normal.WhiteHandeHisya)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeHisya,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.WhiteHandeKaku)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeKaku,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.WhiteHandeHisyaKaku)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeHisyaKaku,
+            )
         }
         Row {
-            HandeFilterChip(selected, PieceSetUpRule.Normal.WhiteHandeFor)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeFor,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.WhiteHandeSix)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeSix,
+            )
             Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(selected, PieceSetUpRule.Normal.WhiteHandeEight)
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeEight,
+            )
         }
     }
 }
@@ -65,13 +117,14 @@ fun HandeSettingBox(selected: MutableState<PieceSetUpRule.Normal>) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HandeFilterChip(
-    selected: MutableState<PieceSetUpRule.Normal>,
+    selected: PieceSetUpRule.Normal,
+    onChange: (PieceSetUpRule.Normal) -> Unit,
     pieceSetUpRule: PieceSetUpRule.Normal
 ) {
     FilterChip(
         modifier = Modifier.width(88.dp),
-        selected = selected.value == pieceSetUpRule,
-        onClick = { selected.value = pieceSetUpRule },
+        selected = selected == pieceSetUpRule,
+        onClick = { onChange(pieceSetUpRule) },
         label = {
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -98,11 +151,10 @@ fun HandeFilterChip(
 @Preview(showBackground = true)
 @Composable
 fun HandeSettingBoxPreview() {
-    val selected = remember { mutableStateOf<PieceSetUpRule.Normal>(PieceSetUpRule.Normal.NoHande) }
-
     Shogi2023Theme {
         HandeSettingBox(
-            selected = selected
+            selected = PieceSetUpRule.Normal.BlackHandeKaku,
+            onChange = { },
         )
     }
 }
