@@ -1,4 +1,13 @@
 <resources>
     <!-- HOME -->
     <string name="home_game_start_button">対局</string>
+
+    <!-- 駒落ち -->
+    <string name="hande_eight">８枚落ち</string>
+    <string name="hande_six">６枚落ち</string>
+    <string name="hande_for">４枚落ち</string>
+    <string name="hande_two">２枚落ち</string>
+    <string name="hande_hisya">飛車落ち</string>
+    <string name="hande_kaku">角落ち</string>
+    <string name="hande_nothing">平手</string>
 </resources>
