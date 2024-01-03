@@ -2,7 +2,11 @@
     <!-- HOME -->
     <string name="home_game_start_button">対局</string>
 
+    <!-- ゲームモード -->
+    <string name="title_rule_normal">本将棋</string>
+
     <!-- 駒落ち -->
+    <string name="title_hande">駒落ち</string>
     <string name="hande_eight">８枚落ち</string>
     <string name="hande_six">６枚落ち</string>
     <string name="hande_for">４枚落ち</string>

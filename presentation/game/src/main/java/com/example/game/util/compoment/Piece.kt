@@ -11,10 +11,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import com.example.core.theme.Shogi2023Theme
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.Turn
 import com.example.game.util.extension.getIcon
-import com.example.shogi2023.ui.theme.Shogi2023Theme
 
 @Composable
 fun PieceImage(modifier: Modifier = Modifier, piece: Piece, turn: Turn) {

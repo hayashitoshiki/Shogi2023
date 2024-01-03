@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -21,11 +22,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.entity.game.rule.PieceSetUpRule
 import com.example.home.ext.stringRes
 import com.example.home.ext.turnImageRes
-import com.example.shogi2023.ui.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun HandeSettingBox(selected: MutableState<PieceSetUpRule.Normal>) {
@@ -86,7 +86,7 @@ fun HandeFilterChip(
                     Spacer(modifier = Modifier.padding(2.dp))
                 }
                 Text(
-                    fontSize = 11.sp,
+                    style = MaterialTheme.typography.labelSmall,
                     text = stringResource(id = pieceSetUpRule.stringRes),
                 )
             }

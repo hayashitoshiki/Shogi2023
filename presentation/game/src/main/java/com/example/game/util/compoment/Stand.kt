@@ -15,11 +15,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.core.theme.Shogi2023Theme
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.Turn
 import com.example.game.R
-import com.example.shogi2023.ui.theme.Shogi2023Theme
 
 
 @Composable
