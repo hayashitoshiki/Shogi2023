@@ -61,6 +61,12 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
+    // Tab
+    val accompanistVersion = "0.24.6-alpha"
+    implementation("androidx.compose.foundation:foundation:1.6.0-beta03")
+    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
 
     implementation(project(":presentation:core"))
     implementation(project(":application:usecase"))

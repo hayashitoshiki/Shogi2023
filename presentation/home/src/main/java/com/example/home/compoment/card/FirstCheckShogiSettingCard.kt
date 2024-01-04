@@ -7,14 +7,14 @@ import com.example.entity.game.rule.PieceSetUpRule
 import com.example.home.R
 
 @Composable
-fun NormalShogiSettingCard(
+fun FirstCheckShogiSettingCard(
     modifier: Modifier = Modifier,
     selected: PieceSetUpRule.Normal,
     onChange: (PieceSetUpRule.Normal) -> Unit,
 ) {
     BaseSettingCard(
         modifier = modifier,
-        title = stringResource(id = R.string.title_rule_normal),
+        title = stringResource(id = R.string.title_rule_first_check),
         selected = selected,
         onChange = onChange,
     )

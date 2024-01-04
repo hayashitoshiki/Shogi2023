@@ -4,6 +4,7 @@
 
     <!-- ゲームモード -->
     <string name="title_rule_normal">本将棋</string>
+    <string name="title_rule_first_check">王手将棋</string>
 
     <!-- 駒落ち -->
     <string name="title_hande">駒落ち</string>

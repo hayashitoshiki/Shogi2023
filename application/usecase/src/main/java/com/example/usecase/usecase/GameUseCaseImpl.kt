@@ -111,7 +111,6 @@ class GameUseCaseImpl @Inject constructor(
             Turn.Normal.Black -> Turn.Normal.White
             Turn.Normal.White -> Turn.Normal.Black
         }
-        val isGetKing = board.isKingCellBy(position, opponentTurn)
         val (newBoard, newStand) = when (hold) {
             is MoveTarget.Board -> {
                 gameService.movePieceByPosition(board, stand, hold.position, position)
@@ -137,6 +136,7 @@ class GameUseCaseImpl @Inject constructor(
                     false
                 }
             } ?: false
+        val isGamSet = checkGameSet(newBoard, position, opponentTurn)
         val nextTurn = turn.changeNextTurn()
         addLog(
             turn = turn,
@@ -145,7 +145,7 @@ class GameUseCaseImpl @Inject constructor(
             isEvolution = isEvolution,
             takePiece = takePiece,
         )
-        if (isGetKing) {
+        if (isGamSet) {
             return NextResult.Move.Win(
                 board = newBoard,
                 stand = newStand,
@@ -200,5 +200,13 @@ class GameUseCaseImpl @Inject constructor(
             data,
             log,
         )
+    }
+
+    private fun checkGameSet(board: Board, position: Position, turn: Turn): Boolean {
+        if (gameRuleRepository.getIsFirstCheckEndRule()) {
+            return gameService.isCheckByTurn(board, turn)
+        }
+
+        return board.isKingCellBy(position, turn)
     }
 }

@@ -1,8 +1,16 @@
 package com.example.repository.repositoryinterface
 
+import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.PieceSetUpRule
 
 interface GameRuleRepository {
+
+    /**
+     * ルール読み込み
+     *
+     * @param rule 保持するルール
+     */
+    fun setGameRule(rule: GameRule)
 
     /**
      * ルールの一時保存
@@ -12,10 +20,9 @@ interface GameRuleRepository {
     fun getGameRule(): PieceSetUpRule.Normal
 
     /**
-     * ルール読み込み
+     * 王手将棋の有無取得
      *
-     * @param rule 保持するルール
+     * @return 王手将棋の有無設定値
      */
-    fun setGameRule(rule: PieceSetUpRule.Normal)
-
+    fun getIsFirstCheckEndRule(): Boolean
 }

@@ -1,6 +1,6 @@
 package com.example.usecase.usecaseinterface
 
-import com.example.entity.game.rule.PieceSetUpRule
+import com.example.entity.game.rule.GameRule
 
 /**
  * 将棋のビジネスロジック
@@ -9,9 +9,9 @@ import com.example.entity.game.rule.PieceSetUpRule
 interface HomeUseCase {
 
     /**
-     * ルール登録
+     * 対局ルールセット
      *
-     * @param pieceSetUpRule ルール
+     * @param rule ルール
      */
-    fun setGameRule(pieceSetUpRule: PieceSetUpRule.Normal)
+    fun setGameRule(rule: GameRule)
 }
