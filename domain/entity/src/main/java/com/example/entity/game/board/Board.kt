@@ -8,11 +8,19 @@ import com.example.entity.game.rule.Turn
  * @param size 将棋盤のマス目
  */
 data class Board(val size: Size = Size(9, 9)) {
+
     private val board: List<List<Cell>> = List(size.row) {
         List(size.column) {
             Cell()
         }
     }
+    private val blackPiecePositionList: MutableList<Position> = mutableListOf()
+    private val whitePiecePositionList: MutableList<Position> = mutableListOf()
+    private val pieceEmptyPositionList: MutableList<Position> = (1..size.row).flatMap { row ->
+        (1..size.column).map { column ->
+            Position(row, column)
+        }
+    }.toMutableList()
 
     /**
      * マス目を更新
@@ -21,7 +29,25 @@ data class Board(val size: Size = Size(9, 9)) {
      * @param position マス目
      */
     fun update(position: Position, status: CellStatus) {
-        board[position.row - 1][position.column - 1].update(status)
+        val row = position.row - 1
+        val column = position.column - 1
+        val beforeCell = board[row][column].getStatus()
+        board[row][column].update(status)
+
+        when (beforeCell) {
+            CellStatus.Empty -> pieceEmptyPositionList.remove(position)
+            is CellStatus.Fill.FromPiece -> when (beforeCell.turn) {
+                Turn.Normal.Black -> blackPiecePositionList.remove(position)
+                Turn.Normal.White -> whitePiecePositionList.remove(position)
+            }
+        }
+        when (status) {
+            CellStatus.Empty -> pieceEmptyPositionList.add(position)
+            is CellStatus.Fill.FromPiece -> when (status.turn) {
+                Turn.Normal.Black -> blackPiecePositionList.add(position)
+                Turn.Normal.White -> whitePiecePositionList.add(position)
+            }
+        }
     }
 
     /**
@@ -45,9 +71,9 @@ data class Board(val size: Size = Size(9, 9)) {
      *
      */
     fun clear() {
-        board.forEach { row ->
-            row.forEach { cell ->
-                cell.update(CellStatus.Empty)
+        (1..size.row).flatMap { row ->
+            (1..size.column).map { column ->
+                update(Position(row, column), CellStatus.Empty)
             }
         }
     }
@@ -82,41 +108,16 @@ data class Board(val size: Size = Size(9, 9)) {
      * @return 条件に一致したマス目一覧
      */
     private fun getCellsBy(param: SearchParam): List<Position> {
-        return board.flatMapIndexed { rowIndex, list ->
-            val row = rowIndex + 1
-            list.mapIndexedNotNull { columnIndex, cell ->
-                val column = columnIndex + 1
-                when (val cellInfo = cell.getStatus()) {
-                    CellStatus.Empty -> when (param) {
-                        SearchParam.Empty,
-                        is SearchParam.Piece.NotMatchTurn -> Position(row, column)
+        return when (param) {
+            SearchParam.Empty -> pieceEmptyPositionList
+            is SearchParam.Piece.MatchTurn -> when (param.turn) {
+                Turn.Normal.Black -> blackPiecePositionList
+                Turn.Normal.White -> whitePiecePositionList
+            }
 
-                        is SearchParam.Piece.MatchTurn -> null
-                    }
-
-                    is CellStatus.Fill.FromPiece -> {
-                        when (param) {
-                            SearchParam.Empty -> null
-                            is SearchParam.Piece.NotMatchTurn -> {
-                                val isTurnMatch = cellInfo.turn == param.turn
-                                if (isTurnMatch) {
-                                    null
-                                } else {
-                                    Position(row, column)
-                                }
-                            }
-
-                            is SearchParam.Piece.MatchTurn -> {
-                                val isTurnMatch = cellInfo.turn == param.turn
-                                if (isTurnMatch) {
-                                    Position(row, column)
-                                } else {
-                                    null
-                                }
-                            }
-                        }
-                    }
-                }
+            is SearchParam.Piece.NotMatchTurn -> when (param.turn) {
+                Turn.Normal.Black -> pieceEmptyPositionList + whitePiecePositionList
+                Turn.Normal.White -> pieceEmptyPositionList + blackPiecePositionList
             }
         }
     }
