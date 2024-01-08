@@ -14,7 +14,7 @@ import com.example.entity.game.rule.Turn
  * @param pieceSetUpRule 設定内容
  * @return 設定内容に従った将棋盤の初期値
  */
-internal fun Board.Companion.setUp(pieceSetUpRule: PieceSetUpRule): Board {
+fun Board.Companion.setUp(pieceSetUpRule: PieceSetUpRule): Board {
     return Board(pieceSetUpRule.boardSize).apply {
         pieceSetUpRule.initPiece.forEach { (position, cellStatus) ->
             update(position, cellStatus)
@@ -43,9 +43,8 @@ internal fun Board.movePieceByPosition(beforePosition: Position, afterPosition: 
  * @param turn 現在の手番
  * @return　動かせるマスのリスト
  */
-internal fun Board.searchMoveBy(position: Position, turn: Turn): List<Position> {
-    val cellStatus = this.getCellByPosition(position).getStatus()
-    if (cellStatus !is CellStatus.Fill.FromPiece) return emptyList()
+fun Board.searchMoveBy(position: Position, turn: Turn): List<Position> {
+    val cellStatus = this.getPieceOrNullByPosition(position) ?: return emptyList()
     if (cellStatus.turn != turn) return emptyList()
 
     return cellStatus.piece.moves.flatMap { move ->
@@ -66,8 +65,8 @@ internal fun Board.searchMoveBy(position: Position, turn: Turn): List<Position> 
                     .takeWhile {
                         val previousPosition = it.minus(movePosition)
                         val isNotBasePosition = previousPosition != position
-                        val isFilledCell = this.getCellByPosition(previousPosition)
-                            .getStatus() is CellStatus.Fill.FromPiece
+                        val isFilledCell =
+                            this.getCellByPosition(previousPosition).getStatus() is CellStatus.Fill
                         val isNotStop = !(isNotBasePosition && isFilledCell)
                         it in this.size && checkOnMovePiece(it, turn) && isNotStop
                     }
@@ -79,12 +78,22 @@ internal fun Board.searchMoveBy(position: Position, turn: Turn): List<Position> 
     }
 }
 
+/**
+ * 駒を持ち駒から打てる場所を探す
+ *
+ * @param piece 打つ駒
+ * @param turn 手番
+ * @return 打てる場所一覧
+ */
+fun Board.searchPutBy(piece: Piece, turn: Turn): List<Position> {
+    return this.getCellsFromEmpty().filter { piece.isAvailablePut(this, it, turn) }
+}
+
 private fun Board.checkOnMovePiece(position: Position, turn: Turn): Boolean {
     if (position !in this.size) return false
-    return when (val cellStatus = this.getCellByPosition(position).getStatus()) {
-        CellStatus.Empty -> true
-        is CellStatus.Fill.FromPiece -> cellStatus.turn != turn
-    }
+    return this.getPieceOrNullByPosition(position)?.let { cellStatus ->
+        cellStatus.turn != turn
+    } ?: true
 }
 
 /**
@@ -95,11 +104,65 @@ private fun Board.checkOnMovePiece(position: Position, turn: Turn): Boolean {
  * @return 王様がいるか
  */
 fun Board.isKingCellBy(position: Position, turn: Turn): Boolean {
-    val cellStatus = getCellByPosition(position).getStatus()
-    if (cellStatus !is CellStatus.Fill.FromPiece) return false
+    val cellStatus = getPieceOrNullByPosition(position) ?: return false
 
     return when (turn) {
         Turn.Normal.Black -> cellStatus.piece == Piece.Surface.Gyoku
         Turn.Normal.White -> cellStatus.piece == Piece.Surface.Ou
     }
+}
+
+/**
+ * 駒が成れるか判別
+ *
+ * @param beforePosition 動かす前のマス
+ * @param afterPosition 動かした後のマス
+ * @return 判定結果
+ */
+fun Board.checkPieceEvolution(
+    beforePosition: Position,
+    afterPosition: Position,
+): Boolean {
+    val cellStatus = this.getPieceOrNullByPosition(beforePosition) ?: return false
+    val piece = cellStatus.piece as? Piece.Surface ?: return false
+    if (piece.evolution() == null) return false
+    val blackEvolutionArea = 3
+    val whiteEvolutionArea = this.size.column - 3
+    val beforeColumn = beforePosition.column
+    val afterColumn = afterPosition.column
+
+    return when (cellStatus.turn) {
+        Turn.Normal.Black -> beforeColumn <= blackEvolutionArea || afterColumn <= blackEvolutionArea
+        Turn.Normal.White -> beforeColumn > whiteEvolutionArea || afterColumn > whiteEvolutionArea
+    }
+}
+
+/**
+ * 指定した手番が王手されているか判定
+ *
+ * @param turn 王手されているか判定する手番
+ * @return 王手しているかの判定結果
+ */
+fun Board.isCheckByTurn(turn: Turn): Boolean {
+    val opponentTurn = turn.getOpponentTurn()
+    return this.getCellsFromTurn(opponentTurn).any { position ->
+        this.searchMoveBy(position, opponentTurn).any { movePosition ->
+            this.isKingCellBy(movePosition, turn)
+        }
+    }
+}
+
+/**
+ * 指定したマスの駒を成らせる
+ *
+ * @param position マス目
+ * @return 適用した将棋盤
+ */
+fun Board.updatePieceEvolution(position: Position): Board {
+    val cellStatus = this.getPieceOrNullByPosition(position) ?: return this
+    val piece = cellStatus.piece as? Piece.Surface ?: return this
+    piece.evolution()?.also {
+        this.update(position, cellStatus.copy(piece = it))
+    }
+    return this
 }

@@ -19,20 +19,11 @@ sealed interface Piece {
     sealed interface Surface : Piece {
 
         /**
-         * 成り
-         *
-         * @return 裏面
-         */
-        fun evolution(): Reverse?
-
-        /**
          * 歩
          */
         data object Fu : Surface {
 
             override val moves: Set<Move> = setOf(Move.One.Front)
-
-            override fun evolution(): Reverse = Reverse.To
         }
 
         /**
@@ -44,8 +35,6 @@ sealed interface Piece {
                 Move.One.FrontRightKei,
                 Move.One.FrontLeftKei,
             )
-
-            override fun evolution(): Reverse = Reverse.Narikei
         }
 
         /**
@@ -54,8 +43,6 @@ sealed interface Piece {
         data object Kyosya : Surface {
 
             override val moves: Set<Move> = setOf(Move.Endless.Front)
-
-            override fun evolution(): Reverse = Reverse.Narikyo
         }
 
         /**
@@ -70,8 +57,6 @@ sealed interface Piece {
                 Move.One.BackLeft,
                 Move.One.BackRight,
             )
-
-            override fun evolution(): Reverse = Reverse.Narigin
         }
 
         /**
@@ -87,8 +72,6 @@ sealed interface Piece {
                 Move.One.FrontLeft,
                 Move.One.FrontRight,
             )
-
-            override fun evolution(): Reverse? = null
         }
 
         /**
@@ -102,8 +85,6 @@ sealed interface Piece {
                 Move.Endless.BackLeft,
                 Move.Endless.BackRight,
             )
-
-            override fun evolution(): Reverse = Reverse.Uma
         }
 
         /**
@@ -117,8 +98,6 @@ sealed interface Piece {
                 Move.Endless.Left,
                 Move.Endless.Right,
             )
-
-            override fun evolution(): Reverse = Reverse.Ryu
         }
 
         /**
@@ -136,8 +115,6 @@ sealed interface Piece {
                 Move.One.BackLeft,
                 Move.One.BackRight,
             )
-
-            override fun evolution(): Reverse? = null
         }
 
         /**
@@ -146,8 +123,6 @@ sealed interface Piece {
         data object Gyoku : Surface {
 
             override val moves: Set<Move> = Ou.moves
-
-            override fun evolution(): Reverse? = null
         }
 
     }
@@ -159,20 +134,11 @@ sealed interface Piece {
     sealed interface Reverse : Piece {
 
         /**
-         * 退化
-         *
-         * @return 表面
-         */
-        fun degeneracy(): Surface
-
-        /**
          * と金
          */
         data object To : Reverse {
 
             override val moves: Set<Move> = Surface.Kin.moves
-
-            override fun degeneracy(): Surface = Surface.Fu
         }
 
         /**
@@ -181,8 +147,6 @@ sealed interface Piece {
         data object Narikei : Reverse {
 
             override val moves: Set<Move> = Surface.Kin.moves
-
-            override fun degeneracy(): Surface = Surface.Keima
         }
 
         /**
@@ -191,8 +155,6 @@ sealed interface Piece {
         data object Narikyo : Reverse {
 
             override val moves: Set<Move> = Surface.Kin.moves
-
-            override fun degeneracy(): Surface = Surface.Kyosya
         }
 
         /**
@@ -201,8 +163,6 @@ sealed interface Piece {
         data object Narigin : Reverse {
 
             override val moves: Set<Move> = Surface.Kin.moves
-
-            override fun degeneracy(): Surface = Surface.Gin
         }
 
         /**
@@ -220,8 +180,6 @@ sealed interface Piece {
                 Move.Endless.BackLeft,
                 Move.Endless.BackRight,
             )
-
-            override fun degeneracy(): Surface = Surface.Kaku
         }
 
         /**
@@ -239,8 +197,6 @@ sealed interface Piece {
                 Move.One.BackLeft,
                 Move.One.BackRight,
             )
-
-            override fun degeneracy(): Surface = Surface.Hisya
         }
     }
 }

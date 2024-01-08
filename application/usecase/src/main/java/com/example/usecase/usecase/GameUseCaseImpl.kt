@@ -3,13 +3,20 @@ package com.example.usecase.usecase
 import com.example.entity.game.Log
 import com.example.entity.game.MoveTarget
 import com.example.entity.game.board.Board
-import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.Turn
 import com.example.extention.changeNextTurn
+import com.example.extention.checkPieceEvolution
+import com.example.extention.getOpponentTurn
+import com.example.extention.isCheckByTurn
 import com.example.extention.isKingCellBy
+import com.example.extention.searchMoveBy
+import com.example.extention.searchPutBy
+import com.example.extention.setUp
+import com.example.extention.shouldEvolution
+import com.example.extention.updatePieceEvolution
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
 import com.example.service.GameService
@@ -28,7 +35,7 @@ class GameUseCaseImpl @Inject constructor(
 
     override fun gameInit(): GameInitResult {
         val rule = gameRuleRepository.getGameRule()
-        val board = gameService.setUpBoard(rule)
+        val board = Board.setUp(rule)
         val blackStand = Stand()
         val whiteStand = Stand()
         val now = LocalDateTime.now()
@@ -51,13 +58,10 @@ class GameUseCaseImpl @Inject constructor(
     ): NextResult {
         return when (touchAction) {
             is MoveTarget.Board -> {
-                if (holdMove?.hold != null) {
-                    val nextPosition = touchAction.position
-                    if (holdMove.hintList.contains(nextPosition)) {
-                        setMove(board, stand, nextPosition, turn, holdMove.hold)
-                    } else {
-                        setHintPosition(board, touchAction, turn)
-                    }
+                val holdPiece = holdMove?.hold
+                val nextPosition = touchAction.position
+                if (holdPiece != null && holdMove.hintList.contains(nextPosition)) {
+                    setMove(board, stand, nextPosition, turn, holdPiece)
                 } else {
                     setHintPosition(board, touchAction, turn)
                 }
@@ -73,7 +77,7 @@ class GameUseCaseImpl @Inject constructor(
         board: Board,
         position: Position,
     ): Board {
-        gameService.pieceEvolution(board, position)
+        board.updatePieceEvolution(position)
         val key = logRepository.getLatestKey()
         logRepository.fixLogByEvolution(key)
 
@@ -87,11 +91,11 @@ class GameUseCaseImpl @Inject constructor(
     ): NextResult.Hint {
         val hintPositionList = when (touchAction) {
             is MoveTarget.Board -> {
-                gameService.searchMoveBy(board, touchAction.position, turn)
+                board.searchMoveBy(touchAction.position, turn)
             }
 
             is MoveTarget.Stand -> {
-                gameService.searchPutBy(board, touchAction.piece, turn)
+                board.searchPutBy(touchAction.piece, turn)
             }
         }
 
@@ -107,10 +111,6 @@ class GameUseCaseImpl @Inject constructor(
         turn: Turn,
         hold: MoveTarget,
     ): NextResult {
-        val opponentTurn = when (turn) {
-            Turn.Normal.Black -> Turn.Normal.White
-            Turn.Normal.White -> Turn.Normal.Black
-        }
         val (newBoard, newStand) = when (hold) {
             is MoveTarget.Board -> {
                 gameService.movePieceByPosition(board, stand, hold.position, position)
@@ -120,24 +120,20 @@ class GameUseCaseImpl @Inject constructor(
                 gameService.putPieceByStand(board, stand, turn, hold.piece, position)
             }
         }
-        val takePiece =
-            (board.getCellByPosition(position).getStatus() as? CellStatus.Fill.FromPiece)?.let {
-                if (it.turn != turn) {
-                    it.piece
-                } else {
-                    null
-                }
+        val takePiece = board.getPieceOrNullByPosition(position)?.let {
+            if (it.turn != turn) {
+                it.piece
+            } else {
+                null
             }
-        val isEvolution =
-            (board.getCellByPosition(position).getStatus() as? CellStatus.Fill.FromPiece)?.let {
-                if (it.turn == turn) {
-                    it.piece is Piece.Reverse
-                } else {
-                    false
-                }
-            } ?: false
-        val isGamSet = checkGameSet(newBoard, position, opponentTurn)
-        val nextTurn = turn.changeNextTurn()
+        }
+        val isEvolution = board.getPieceOrNullByPosition(position)?.let {
+            if (it.turn == turn) {
+                it.piece is Piece.Reverse
+            } else {
+                false
+            }
+        } ?: false
         addLog(
             turn = turn,
             moveTarget = hold,
@@ -145,7 +141,9 @@ class GameUseCaseImpl @Inject constructor(
             isEvolution = isEvolution,
             takePiece = takePiece,
         )
-        if (isGamSet) {
+        val opponentTurn = turn.getOpponentTurn()
+        val nextTurn = turn.changeNextTurn()
+        if (checkGameSet(newBoard, position, opponentTurn)) {
             return NextResult.Move.Win(
                 board = newBoard,
                 stand = newStand,
@@ -154,14 +152,18 @@ class GameUseCaseImpl @Inject constructor(
         }
 
         if (hold is MoveTarget.Board) {
-            if (gameService.shouldPieceEvolution(board, hold.position, position)) {
-                gameService.pieceEvolution(newBoard, position)
-            } else if (gameService.checkPieceEvolution(board, hold.position, position)) {
-                return NextResult.Move.ChooseEvolution(
-                    board = newBoard,
-                    stand = newStand,
-                    nextTurn = nextTurn,
-                )
+            val cellStatus = board.getPieceOrNullByPosition(hold.position)
+            val piece = cellStatus?.piece as? Piece.Surface
+            if (piece != null) {
+                if (piece.shouldEvolution(board, position, cellStatus.turn)) {
+                    newBoard.updatePieceEvolution(position)
+                } else if (board.checkPieceEvolution(hold.position, position)) {
+                    return NextResult.Move.ChooseEvolution(
+                        board = newBoard,
+                        stand = newStand,
+                        nextTurn = nextTurn,
+                    )
+                }
             }
         }
 
@@ -196,15 +198,12 @@ class GameUseCaseImpl @Inject constructor(
         )
         val data = logRepository.getLatestKey()
 
-        logRepository.addLog(
-            data,
-            log,
-        )
+        logRepository.addLog(data, log)
     }
 
     private fun checkGameSet(board: Board, position: Position, turn: Turn): Boolean {
         if (gameRuleRepository.getIsFirstCheckEndRule()) {
-            return gameService.isCheckByTurn(board, turn)
+            return board.isCheckByTurn(turn)
         }
 
         return board.isKingCellBy(position, turn)

@@ -6,8 +6,7 @@ import com.example.entity.game.piece.Piece
  * 持ち駒台
  *
  */
-class Stand {
-    private val pieceList: MutableList<Piece> = mutableListOf()
+class Stand(private val pieceList: MutableList<Piece> = mutableListOf()) {
 
     /**
      * 持ち駒数

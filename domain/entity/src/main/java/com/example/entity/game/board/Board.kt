@@ -58,6 +58,15 @@ data class Board(val size: Size = Size(9, 9)) {
      */
     fun getCellByPosition(position: Position): Cell = board[position.row - 1][position.column - 1]
 
+    /**
+     * 指定したマス目の駒情報取得
+     *
+     * @param position 取得するマス目
+     * @return 駒情報（駒がない場合はnullを返却）
+     */
+    fun getPieceOrNullByPosition(position: Position): CellStatus.Fill.FromPiece? =
+        getCellByPosition(position).getStatus() as? CellStatus.Fill.FromPiece
+
     fun getAllCells(): Map<Position, Cell> {
         return board.flatMapIndexed { row, cells ->
             cells.mapIndexed { column, cell ->

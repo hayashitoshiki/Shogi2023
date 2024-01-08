@@ -7,10 +7,12 @@ import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.PieceSetUpRule
-import com.example.entity.game.rule.Turn
+import com.example.extention.degeneracy
+import com.example.extention.evolution
+import com.example.extention.getOpponentTurn
+import com.example.extention.setUp
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
-import com.example.service.GameService
 import com.example.usecase.usecaseinterface.ReplayUseCase
 import com.example.usecase.usecaseinterface.model.result.ReplayGoBackResult
 import com.example.usecase.usecaseinterface.model.result.ReplayGoNextResult
@@ -21,11 +23,10 @@ class ReplayUseCaseImpl @Inject constructor(
     private val logRepository: LogRepository,
     private val gameRuleRepository: GameRuleRepository,
 ) : ReplayUseCase {
-    private val gameService = GameService()
 
     override fun replayInit(pieceSetUpRule: PieceSetUpRule): ReplayInitResult {
         val rule = gameRuleRepository.getGameRule()
-        val board = gameService.setUpBoard(rule)
+        val board = Board.setUp(rule)
         val blackStand = Stand()
         val whiteStand = Stand()
         val log = logRepository.getLatestLog()
@@ -40,8 +41,7 @@ class ReplayUseCaseImpl @Inject constructor(
     override fun goNext(board: Board, stand: Stand, log: Log): ReplayGoNextResult {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
-                val cellStatus = board.getCellByPosition(moveTarget.position).getStatus()
-                if (cellStatus is CellStatus.Fill.FromPiece) {
+                board.getPieceOrNullByPosition(moveTarget.position)?.let { cellStatus ->
                     val piece = cellStatus.piece
                     val movePiece = if (log.isEvolution && piece is Piece.Surface) {
                         piece.evolution() ?: piece
@@ -73,27 +73,21 @@ class ReplayUseCaseImpl @Inject constructor(
     override fun goBack(board: Board, stand: Stand, log: Log): ReplayGoBackResult {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
-                val movedCellStatus = board.getCellByPosition(log.afterPosition).getStatus()
-                if (movedCellStatus is CellStatus.Fill.FromPiece) {
+                board.getPieceOrNullByPosition(log.afterPosition)?.let { movedCellStatus ->
                     val piece = movedCellStatus.piece
+                    val turn = log.turn
                     val movePiece = if (log.isEvolution && piece is Piece.Reverse) {
                         piece.degeneracy()
                     } else {
                         piece
                     }
                     val takedPiece = log.takePiece?.let {
-                        val opponentTurn = when (log.turn) {
-                            Turn.Normal.Black -> Turn.Normal.White
-                            Turn.Normal.White -> Turn.Normal.Black
-                        }
+                        val opponentTurn = turn.getOpponentTurn()
                         CellStatus.Fill.FromPiece(it, opponentTurn)
                     } ?: CellStatus.Empty
 
                     board.update(log.afterPosition, takedPiece)
-                    board.update(
-                        moveTarget.position,
-                        CellStatus.Fill.FromPiece(movePiece, log.turn)
-                    )
+                    board.update(moveTarget.position, CellStatus.Fill.FromPiece(movePiece, turn))
                 }
             }
 
