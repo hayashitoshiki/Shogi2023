@@ -3,6 +3,7 @@ package com.example.extention
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Cell
 import com.example.entity.game.board.CellStatus
+import com.example.entity.game.board.EvolutionCheckState
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Size
 import com.example.entity.game.piece.Piece
@@ -779,8 +780,8 @@ class BoardExtTest {
             val caseBeforePosition: Position,
             val caseAfterPosition: Position,
             val caseTurn: Turn,
-            val casePiece: Piece,
-            val result: Boolean,
+            val casePiece: Piece.Surface,
+            val result: EvolutionCheckState,
         )
 
         // data
@@ -791,7 +792,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(2, 3),
                 caseTurn = Turn.Normal.Black,
                 casePiece = Piece.Surface.Gin,
-                result = true,
+                result = EvolutionCheckState.Choose,
             ),
             // 先手_縦１〜３以外での移動
             Param(
@@ -799,7 +800,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 6),
                 caseTurn = Turn.Normal.Black,
                 casePiece = Piece.Surface.Gin,
-                result = false,
+                result = EvolutionCheckState.No,
             ),
             // 先手_縦１〜３以内→１〜３以外への移動
             Param(
@@ -807,7 +808,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 4),
                 caseTurn = Turn.Normal.Black,
                 casePiece = Piece.Surface.Gin,
-                result = true,
+                result = EvolutionCheckState.Choose,
             ),
             // 先手_縦１〜３以外→１〜３以内への移動
             Param(
@@ -815,7 +816,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 3),
                 caseTurn = Turn.Normal.Black,
                 casePiece = Piece.Surface.Gin,
-                result = true,
+                result = EvolutionCheckState.Choose,
             ),
             // 先手_範囲内だが裏がない駒の判定
             Param(
@@ -823,7 +824,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 3),
                 caseTurn = Turn.Normal.Black,
                 casePiece = Piece.Surface.Kin,
-                result = false,
+                result = EvolutionCheckState.No,
             ),
             // 先手_縦7 〜９以内での移動
             Param(
@@ -831,15 +832,31 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 8),
                 caseTurn = Turn.Normal.Black,
                 casePiece = Piece.Surface.Gin,
-                result = false,
+                result = EvolutionCheckState.No,
             ),
-            // 先手_範囲内だが既に成っている駒の判定
+            // 先手_強制的にならなければならない場合（歩）
+            Param(
+                caseBeforePosition = Position(5, 2),
+                caseAfterPosition = Position(5, 1),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Fu,
+                result = EvolutionCheckState.Should,
+            ),
+            // 先手_強制的にならなければならない場合（香車）
+            Param(
+                caseBeforePosition = Position(5, 2),
+                caseAfterPosition = Position(5, 1),
+                caseTurn = Turn.Normal.Black,
+                casePiece = Piece.Surface.Kyosya,
+                result = EvolutionCheckState.Should,
+            ),
+            // 先手_強制的にならなければならない場合（桂馬）
             Param(
                 caseBeforePosition = Position(5, 4),
-                caseAfterPosition = Position(5, 3),
+                caseAfterPosition = Position(4, 2),
                 caseTurn = Turn.Normal.Black,
-                casePiece = Piece.Reverse.Narigin,
-                result = false,
+                casePiece = Piece.Surface.Keima,
+                result = EvolutionCheckState.Should,
             ),
             // 後手_縦７〜９以内での移動
             Param(
@@ -847,7 +864,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(2, 8),
                 caseTurn = Turn.Normal.White,
                 casePiece = Piece.Surface.Gin,
-                result = true,
+                result = EvolutionCheckState.Choose,
             ),
             // 後手_縦７〜８以外での移動
             Param(
@@ -855,7 +872,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 6),
                 caseTurn = Turn.Normal.White,
                 casePiece = Piece.Surface.Gin,
-                result = false,
+                result = EvolutionCheckState.No,
             ),
             // 後手_縦７〜９以内→７〜９以外への移動
             Param(
@@ -863,7 +880,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 6),
                 caseTurn = Turn.Normal.White,
                 casePiece = Piece.Surface.Gin,
-                result = true,
+                result = EvolutionCheckState.Choose,
             ),
             // 後手_縦７〜９以外→７〜９以内への移動
             Param(
@@ -871,7 +888,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 7),
                 caseTurn = Turn.Normal.White,
                 casePiece = Piece.Surface.Gin,
-                result = true,
+                result = EvolutionCheckState.Choose,
             ),
             // 後手_範囲内だが裏がない駒の判定
             Param(
@@ -879,7 +896,7 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 8),
                 caseTurn = Turn.Normal.White,
                 casePiece = Piece.Surface.Kin,
-                result = false,
+                result = EvolutionCheckState.No,
             ),
             // 後手_縦１〜３以内での移動
             Param(
@@ -887,15 +904,31 @@ class BoardExtTest {
                 caseAfterPosition = Position(5, 3),
                 caseTurn = Turn.Normal.White,
                 casePiece = Piece.Surface.Gin,
-                result = false,
+                result = EvolutionCheckState.No,
             ),
-            // 後手_範囲内だが既に成っている駒の判定
+            // 強制的にならなければならない場合（歩）
             Param(
-                caseBeforePosition = Position(5, 7),
-                caseAfterPosition = Position(5, 8),
+                caseBeforePosition = Position(5, 8),
+                caseAfterPosition = Position(5, 9),
                 caseTurn = Turn.Normal.White,
-                casePiece = Piece.Reverse.Narigin,
-                result = false,
+                casePiece = Piece.Surface.Fu,
+                result = EvolutionCheckState.Should,
+            ),
+            // 強制的にならなければならない場合（香車）
+            Param(
+                caseBeforePosition = Position(5, 8),
+                caseAfterPosition = Position(5, 9),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Kyosya,
+                result = EvolutionCheckState.Should,
+            ),
+            // 強制的にならなければならない場合（桂馬）
+            Param(
+                caseBeforePosition = Position(5, 6),
+                caseAfterPosition = Position(4, 8),
+                caseTurn = Turn.Normal.White,
+                casePiece = Piece.Surface.Keima,
+                result = EvolutionCheckState.Should,
             ),
         )
 
@@ -904,7 +937,12 @@ class BoardExtTest {
             val board = Board().apply {
                 update(it.caseBeforePosition, CellStatus.Fill.FromPiece(it.casePiece, it.caseTurn))
             }
-            val expected = board.checkPieceEvolution(it.caseBeforePosition, it.caseAfterPosition)
+            val expected = board.checkPieceEvolution(
+                it.casePiece,
+                it.caseBeforePosition,
+                it.caseAfterPosition,
+                it.caseTurn,
+            )
             Assert.assertEquals(expected, it.result)
         }
     }
@@ -1128,7 +1166,7 @@ class BoardExtTest {
                 caseTurn = Turn.Normal.Black,
                 result = false,
             ),
-            // ご手番
+            // 後手番
             // １マスずつで王手になっているマス
             Param(
                 casePiece = Piece.Surface.Gin,
@@ -1353,6 +1391,45 @@ class BoardExtTest {
             }
             val expected = board.isCheckByTurn(opponentTun)
             Assert.assertEquals(expected, it.result)
+        }
+    }
+
+    @Test
+    fun `指定したマスの駒を成らせる`() {
+        data class Param(
+            val casePiece: Piece,
+            val result: Piece,
+        )
+
+        val params = listOf(
+            // 成ることができる駒
+            Param(
+                casePiece = Piece.Surface.Fu,
+                result = Piece.Reverse.To,
+            ),
+            // 成ることができない駒
+            Param(
+                casePiece = Piece.Surface.Kin,
+                result = Piece.Surface.Kin,
+            ),
+            // すでに成るっている駒
+            Param(
+                casePiece = Piece.Reverse.To,
+                result = Piece.Reverse.To,
+            ),
+        )
+
+        params.forEach {
+            val position = Position(5, 3)
+            val board = Board().apply {
+                val cellStatus = CellStatus.Fill.FromPiece(it.casePiece, Turn.Normal.Black)
+                this.update(position, cellStatus)
+            }
+            val resultBoard = board.copy()
+            val expected = board.updatePieceEvolution(position)
+            val cellStatus = CellStatus.Fill.FromPiece(it.result, Turn.Normal.Black)
+            resultBoard.update(position, cellStatus)
+            Assert.assertEquals(expected, resultBoard)
         }
     }
 }

@@ -5,8 +5,11 @@ import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
+import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Turn
+import com.example.extention.changeNextTurn
 import com.example.extention.degeneracy
+import com.example.extention.isAvailableKingBy
 import com.example.extention.isCheckByTurn
 import com.example.extention.movePieceByPosition
 import com.example.extention.searchMoveBy
@@ -19,7 +22,7 @@ import com.example.extention.searchPutBy
 class GameService {
 
     /**
-     * 詰んでいるか判定
+     * 指定した手番の王様が詰んでいるか判定
      *
      * @param board 将棋盤
      * @param stand 持ち駒
@@ -94,5 +97,28 @@ class GameService {
         }
 
         return Pair(newBoard, newStand)
+    }
+
+    /**
+     * 勝利判定
+     *
+     * @param board 将棋盤
+     * @param stand 持ち駒
+     * @param turn 手番
+     * @param rule ルール
+     * @return 判定結果
+     */
+    fun checkGameSet(
+        board: Board,
+        stand: Stand,
+        turn: Turn,
+        rule: GameRule,
+    ): Boolean {
+        val nextTurn = turn.changeNextTurn()
+        if (rule.isFirstCheckEnd) {
+            return board.isCheckByTurn(nextTurn)
+        }
+
+        return !board.isAvailableKingBy(nextTurn) || isCheckmate(board, stand, nextTurn)
     }
 }

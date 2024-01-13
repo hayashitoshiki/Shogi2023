@@ -26,7 +26,7 @@ class ReplayUseCaseImpl @Inject constructor(
 
     override fun replayInit(pieceSetUpRule: PieceSetUpRule): ReplayInitResult {
         val rule = gameRuleRepository.getGameRule()
-        val board = Board.setUp(rule)
+        val board = Board.setUp(rule.pieceSetUpRule)
         val blackStand = Stand()
         val whiteStand = Stand()
         val log = logRepository.getLatestLog()

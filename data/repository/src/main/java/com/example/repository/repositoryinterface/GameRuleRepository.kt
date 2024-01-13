@@ -1,7 +1,6 @@
 package com.example.repository.repositoryinterface
 
 import com.example.entity.game.rule.GameRule
-import com.example.entity.game.rule.PieceSetUpRule
 
 interface GameRuleRepository {
 
@@ -15,9 +14,9 @@ interface GameRuleRepository {
     /**
      * ルールの一時保存
      *
-     * @return 一時保持したルール）
+     * @return 一時保持したルール
      */
-    fun getGameRule(): PieceSetUpRule.Normal
+    fun getGameRule(): GameRule
 
     /**
      * 王手将棋の有無取得

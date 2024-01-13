@@ -2,6 +2,7 @@ package com.example.extention
 
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus
+import com.example.entity.game.board.EvolutionCheckState
 import com.example.entity.game.board.Position
 import com.example.entity.game.piece.Move
 import com.example.entity.game.piece.Piece
@@ -96,19 +97,26 @@ private fun Board.checkOnMovePiece(position: Position, turn: Turn): Boolean {
     } ?: true
 }
 
-/**
- * 王様のいるマスか判定
- *
- * @param position 指定したマス
- * @param turn 手番
- * @return 王様がいるか
- */
-fun Board.isKingCellBy(position: Position, turn: Turn): Boolean {
+private fun Board.isKingCellBy(position: Position, turn: Turn): Boolean {
     val cellStatus = getPieceOrNullByPosition(position) ?: return false
 
     return when (turn) {
         Turn.Normal.Black -> cellStatus.piece == Piece.Surface.Gyoku
         Turn.Normal.White -> cellStatus.piece == Piece.Surface.Ou
+    }
+}
+
+/**
+ * 指定した手番の王様がいるか判定
+ *
+ * @param turn 手番
+ * @return 王様がいるか
+ */
+fun Board.isAvailableKingBy(turn: Turn): Boolean {
+    return this.getAllCells().any {
+        val cell = it.value.getStatus() as? CellStatus.Fill.FromPiece ?: return@any false
+        if (cell.turn != turn) return@any false
+        cell.piece is Piece.Surface.Ou || cell.piece is Piece.Surface.Gyoku
     }
 }
 
@@ -120,6 +128,26 @@ fun Board.isKingCellBy(position: Position, turn: Turn): Boolean {
  * @return 判定結果
  */
 fun Board.checkPieceEvolution(
+    piece: Piece.Surface,
+    beforePosition: Position,
+    afterPosition: Position,
+    turn: Turn,
+): EvolutionCheckState {
+    return when {
+        piece.shouldEvolution(this, afterPosition, turn) -> EvolutionCheckState.Should
+        checkAvailablePieceEvolution(beforePosition, afterPosition) -> EvolutionCheckState.Choose
+        else -> EvolutionCheckState.No
+    }
+}
+
+/**
+ * 駒が成れるか判別
+ *
+ * @param beforePosition 動かす前のマス
+ * @param afterPosition 動かした後のマス
+ * @return 判定結果
+ */
+private fun Board.checkAvailablePieceEvolution(
     beforePosition: Position,
     afterPosition: Position,
 ): Boolean {
@@ -159,10 +187,10 @@ fun Board.isCheckByTurn(turn: Turn): Boolean {
  * @return 適用した将棋盤
  */
 fun Board.updatePieceEvolution(position: Position): Board {
-    val cellStatus = this.getPieceOrNullByPosition(position) ?: return this
-    val piece = cellStatus.piece as? Piece.Surface ?: return this
-    piece.evolution()?.also {
-        this.update(position, cellStatus.copy(piece = it))
+    getPieceOrNullByPosition(position)?.let { cellStatus ->
+        (cellStatus.piece as? Piece.Surface)?.evolution()?.let { evolvedPiece ->
+            update(position, cellStatus.copy(piece = evolvedPiece))
+        }
     }
     return this
 }
