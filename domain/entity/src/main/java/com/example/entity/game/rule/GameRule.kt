@@ -3,10 +3,10 @@ package com.example.entity.game.rule
 /**
  * 対局ルール
  *
- * @property pieceSetUpRule 駒落ち設定
- * @property isFirstCheckEnd 王手将棋が適用されているか
+ * @property boardRule 将棋盤のルール
+ * @property usersRule プレイヤーのルール
  */
 data class GameRule(
-    val pieceSetUpRule: PieceSetUpRule.Normal = PieceSetUpRule.Normal.NoHande,
-    val isFirstCheckEnd: Boolean = false,
+    val boardRule: BoardRule,
+    val usersRule: UsersRule,
 )
