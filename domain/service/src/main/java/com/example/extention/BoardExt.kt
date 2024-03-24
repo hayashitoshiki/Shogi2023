@@ -22,8 +22,8 @@ fun Board.Companion.setUp(gameRule: GameRule): Board {
     val boardRule = gameRule.boardRule
     return Board(boardRule.boardSize).apply {
         val initPiece = boardRule.setUpRule.toSetUpPiece()
-            .setHandBlack(gameRule.usersRule.blackRule.hande)
-            .setHandeWhite(gameRule.usersRule.whiteRule.hande)
+            .setHandBlack(gameRule.playersRule.blackRule.hande)
+            .setHandeWhite(gameRule.playersRule.whiteRule.hande)
         initPiece.forEach { (position, cellStatus) -> update(position, cellStatus) }
     }
 }

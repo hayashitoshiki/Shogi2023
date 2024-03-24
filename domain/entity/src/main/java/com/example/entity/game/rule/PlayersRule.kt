@@ -6,7 +6,7 @@ package com.example.entity.game.rule
  * @property blackRule 先手のルール
  * @property whiteRule 後手のルール
  */
-data class UsersRule(
-    val blackRule: UserRule,
-    val whiteRule: UserRule,
+data class PlayersRule(
+    val blackRule: PlayerRule,
+    val whiteRule: PlayerRule,
 )

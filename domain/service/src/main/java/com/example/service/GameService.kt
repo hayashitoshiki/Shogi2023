@@ -127,11 +127,11 @@ class GameService {
     fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean {
         val nextTurn = turn.changeNextTurn()
         return when {
-            turn is Turn.Normal.Black && rule.usersRule.blackRule.isFirstCheckEnd -> {
+            turn is Turn.Normal.Black && rule.playersRule.blackRule.isFirstCheckEnd -> {
                 board.isCheckByTurn(nextTurn)
             }
 
-            turn is Turn.Normal.White && rule.usersRule.whiteRule.isFirstCheckEnd -> {
+            turn is Turn.Normal.White && rule.playersRule.whiteRule.isFirstCheckEnd -> {
                 board.isCheckByTurn(nextTurn)
             }
 

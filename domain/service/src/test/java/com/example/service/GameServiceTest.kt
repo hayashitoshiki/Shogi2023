@@ -7,9 +7,9 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.BoardRule
 import com.example.entity.game.rule.GameRule
+import com.example.entity.game.rule.PlayerRule
+import com.example.entity.game.rule.PlayersRule
 import com.example.entity.game.rule.Turn
-import com.example.entity.game.rule.UserRule
-import com.example.entity.game.rule.UsersRule
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -400,9 +400,9 @@ class GameServiceTest {
 
         val ruleNormal = GameRule(
             boardRule = BoardRule(),
-            usersRule = UsersRule(
-                blackRule = UserRule(),
-                whiteRule = UserRule(),
+            playersRule = PlayersRule(
+                blackRule = PlayerRule(),
+                whiteRule = PlayerRule(),
             )
         )
         val params = listOf(
@@ -478,19 +478,19 @@ class GameServiceTest {
 
         val ruleNormal = GameRule(
             boardRule = BoardRule(),
-            usersRule = UsersRule(
-                blackRule = UserRule(),
-                whiteRule = UserRule(),
+            playersRule = PlayersRule(
+                blackRule = PlayerRule(),
+                whiteRule = PlayerRule(),
             )
         )
         val ruleIsFirstCheck =
             GameRule(
                 boardRule = BoardRule(),
-                usersRule = UsersRule(
-                    blackRule = UserRule(
+                playersRule = PlayersRule(
+                    blackRule = PlayerRule(
                         isFirstCheckEnd = true,
                     ),
-                    whiteRule = UserRule(
+                    whiteRule = PlayerRule(
                         isFirstCheckEnd = true,
                     ),
                 )

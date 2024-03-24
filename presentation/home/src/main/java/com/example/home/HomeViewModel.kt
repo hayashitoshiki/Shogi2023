@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.entity.game.rule.BoardRule
 import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Hande
+import com.example.entity.game.rule.PlayerRule
+import com.example.entity.game.rule.PlayersRule
 import com.example.entity.game.rule.Turn
-import com.example.entity.game.rule.UserRule
-import com.example.entity.game.rule.UsersRule
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.usecase.usecaseinterface.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -83,12 +83,12 @@ class HomeViewModel @Inject constructor(
         }
         val rule = GameRule(
             boardRule = BoardRule(),
-            usersRule = UsersRule(
-                blackRule = UserRule(
+            playersRule = PlayersRule(
+                blackRule = PlayerRule(
                     hande = blackHande,
                     isFirstCheckEnd = isFirstCheckEnd,
                 ),
-                whiteRule = UserRule(
+                whiteRule = PlayerRule(
                     hande = whiteHande,
                     isFirstCheckEnd = isFirstCheckEnd,
                 )
