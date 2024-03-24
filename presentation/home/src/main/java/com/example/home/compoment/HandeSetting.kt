@@ -19,96 +19,111 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.entity.game.rule.PieceSetUpRule
+import com.example.core.theme.Shogi2023Theme
+import com.example.entity.game.rule.Hande
+import com.example.entity.game.rule.Turn
 import com.example.home.ext.stringRes
 import com.example.home.ext.turnImageRes
-import com.example.core.theme.Shogi2023Theme
+import com.example.home.model.GameRuleSettingUiModel
 
 @Composable
 fun HandeSettingBox(
-    selected: PieceSetUpRule.Normal,
-    onChange: (PieceSetUpRule.Normal) -> Unit,
+    selected: GameRuleSettingUiModel.SelectedHande,
+    onChange: (GameRuleSettingUiModel.SelectedHande) -> Unit,
 ) {
     Column(modifier = Modifier.padding(8.dp)) {
         HandeFilterChip(
             selected = selected,
             onChange = onChange,
-            pieceSetUpRule = PieceSetUpRule.Normal.NoHande,
+            pieceSetUpRule = Hande.NON,
+            turn = Turn.Normal.Black,
         )
         Row {
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeHisya,
+                pieceSetUpRule = Hande.HISYA,
+                turn = Turn.Normal.Black,
             )
             Spacer(modifier = Modifier.size(8.dp))
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeKaku,
+                pieceSetUpRule = Hande.KAKU,
+                turn = Turn.Normal.Black,
             )
             Spacer(modifier = Modifier.size(8.dp))
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeHisyaKaku,
+                pieceSetUpRule = Hande.TWO,
+                turn = Turn.Normal.Black,
             )
         }
         Row {
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeFor,
+                pieceSetUpRule = Hande.FOR,
+                turn = Turn.Normal.Black,
             )
             Spacer(modifier = Modifier.size(8.dp))
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeSix,
+                pieceSetUpRule = Hande.SIX,
+                turn = Turn.Normal.Black,
             )
             Spacer(modifier = Modifier.size(8.dp))
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.BlackHandeEight,
-                )
-        }
-        Row {
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeHisya,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeKaku,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeHisyaKaku,
+                pieceSetUpRule = Hande.EIGHT,
+                turn = Turn.Normal.Black,
             )
         }
         Row {
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeFor,
+                pieceSetUpRule = Hande.HISYA,
+                turn = Turn.Normal.White,
             )
             Spacer(modifier = Modifier.size(8.dp))
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeSix,
+                pieceSetUpRule = Hande.KAKU,
+                turn = Turn.Normal.White,
             )
             Spacer(modifier = Modifier.size(8.dp))
             HandeFilterChip(
                 selected = selected,
                 onChange = onChange,
-                pieceSetUpRule = PieceSetUpRule.Normal.WhiteHandeEight,
+                pieceSetUpRule = Hande.TWO,
+                turn = Turn.Normal.White,
+            )
+        }
+        Row {
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = Hande.FOR,
+                turn = Turn.Normal.White,
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = Hande.SIX,
+                turn = Turn.Normal.White,
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+            HandeFilterChip(
+                selected = selected,
+                onChange = onChange,
+                pieceSetUpRule = Hande.EIGHT,
+                turn = Turn.Normal.White,
             )
         }
     }
@@ -117,20 +132,21 @@ fun HandeSettingBox(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HandeFilterChip(
-    selected: PieceSetUpRule.Normal,
-    onChange: (PieceSetUpRule.Normal) -> Unit,
-    pieceSetUpRule: PieceSetUpRule.Normal
+    selected: GameRuleSettingUiModel.SelectedHande,
+    onChange: (GameRuleSettingUiModel.SelectedHande) -> Unit,
+    pieceSetUpRule: Hande,
+    turn: Turn,
 ) {
     FilterChip(
         modifier = Modifier.width(88.dp),
-        selected = selected == pieceSetUpRule,
-        onClick = { onChange(pieceSetUpRule) },
+        selected = selected.hande == pieceSetUpRule && selected.turn == turn,
+        onClick = { onChange(GameRuleSettingUiModel.SelectedHande(pieceSetUpRule, turn)) },
         label = {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                pieceSetUpRule.turnImageRes?.let { turnImageRes ->
+                turn.turnImageRes.let { turnImageRes ->
                     Image(
                         modifier = Modifier.size(12.dp),
                         painter = painterResource(turnImageRes),
@@ -153,7 +169,10 @@ fun HandeFilterChip(
 fun HandeSettingBoxPreview() {
     Shogi2023Theme {
         HandeSettingBox(
-            selected = PieceSetUpRule.Normal.BlackHandeKaku,
+            selected = GameRuleSettingUiModel.SelectedHande(
+                hande = Hande.KAKU,
+                turn = Turn.Normal.Black,
+            ),
             onChange = { },
         )
     }

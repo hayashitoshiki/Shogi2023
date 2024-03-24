@@ -14,16 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.entity.game.rule.PieceSetUpRule
 import com.example.home.R
 import com.example.home.compoment.HandeSettingBox
+import com.example.home.model.GameRuleSettingUiModel
 
 @Composable
 fun BaseSettingCard(
     modifier: Modifier = Modifier,
     title: String,
-    selected: PieceSetUpRule.Normal,
-    onChange: (PieceSetUpRule.Normal) -> Unit,
+    selected: GameRuleSettingUiModel.SelectedHande,
+    onChange: (GameRuleSettingUiModel.SelectedHande) -> Unit,
 ) {
     Card(modifier = modifier.shadow(8.dp, RoundedCornerShape(8.dp))) {
         Column(modifier = Modifier.padding(8.dp)) {

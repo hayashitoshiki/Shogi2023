@@ -2,8 +2,12 @@ package com.example.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.entity.game.rule.BoardRule
 import com.example.entity.game.rule.GameRule
-import com.example.entity.game.rule.PieceSetUpRule
+import com.example.entity.game.rule.Hande
+import com.example.entity.game.rule.Turn
+import com.example.entity.game.rule.UserRule
+import com.example.entity.game.rule.UsersRule
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.usecase.usecaseinterface.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,22 +38,27 @@ class HomeViewModel @Inject constructor(
     private val mutableGameStartEffect: MutableSharedFlow<Effect.GameStart> = MutableSharedFlow()
     val gameStartEffect: SharedFlow<Effect.GameStart> = mutableGameStartEffect.asSharedFlow()
 
-    fun changePieceHandeByNormalItem(pieceHande: PieceSetUpRule.Normal) {
+    fun changePieceHandeByNormalItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
         _uiState.value = uiState.value.copy(
             ruleItems = uiState.value.ruleItems.toMutableList().map {
                 when (it) {
                     is GameRuleSettingUiModel.FirstCheck -> it
-                    is GameRuleSettingUiModel.Normal -> it.copy(pieceHande = pieceHande)
+                    is GameRuleSettingUiModel.Normal -> it.copy(
+                        selectedHande = selectedHande,
+                    )
                 }
             },
         )
     }
 
-    fun changePieceHandeByFirstCheckItem(pieceHande: PieceSetUpRule.Normal) {
+    fun changePieceHandeByFirstCheckItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
         _uiState.value = uiState.value.copy(
             ruleItems = uiState.value.ruleItems.toMutableList().map {
                 when (it) {
-                    is GameRuleSettingUiModel.FirstCheck -> it.copy(pieceHande = pieceHande)
+                    is GameRuleSettingUiModel.FirstCheck -> it.copy(
+                        selectedHande = selectedHande,
+                    )
+
                     is GameRuleSettingUiModel.Normal -> it
                 }
             },
@@ -62,9 +71,28 @@ class HomeViewModel @Inject constructor(
             is GameRuleSettingUiModel.FirstCheck -> true
             is GameRuleSettingUiModel.Normal -> false
         }
+        val handeTurn = setting.selectedHande.turn
+        val hande = setting.selectedHande.hande
+        val blackHande = when (handeTurn) {
+            Turn.Normal.Black -> hande
+            Turn.Normal.White -> Hande.NON
+        }
+        val whiteHande = when (handeTurn) {
+            Turn.Normal.Black -> Hande.NON
+            Turn.Normal.White -> hande
+        }
         val rule = GameRule(
-            pieceSetUpRule = setting.pieceHande,
-            isFirstCheckEnd = isFirstCheckEnd
+            boardRule = BoardRule(),
+            usersRule = UsersRule(
+                blackRule = UserRule(
+                    hande = blackHande,
+                    isFirstCheckEnd = isFirstCheckEnd,
+                ),
+                whiteRule = UserRule(
+                    hande = whiteHande,
+                    isFirstCheckEnd = isFirstCheckEnd,
+                )
+            ),
         )
 
         useCase.setGameRule(rule)

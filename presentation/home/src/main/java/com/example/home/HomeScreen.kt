@@ -59,7 +59,7 @@ fun HomeScreen(
             is GameRuleSettingUiModel.FirstCheck -> {
                 {
                     FirstCheckShogiSettingCard(
-                        selected = it.pieceHande,
+                        selected = it.selectedHande,
                         onChange = viewModel::changePieceHandeByFirstCheckItem,
                     )
                 }
@@ -68,7 +68,7 @@ fun HomeScreen(
             is GameRuleSettingUiModel.Normal -> {
                 {
                     NormalShogiSettingCard(
-                        selected = it.pieceHande,
+                        selected = it.selectedHande,
                         onChange = viewModel::changePieceHandeByNormalItem,
                     )
                 }

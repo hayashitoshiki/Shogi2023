@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.example.entity.game.Log
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Stand
-import com.example.entity.game.rule.PieceSetUpRule
 import com.example.entity.game.rule.Turn
 import com.example.usecase.usecaseinterface.ReplayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +33,7 @@ class ReplayViewModel @Inject constructor(
     }
 
     fun initBard() {
-        val result = useCase.replayInit(PieceSetUpRule.Normal.NoHande)
+        val result = useCase.replayInit()
         _uiState.value = UiState(
             board = result.board,
             blackStand = result.blackStand,

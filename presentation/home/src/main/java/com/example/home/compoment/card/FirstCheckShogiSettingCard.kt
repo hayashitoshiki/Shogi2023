@@ -3,14 +3,14 @@ package com.example.home.compoment.card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.example.entity.game.rule.PieceSetUpRule
 import com.example.home.R
+import com.example.home.model.GameRuleSettingUiModel
 
 @Composable
 fun FirstCheckShogiSettingCard(
     modifier: Modifier = Modifier,
-    selected: PieceSetUpRule.Normal,
-    onChange: (PieceSetUpRule.Normal) -> Unit,
+    selected: GameRuleSettingUiModel.SelectedHande,
+    onChange: (GameRuleSettingUiModel.SelectedHande) -> Unit,
 ) {
     BaseSettingCard(
         modifier = modifier,
