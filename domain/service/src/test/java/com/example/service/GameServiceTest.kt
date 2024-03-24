@@ -5,8 +5,11 @@ import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
+import com.example.entity.game.rule.BoardRule
 import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Turn
+import com.example.entity.game.rule.UserRule
+import com.example.entity.game.rule.UsersRule
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -395,22 +398,15 @@ class GameServiceTest {
             val result: Boolean,
         )
 
-        val ruleNormal = GameRule()
-        val ruleIsFirstCheck = ruleNormal.copy(isFirstCheckEnd = true)
+        val ruleNormal = GameRule(
+            boardRule = BoardRule(),
+            usersRule = UsersRule(
+                blackRule = UserRule(),
+                whiteRule = UserRule(),
+            )
+        )
         val params = listOf(
-            // 王手将棋設定ありで王手状態
-            Param(
-                caseGameRule = ruleIsFirstCheck,
-                caseIsCheck = true,
-                result = true,
-            ),
-            // 王手将棋設定ありで王手状態ではない
-            Param(
-                caseGameRule = ruleIsFirstCheck,
-                caseIsCheck = false,
-                result = false,
-            ),
-            // 王手将棋設定なしで王手状態
+            // 王手状態
             Param(
                 caseGameRule = ruleNormal,
                 caseIsCheck = true,
@@ -465,7 +461,88 @@ class GameServiceTest {
             }
             val stand = Stand()
             val turn = Turn.Normal.White
-            val expected = gameService.checkGameSet(board, stand, turn, it.caseGameRule)
+            val expected = gameService.checkGameSet(board, stand, turn)
+            assertEquals(expected, it.result)
+        }
+    }
+
+    @Test
+    fun `王手将棋件勝利判定`() {
+        data class Param(
+            val caseGameRule: GameRule,
+            val caseIsCheck: Boolean = false,
+            val caseIsCheckmate: Boolean = false,
+            val caseNotKing: Boolean = false,
+            val result: Boolean,
+        )
+
+        val ruleNormal = GameRule(
+            boardRule = BoardRule(),
+            usersRule = UsersRule(
+                blackRule = UserRule(),
+                whiteRule = UserRule(),
+            )
+        )
+        val ruleIsFirstCheck =
+            GameRule(
+                boardRule = BoardRule(),
+                usersRule = UsersRule(
+                    blackRule = UserRule(
+                        isFirstCheckEnd = true,
+                    ),
+                    whiteRule = UserRule(
+                        isFirstCheckEnd = true,
+                    ),
+                )
+            )
+        val params = listOf(
+            // 王手将棋設定ありで王手状態
+            Param(
+                caseGameRule = ruleIsFirstCheck,
+                caseIsCheck = true,
+                result = true,
+            ),
+            // 王手将棋設定ありで王手状態ではない
+            Param(
+                caseGameRule = ruleIsFirstCheck,
+                caseIsCheck = false,
+                result = false,
+            ),
+            // 王手将棋設定なしで王手状態
+            Param(
+                caseGameRule = ruleNormal,
+                caseIsCheck = true,
+                result = false,
+            ),
+        )
+
+        params.forEach {
+            val board = Board().apply {
+                val kingPosition = Position(5, 9)
+                val king = CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                update(kingPosition, king)
+                when {
+                    it.caseIsCheck -> {
+                        val position1 = Position(5, 7)
+                        val position2 = Position(5, 8)
+                        val kin = CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                        update(position1, kin)
+                        update(position2, kin)
+                    }
+
+                    it.caseIsCheckmate -> {
+                        val position = Position(5, 5)
+                        val cell = CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White)
+                        update(position, cell)
+                    }
+
+                    it.caseNotKing -> {
+                        update(kingPosition, CellStatus.Empty)
+                    }
+                }
+            }
+            val turn = Turn.Normal.White
+            val expected = gameService.checkGameSetForFirstCheck(board, turn, it.caseGameRule)
             assertEquals(expected, it.result)
         }
     }

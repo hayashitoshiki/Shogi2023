@@ -105,20 +105,37 @@ class GameService {
      * @param board 将棋盤
      * @param stand 持ち駒
      * @param turn 手番
-     * @param rule ルール
      * @return 判定結果
      */
     fun checkGameSet(
         board: Board,
         stand: Stand,
         turn: Turn,
-        rule: GameRule,
     ): Boolean {
         val nextTurn = turn.changeNextTurn()
-        if (rule.isFirstCheckEnd) {
-            return board.isCheckByTurn(nextTurn)
-        }
-
         return !board.isAvailableKingBy(nextTurn) || isCheckmate(board, stand, nextTurn)
+    }
+
+    /**
+     * 王手将棋かつ詰み判定
+     *
+     * @param board 将棋盤
+     * @param turn 手番
+     * @param rule ルール
+     * @return 王手将棋でかつ詰んでいるか
+     */
+    fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean {
+        val nextTurn = turn.changeNextTurn()
+        return when {
+            turn is Turn.Normal.Black && rule.usersRule.blackRule.isFirstCheckEnd -> {
+                board.isCheckByTurn(nextTurn)
+            }
+
+            turn is Turn.Normal.White && rule.usersRule.whiteRule.isFirstCheckEnd -> {
+                board.isCheckByTurn(nextTurn)
+            }
+
+            else -> false
+        }
     }
 }

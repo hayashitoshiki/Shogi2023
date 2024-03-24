@@ -1,24 +1,112 @@
 package com.example.extention
 
+import android.util.Log
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.EvolutionCheckState
 import com.example.entity.game.board.Position
 import com.example.entity.game.piece.Move
 import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.PieceSetUpRule
+import com.example.entity.game.rule.BoardRule
+import com.example.entity.game.rule.GameRule
+import com.example.entity.game.rule.Hande
 import com.example.entity.game.rule.Turn
 
 /**
  * 将棋盤のセットアップ
  *
- * @param pieceSetUpRule 設定内容
+ * @param gameRule 設定内容
  * @return 設定内容に従った将棋盤の初期値
  */
-fun Board.Companion.setUp(pieceSetUpRule: PieceSetUpRule): Board {
-    return Board(pieceSetUpRule.boardSize).apply {
-        pieceSetUpRule.initPiece.forEach { (position, cellStatus) ->
-            update(position, cellStatus)
+fun Board.Companion.setUp(gameRule: GameRule): Board {
+    val boardRule = gameRule.boardRule
+    return Board(boardRule.boardSize).apply {
+        val initPiece = boardRule.setUpRule.toSetUpPiece()
+            .setHandBlack(gameRule.usersRule.blackRule.hande)
+            .setHandeWhite(gameRule.usersRule.whiteRule.hande)
+        initPiece.forEach { (position, cellStatus) -> update(position, cellStatus) }
+    }
+}
+
+/**
+ * 盤面駒配置
+ *
+ * @return 初期設定値で駒を配置した盤面
+ */
+private fun BoardRule.SetUpRule.toSetUpPiece(): Map<Position, CellStatus> {
+    return when (this) {
+        BoardRule.SetUpRule.NORMAL -> SetUpPiece.Normal.normalInitPiece
+    }
+}
+
+/**
+ * 先手のハンデ設定
+ *
+ * @return 先手のハンデを設定した盤面
+ */
+private fun Map<Position, CellStatus>.setHandBlack(hande: Hande): Map<Position, CellStatus> {
+    return when (hande) {
+        Hande.NON -> this
+        Hande.KAKU -> this.minus(SetUpPiece.Normal.blackKaku.first)
+        Hande.HISYA -> this.minus(SetUpPiece.Normal.blackHisya.first)
+        Hande.TWO -> this.minus(SetUpPiece.Normal.blackKaku.first)
+            .minus(SetUpPiece.Normal.blackHisya.first)
+
+        Hande.FOR -> {
+            this.minus(SetUpPiece.Normal.blackHisya.first)
+                .minus(SetUpPiece.Normal.blackKaku.first)
+                .minus(SetUpPiece.Normal.blackKyo.entries.map { it.key }.toSet())
+        }
+
+        Hande.SIX -> {
+            this.minus(SetUpPiece.Normal.blackHisya.first)
+                .minus(SetUpPiece.Normal.blackKaku.first)
+                .minus(SetUpPiece.Normal.blackKei.entries.map { it.key }.toSet())
+                .minus(SetUpPiece.Normal.blackKyo.entries.map { it.key }.toSet())
+        }
+
+        Hande.EIGHT -> {
+            this.minus(SetUpPiece.Normal.blackHisya.first)
+                .minus(SetUpPiece.Normal.blackKaku.first)
+                .minus(SetUpPiece.Normal.blackKei.entries.map { it.key }.toSet())
+                .minus(SetUpPiece.Normal.blackKyo.entries.map { it.key }.toSet())
+                .minus(SetUpPiece.Normal.blackGin.entries.map { it.key }.toSet())
+        }
+    }
+}
+
+/**
+ * 後手のハンデ設定
+ *
+ * @return 先手のハンデを設定した盤面
+ */
+private fun Map<Position, CellStatus>.setHandeWhite(hande: Hande): Map<Position, CellStatus> {
+    return when (hande) {
+        Hande.NON -> this
+        Hande.KAKU -> this.minus(SetUpPiece.Normal.whiteKaku.first)
+        Hande.HISYA -> this.minus(SetUpPiece.Normal.whiteHisya.first)
+        Hande.TWO -> this.minus(SetUpPiece.Normal.whiteKaku.first)
+            .minus(SetUpPiece.Normal.whiteHisya.first)
+
+        Hande.FOR -> {
+            this.minus(SetUpPiece.Normal.whiteKaku.first)
+                .minus(SetUpPiece.Normal.whiteHisya.first)
+                .minus(SetUpPiece.Normal.whiteKyo.entries.map { it.key }.toSet())
+        }
+
+        Hande.SIX -> {
+            this.minus(SetUpPiece.Normal.whiteKaku.first)
+                .minus(SetUpPiece.Normal.whiteHisya.first)
+                .minus(SetUpPiece.Normal.whiteKyo.entries.map { it.key }.toSet())
+                .minus(SetUpPiece.Normal.whiteKei.entries.map { it.key }.toSet())
+        }
+
+        Hande.EIGHT -> {
+            this.minus(SetUpPiece.Normal.whiteKaku.first)
+                .minus(SetUpPiece.Normal.whiteHisya.first)
+                .minus(SetUpPiece.Normal.whiteKyo.entries.map { it.key }.toSet())
+                .minus(SetUpPiece.Normal.whiteKei.entries.map { it.key }.toSet())
+                .minus(SetUpPiece.Normal.whiteGin.entries.map { it.key }.toSet())
         }
     }
 }
@@ -175,6 +263,9 @@ fun Board.isCheckByTurn(turn: Turn): Boolean {
     val opponentTurn = turn.getOpponentTurn()
     return this.getCellsFromTurn(opponentTurn).any { position ->
         this.searchMoveBy(position, opponentTurn).any { movePosition ->
+            if (position.column == 3 && position.row == 3) {
+                Log.e("画面遷移", "isCheckByTurn()　角の動ける範囲 = " + movePosition)
+            }
             this.isKingCellBy(movePosition, turn)
         }
     }
@@ -193,4 +284,139 @@ fun Board.updatePieceEvolution(position: Position): Board {
         }
     }
     return this
+}
+
+object SetUpPiece {
+    object Normal {
+        val blackHisya = Pair(
+            Position(2, 8),
+            CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.Black),
+        )
+        val blackKaku = Pair(
+            Position(8, 8),
+            CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.Black),
+        )
+        val blackKyo = mapOf(
+            Pair(
+                Position(1, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black),
+            ),
+            Pair(
+                Position(9, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black),
+            ),
+        )
+        val blackKei = mapOf(
+            Pair(
+                Position(2, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
+            ),
+            Pair(
+                Position(8, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
+            ),
+        )
+        val blackGin = mapOf(
+            Pair(
+                Position(3, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Gin, Turn.Normal.Black),
+            ),
+            Pair(
+                Position(7, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Gin, Turn.Normal.Black),
+            ),
+        )
+        val blackKin = setOf(
+            Pair(
+                Position(4, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+            ),
+            Pair(
+                Position(6, 9),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+            ),
+        )
+        val whiteHisya = Pair(
+            Position(8, 2),
+            CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White),
+        )
+        val whiteKaku = Pair(
+            Position(2, 2),
+            CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.White),
+        )
+        val whiteKyo = mapOf(
+            Pair(
+                Position(1, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White),
+            ),
+            Pair(
+                Position(9, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White),
+            ),
+        )
+        val whiteKei = mapOf(
+            Pair(
+                Position(2, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
+            ),
+            Pair(
+                Position(8, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
+            ),
+        )
+        val whiteGin = mapOf(
+            Pair(
+                Position(3, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Gin, Turn.Normal.White),
+            ),
+            Pair(
+                Position(7, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Gin, Turn.Normal.White),
+            ),
+        )
+        val whiteKin = setOf(
+            Pair(
+                Position(4, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+            ),
+            Pair(
+                Position(6, 1),
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+            ),
+        )
+        val normalInitPiece: Map<Position, CellStatus> = mutableMapOf(
+            Position(5, 1) to CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
+            Position(1, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(2, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(3, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(4, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(5, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(6, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(7, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(8, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(9, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(5, 9) to CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
+            Position(1, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(2, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(3, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(4, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(5, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(6, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(7, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(8, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(9, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+        )
+            .plus(whiteKyo)
+            .plus(whiteKei)
+            .plus(whiteGin)
+            .plus(whiteKin)
+            .plus(whiteHisya)
+            .plus(whiteKaku)
+            .plus(blackKyo)
+            .plus(blackKei)
+            .plus(blackGin)
+            .plus(blackKin)
+            .plus(blackHisya)
+            .plus(blackKaku)
+    }
 }

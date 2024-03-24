@@ -5,10 +5,13 @@ import com.example.entity.game.board.Cell
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.EvolutionCheckState
 import com.example.entity.game.board.Position
-import com.example.entity.game.board.Size
 import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.PieceSetUpRule
+import com.example.entity.game.rule.BoardRule
+import com.example.entity.game.rule.GameRule
+import com.example.entity.game.rule.Hande
 import com.example.entity.game.rule.Turn
+import com.example.entity.game.rule.UserRule
+import com.example.entity.game.rule.UsersRule
 import org.junit.Assert
 import org.junit.Test
 
@@ -17,16 +20,15 @@ class BoardExtTest {
     @Test
     fun `盤面初期化`() {
         data class Param(
-            val case: PieceSetUpRule,
-            val resultBoardSize: Size,
+            val case: GameRule,
             val resultPieceList: Map<Position, Cell>,
         )
 
-        fun PieceSetUpRule.createBoard(): Map<Position, Cell> {
-            return (0 until this.boardSize.row).flatMap { row ->
-                (0 until this.boardSize.column).map { column ->
+        fun Map<Position, CellStatus>.createBoard(): Map<Position, Cell> {
+            return (0 until 9).flatMap { row ->
+                (0 until 9).map { column ->
                     val position = Position(row + 1, column + 1)
-                    val cellStatus = this.initPiece[position] ?: CellStatus.Empty
+                    val cellStatus = this[position] ?: CellStatus.Empty
                     val cell = Cell()
                     cell.update(cellStatus)
                     Pair(position, cell)
@@ -34,34 +36,212 @@ class BoardExtTest {
             }.toMap()
         }
 
+        val baseSet: Map<Position, CellStatus> = mutableMapOf(
+            Position(5, 1) to CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
+            Position(1, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(2, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(3, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(4, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(5, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(6, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(7, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(8, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(9, 3) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
+            Position(5, 9) to CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
+            Position(1, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(2, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(3, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(4, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(5, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(6, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(7, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(8, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+            Position(9, 7) to CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
+        )
+            .plus(SetUpPiece.Normal.whiteKyo)
+            .plus(SetUpPiece.Normal.whiteKei)
+            .plus(SetUpPiece.Normal.whiteGin)
+            .plus(SetUpPiece.Normal.whiteKin)
+            .plus(SetUpPiece.Normal.whiteHisya)
+            .plus(SetUpPiece.Normal.whiteKaku)
+            .plus(SetUpPiece.Normal.blackKyo)
+            .plus(SetUpPiece.Normal.blackKei)
+            .plus(SetUpPiece.Normal.blackGin)
+            .plus(SetUpPiece.Normal.blackKin)
+            .plus(SetUpPiece.Normal.blackHisya)
+            .plus(SetUpPiece.Normal.blackKaku)
         // data
         val params = listOf(
-            PieceSetUpRule.Normal.NoHande,
-            PieceSetUpRule.Normal.BlackHandeHisya,
-            PieceSetUpRule.Normal.BlackHandeKaku,
-            PieceSetUpRule.Normal.BlackHandeHisyaKaku,
-            PieceSetUpRule.Normal.BlackHandeFor,
-            PieceSetUpRule.Normal.BlackHandeSix,
-            PieceSetUpRule.Normal.BlackHandeEight,
-            PieceSetUpRule.Normal.WhiteHandeHisya,
-            PieceSetUpRule.Normal.WhiteHandeKaku,
-            PieceSetUpRule.Normal.WhiteHandeHisyaKaku,
-            PieceSetUpRule.Normal.WhiteHandeFor,
-            PieceSetUpRule.Normal.WhiteHandeSix,
-            PieceSetUpRule.Normal.WhiteHandeEight,
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(
+                        hande = Hande.NON,
+                    ),
+                    whiteRule = UserRule(),
+                ),
+                baseSet
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(
+                        hande = Hande.HISYA,
+                    ),
+                    whiteRule = UserRule(),
+                ),
+                baseSet.minus(SetUpPiece.Normal.blackHisya.first)
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(
+                        hande = Hande.KAKU,
+                    ),
+                    whiteRule = UserRule(),
+                ),
+                baseSet.minus(SetUpPiece.Normal.blackKaku.first)
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(
+                        hande = Hande.TWO,
+                    ),
+                    whiteRule = UserRule(),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.blackHisya.first)
+                    .minus(SetUpPiece.Normal.blackKaku.first)
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(
+                        hande = Hande.FOR,
+                    ),
+                    whiteRule = UserRule(),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.blackHisya.first)
+                    .minus(SetUpPiece.Normal.blackKaku.first)
+                    .minus(SetUpPiece.Normal.blackKyo.entries.map { it.key }.toSet())
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(
+                        hande = Hande.SIX,
+                    ),
+                    whiteRule = UserRule(),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.blackHisya.first)
+                    .minus(SetUpPiece.Normal.blackKaku.first)
+                    .minus(SetUpPiece.Normal.blackKyo.entries.map { it.key }.toSet())
+                    .minus(SetUpPiece.Normal.blackKei.entries.map { it.key }.toSet())
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(
+                        hande = Hande.EIGHT
+                    ),
+                    whiteRule = UserRule(),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.blackHisya.first)
+                    .minus(SetUpPiece.Normal.blackKaku.first)
+                    .minus(SetUpPiece.Normal.blackKyo.entries.map { it.key }.toSet())
+                    .minus(SetUpPiece.Normal.blackKei.entries.map { it.key }.toSet())
+                    .minus(SetUpPiece.Normal.blackGin.entries.map { it.key }.toSet())
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(),
+                    whiteRule = UserRule(
+                        hande = Hande.HISYA,
+                    ),
+                ),
+                baseSet.minus(SetUpPiece.Normal.whiteHisya.first)
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(),
+                    whiteRule = UserRule(
+                        hande = Hande.KAKU,
+                    ),
+                ),
+                baseSet.minus(SetUpPiece.Normal.whiteKaku.first)
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(),
+                    whiteRule = UserRule(
+                        hande = Hande.TWO,
+                    ),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.whiteHisya.first)
+                    .minus(SetUpPiece.Normal.whiteKaku.first)
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(),
+                    whiteRule = UserRule(
+                        hande = Hande.FOR,
+                    ),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.whiteHisya.first)
+                    .minus(SetUpPiece.Normal.whiteKaku.first)
+                    .minus(SetUpPiece.Normal.whiteKyo.entries.map { it.key }.toSet())
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(),
+                    whiteRule = UserRule(
+                        hande = Hande.SIX,
+                    ),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.whiteHisya.first)
+                    .minus(SetUpPiece.Normal.whiteKaku.first)
+                    .minus(SetUpPiece.Normal.whiteKyo.entries.map { it.key }.toSet())
+                    .minus(SetUpPiece.Normal.whiteKei.entries.map { it.key }.toSet())
+            ),
+            Pair(
+                UsersRule(
+                    blackRule = UserRule(),
+                    whiteRule = UserRule(
+                        hande = Hande.EIGHT
+                    ),
+                ),
+                baseSet
+                    .minus(SetUpPiece.Normal.whiteHisya.first)
+                    .minus(SetUpPiece.Normal.whiteKaku.first)
+                    .minus(SetUpPiece.Normal.whiteKyo.entries.map { it.key }.toSet())
+                    .minus(SetUpPiece.Normal.whiteKei.entries.map { it.key }.toSet())
+                    .minus(SetUpPiece.Normal.whiteGin.entries.map { it.key }.toSet())
+            ),
         )
-            .map { rule ->
+            .map { (userRule, baseSet) ->
+                val gameRule = GameRule(
+                    boardRule = BoardRule(),
+                    usersRule = userRule,
+                )
+
+                (0 until 9).flatMap { row ->
+                    (0 until 9).map { column ->
+                        val position = Position(row + 1, column + 1)
+                        val cellStatus = baseSet[position] ?: CellStatus.Empty
+                        val cell = Cell()
+                        cell.update(cellStatus)
+                        Pair(position, cell)
+                    }
+                }.toMap()
                 Param(
-                    case = rule,
-                    resultBoardSize = rule.boardSize,
-                    resultPieceList = rule.createBoard(),
+                    case = gameRule,
+                    resultPieceList = baseSet.createBoard(),
                 )
             }
 
         // result
         params.forEach {
             val expected = Board.setUp(it.case)
-            Assert.assertEquals(expected.size, it.resultBoardSize)
             Assert.assertEquals(expected.getAllCells(), it.resultPieceList)
         }
     }
