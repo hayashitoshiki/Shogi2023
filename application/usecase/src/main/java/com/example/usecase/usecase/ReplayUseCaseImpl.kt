@@ -3,7 +3,6 @@ package com.example.usecase.usecase
 import com.example.entity.game.Log
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Stand
-import com.example.entity.game.rule.PieceSetUpRule
 import com.example.extention.setUp
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
@@ -21,9 +20,9 @@ class ReplayUseCaseImpl @Inject constructor(
 
     private val replayService = ReplayService()
 
-    override fun replayInit(pieceSetUpRule: PieceSetUpRule): ReplayInitResult {
+    override fun replayInit(): ReplayInitResult {
         val rule = gameRuleRepository.getGameRule()
-        val board = Board.setUp(rule.pieceSetUpRule)
+        val board = Board.setUp(rule)
         val blackStand = Stand()
         val whiteStand = Stand()
         val log = logRepository.getLatestLog()

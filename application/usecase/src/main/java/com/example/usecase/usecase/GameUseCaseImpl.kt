@@ -32,7 +32,7 @@ class GameUseCaseImpl @Inject constructor(
 
     override fun gameInit(): GameInitResult {
         val rule = gameRuleRepository.getGameRule()
-        val board = Board.setUp(rule.pieceSetUpRule)
+        val board = Board.setUp(rule)
         val blackStand = Stand()
         val whiteStand = Stand()
         val now = LocalDateTime.now()
@@ -135,18 +135,31 @@ class GameUseCaseImpl @Inject constructor(
                     EvolutionCheckState.Should -> newBoard.updatePieceEvolution(position)
                     EvolutionCheckState.No -> Unit
                     EvolutionCheckState.Choose -> {
-                        return NextResult.Move.ChooseEvolution(
+                        val rule = gameRuleRepository.getGameRule()
+                        val gameSet = gameService.checkGameSetForFirstCheck(
                             board = newBoard,
-                            stand = newStand,
-                            nextTurn = nextTurn,
+                            turn = turn,
+                            rule = rule,
                         )
+                        return if (gameSet) {
+                            NextResult.Move.Win(
+                                board = newBoard,
+                                stand = newStand,
+                                nextTurn = nextTurn,
+                            )
+                        } else {
+                            NextResult.Move.ChooseEvolution(
+                                board = newBoard,
+                                stand = newStand,
+                                nextTurn = nextTurn,
+                            )
+                        }
                     }
                 }
             }
         }
 
-        val rule = gameRuleRepository.getGameRule()
-        return if (gameService.checkGameSet(newBoard, stand, turn, rule)) {
+        return if (gameService.checkGameSet(newBoard, stand, turn)) {
             NextResult.Move.Win(
                 board = newBoard,
                 stand = newStand,
