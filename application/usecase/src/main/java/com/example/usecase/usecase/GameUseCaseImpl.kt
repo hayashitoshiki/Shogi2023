@@ -126,7 +126,20 @@ class GameUseCaseImpl @Inject constructor(
             takePiece = takePiece,
         )
         val nextTurn = turn.changeNextTurn()
+        val rule = gameRuleRepository.getGameRule()
+        val gameSet = gameService.checkGameSetForFirstCheck(
+            board = newBoard,
+            turn = turn,
+            rule = rule,
+        )
 
+        if (gameSet) {
+            return NextResult.Move.Win(
+                board = newBoard,
+                stand = newStand,
+                nextTurn = nextTurn,
+            )
+        }
         if (hold is MoveTarget.Board) {
             val cellStatus = board.getPieceOrNullByPosition(hold.position)
             val piece = cellStatus?.piece as? Piece.Surface
@@ -135,25 +148,11 @@ class GameUseCaseImpl @Inject constructor(
                     EvolutionCheckState.Should -> newBoard.updatePieceEvolution(position)
                     EvolutionCheckState.No -> Unit
                     EvolutionCheckState.Choose -> {
-                        val rule = gameRuleRepository.getGameRule()
-                        val gameSet = gameService.checkGameSetForFirstCheck(
+                        NextResult.Move.ChooseEvolution(
                             board = newBoard,
-                            turn = turn,
-                            rule = rule,
+                            stand = newStand,
+                            nextTurn = nextTurn,
                         )
-                        return if (gameSet) {
-                            NextResult.Move.Win(
-                                board = newBoard,
-                                stand = newStand,
-                                nextTurn = nextTurn,
-                            )
-                        } else {
-                            NextResult.Move.ChooseEvolution(
-                                board = newBoard,
-                                stand = newStand,
-                                nextTurn = nextTurn,
-                            )
-                        }
                     }
                 }
             }
