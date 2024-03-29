@@ -9,4 +9,11 @@ package com.example.entity.game.rule
 data class PlayersRule(
     val blackRule: PlayerRule,
     val whiteRule: PlayerRule,
-)
+) {
+    companion object {
+        val INIT = PlayersRule(
+            blackRule = PlayerRule(),
+            whiteRule = PlayerRule(),
+        )
+    }
+}

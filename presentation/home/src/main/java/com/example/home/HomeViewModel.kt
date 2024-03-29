@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.entity.game.rule.BoardRule
 import com.example.entity.game.rule.GameRule
-import com.example.entity.game.rule.Hande
 import com.example.entity.game.rule.PlayerRule
 import com.example.entity.game.rule.PlayersRule
 import com.example.entity.game.rule.Turn
@@ -27,8 +26,9 @@ class HomeViewModel @Inject constructor(
     private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(
         UiState(
             ruleItems = listOf(
-                GameRuleSettingUiModel.Normal(),
-                GameRuleSettingUiModel.FirstCheck(),
+                GameRuleSettingUiModel.NonCustom.Normal.INIT,
+                GameRuleSettingUiModel.NonCustom.FirstCheck.INIT,
+                GameRuleSettingUiModel.Custom.INIT,
             ),
             showRuleItemIndex = 0,
         )
@@ -42,10 +42,9 @@ class HomeViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(
             ruleItems = uiState.value.ruleItems.toMutableList().map {
                 when (it) {
-                    is GameRuleSettingUiModel.FirstCheck -> it
-                    is GameRuleSettingUiModel.Normal -> it.copy(
-                        selectedHande = selectedHande,
-                    )
+                    is GameRuleSettingUiModel.NonCustom.Normal -> it.copy(selectedHande = selectedHande)
+                    is GameRuleSettingUiModel.NonCustom.FirstCheck,
+                    is GameRuleSettingUiModel.Custom -> it
                 }
             },
         )
@@ -55,47 +54,98 @@ class HomeViewModel @Inject constructor(
         _uiState.value = uiState.value.copy(
             ruleItems = uiState.value.ruleItems.toMutableList().map {
                 when (it) {
-                    is GameRuleSettingUiModel.FirstCheck -> it.copy(
-                        selectedHande = selectedHande,
-                    )
+                    is GameRuleSettingUiModel.NonCustom.FirstCheck -> it.copy(selectedHande = selectedHande)
+                    is GameRuleSettingUiModel.NonCustom.Normal,
+                    is GameRuleSettingUiModel.Custom -> it
+                }
+            },
+        )
+    }
 
-                    is GameRuleSettingUiModel.Normal -> it
+    fun changePieceHandeByCustomItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
+        _uiState.value = uiState.value.copy(
+            ruleItems = uiState.value.ruleItems.toMutableList().map {
+                when (it) {
+                    is GameRuleSettingUiModel.Custom -> {
+                        val (black, whiteRule) = when (selectedHande.turn) {
+                            Turn.Normal.Black -> {
+                                it.playersRule.blackRule.copy(hande = selectedHande.hande) to
+                                        it.playersRule.whiteRule
+                            }
+
+                            Turn.Normal.White -> {
+                                it.playersRule.blackRule to
+                                        it.playersRule.whiteRule.copy(hande = selectedHande.hande)
+                            }
+                        }
+                        val playersRule = PlayersRule(
+                            blackRule = black,
+                            whiteRule = whiteRule,
+                        )
+                        it.copy(playersRule = playersRule)
+                    }
+
+                    is GameRuleSettingUiModel.NonCustom.FirstCheck,
+                    is GameRuleSettingUiModel.NonCustom.Normal -> it
+                }
+            },
+        )
+    }
+
+    fun onChangeFirstCheck(turn: Turn, isFirstCheck: Boolean) {
+        _uiState.value = uiState.value.copy(
+            ruleItems = uiState.value.ruleItems.toMutableList().map {
+                when (it) {
+                    is GameRuleSettingUiModel.Custom -> {
+                        val (black, whiteRule) = when (turn) {
+                            Turn.Normal.Black -> {
+                                it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck) to
+                                        it.playersRule.whiteRule
+                            }
+
+                            Turn.Normal.White -> {
+                                it.playersRule.blackRule to
+                                        it.playersRule.whiteRule.copy(isFirstCheckEnd = isFirstCheck)
+                            }
+                        }
+                        val playersRule = PlayersRule(
+                            blackRule = black,
+                            whiteRule = whiteRule,
+                        )
+                        it.copy(playersRule = playersRule)
+                    }
+
+                    is GameRuleSettingUiModel.NonCustom.FirstCheck,
+                    is GameRuleSettingUiModel.NonCustom.Normal -> it
                 }
             },
         )
     }
 
     fun onGameStartClick() {
-        val setting = uiState.value.ruleItems[uiState.value.showRuleItemIndex]
-        val isFirstCheckEnd = when (setting) {
-            is GameRuleSettingUiModel.FirstCheck -> true
-            is GameRuleSettingUiModel.Normal -> false
-        }
-        val handeTurn = setting.selectedHande.turn
-        val hande = setting.selectedHande.hande
-        val blackHande = when (handeTurn) {
-            Turn.Normal.Black -> hande
-            Turn.Normal.White -> Hande.NON
-        }
-        val whiteHande = when (handeTurn) {
-            Turn.Normal.Black -> Hande.NON
-            Turn.Normal.White -> hande
-        }
-        val rule = GameRule(
+        val playerRules =
+            when (val setting = uiState.value.ruleItems[uiState.value.showRuleItemIndex]) {
+                is GameRuleSettingUiModel.Custom -> setting.playersRule
+                is GameRuleSettingUiModel.NonCustom -> {
+                    val isFirstCheckEnd = setting is GameRuleSettingUiModel.NonCustom.FirstCheck
+                    PlayersRule(
+                        blackRule = PlayerRule(
+                            hande = setting.selectedHande.hande,
+                            isFirstCheckEnd = isFirstCheckEnd,
+                        ),
+                        whiteRule = PlayerRule(
+                            hande = setting.selectedHande.hande,
+                            isFirstCheckEnd = isFirstCheckEnd,
+                        ),
+                    )
+                }
+            }
+        val gameRule = GameRule(
             boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(
-                    hande = blackHande,
-                    isFirstCheckEnd = isFirstCheckEnd,
-                ),
-                whiteRule = PlayerRule(
-                    hande = whiteHande,
-                    isFirstCheckEnd = isFirstCheckEnd,
-                )
-            ),
+            playersRule = playerRules,
         )
 
-        useCase.setGameRule(rule)
+        useCase.setGameRule(gameRule)
         viewModelScope.launch {
             mutableGameStartEffect.emit(Effect.GameStart)
         }

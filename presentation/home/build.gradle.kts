@@ -71,6 +71,7 @@ dependencies {
     implementation(project(":presentation:core"))
     implementation(project(":application:usecase"))
     implementation(project(":domain:entity"))
+    implementation(project(":presentation:game"))
 }
 
 kapt {
