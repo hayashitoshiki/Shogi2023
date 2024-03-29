@@ -1,6 +1,11 @@
 *.iml
 .gradle
 /local.properties
+/.idea/gradle.xml
+/.idea/misc.xm
+/.idea/deploymentTargetDropDown.xml
+/.idea/inspectionProfiles/
+/.idea/saveactions_settings.xml
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
