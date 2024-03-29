@@ -9,14 +9,12 @@ import com.example.entity.game.piece.Piece
 import com.example.extention.degeneracy
 import com.example.extention.evolution
 import com.example.extention.getOpponentTurn
+import com.example.serviceinterface.ReplayService
+import javax.inject.Inject
 
-/**
- * 将棋に関するドメインロジック
- *
- */
-class ReplayService {
+class ReplayServiceImpl @Inject constructor() : ReplayService {
 
-    fun goNext(board: Board, stand: Stand, log: Log): Pair<Board, Stand> {
+    override fun goNext(board: Board, stand: Stand, log: Log): Pair<Board, Stand> {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
                 board.getPieceOrNullByPosition(moveTarget.position)?.let { cellStatus ->
@@ -45,7 +43,7 @@ class ReplayService {
         return board to stand
     }
 
-    fun goBack(board: Board, stand: Stand, log: Log): Pair<Board, Stand> {
+    override fun goBack(board: Board, stand: Stand, log: Log): Pair<Board, Stand> {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
                 board.getPieceOrNullByPosition(log.afterPosition)?.let { movedCellStatus ->

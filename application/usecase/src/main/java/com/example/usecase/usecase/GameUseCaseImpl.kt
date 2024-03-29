@@ -16,7 +16,7 @@ import com.example.extention.setUp
 import com.example.extention.updatePieceEvolution
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
-import com.example.service.GameService
+import com.example.serviceinterface.GameService
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
@@ -27,8 +27,8 @@ import javax.inject.Inject
 class GameUseCaseImpl @Inject constructor(
     private val logRepository: LogRepository,
     private val gameRuleRepository: GameRuleRepository,
+    private val gameService: GameService,
 ) : GameUseCase {
-    private val gameService = GameService()
 
     override fun gameInit(): GameInitResult {
         val rule = gameRuleRepository.getGameRule()

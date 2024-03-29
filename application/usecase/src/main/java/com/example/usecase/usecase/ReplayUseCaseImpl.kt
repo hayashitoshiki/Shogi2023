@@ -6,7 +6,7 @@ import com.example.entity.game.board.Stand
 import com.example.extention.setUp
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
-import com.example.service.ReplayService
+import com.example.serviceinterface.ReplayService
 import com.example.usecase.usecaseinterface.ReplayUseCase
 import com.example.usecase.usecaseinterface.model.result.ReplayGoBackResult
 import com.example.usecase.usecaseinterface.model.result.ReplayGoNextResult
@@ -16,9 +16,8 @@ import javax.inject.Inject
 class ReplayUseCaseImpl @Inject constructor(
     private val logRepository: LogRepository,
     private val gameRuleRepository: GameRuleRepository,
+    private val replayService: ReplayService,
 ) : ReplayUseCase {
-
-    private val replayService = ReplayService()
 
     override fun replayInit(): ReplayInitResult {
         val rule = gameRuleRepository.getGameRule()

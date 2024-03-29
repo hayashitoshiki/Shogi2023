@@ -14,22 +14,12 @@ import com.example.extention.isCheckByTurn
 import com.example.extention.movePieceByPosition
 import com.example.extention.searchMoveBy
 import com.example.extention.searchPutBy
+import com.example.serviceinterface.GameService
+import javax.inject.Inject
 
-/**
- * 将棋に関するドメインロジック
- *
- */
-class GameService {
+class GameServiceImpl @Inject constructor() : GameService {
 
-    /**
-     * 指定した手番の王様が詰んでいるか判定
-     *
-     * @param board 将棋盤
-     * @param stand 持ち駒
-     * @param turn 手番
-     * @return 詰んでいるか
-     */
-    fun isCheckmate(board: Board, stand: Stand, turn: Turn): Boolean {
+    override fun isCheckmate(board: Board, stand: Stand, turn: Turn): Boolean {
         board.getCellsFromTurn(turn).forEach { position ->
             board.searchMoveBy(position, turn).forEach { afterPosition ->
                 val newBoard = movePieceByPosition(board, stand, position, afterPosition).first
@@ -47,16 +37,7 @@ class GameService {
         return true
     }
 
-    /**
-     * 持ち駒の駒を打つ
-     *
-     * @param board 将棋盤
-     * @param stand 持ち駒
-     * @param turn 手番
-     * @param piece 打つ駒
-     * @param position 打つ場所
-     */
-    fun putPieceByStand(
+    override fun putPieceByStand(
         board: Board,
         stand: Stand,
         turn: Turn,
@@ -70,16 +51,7 @@ class GameService {
         return Pair(newBoard, newStand)
     }
 
-    /**
-     * 指定したマスに駒を動かす
-     *
-     * @param board 将棋盤
-     * @param stand 持ち駒
-     * @param beforePosition 動かす駒のマス目
-     * @param afterPosition 動かす先のマス目
-     * @return
-     */
-    fun movePieceByPosition(
+    override fun movePieceByPosition(
         board: Board,
         stand: Stand,
         beforePosition: Position,
@@ -99,15 +71,7 @@ class GameService {
         return Pair(newBoard, newStand)
     }
 
-    /**
-     * 勝利判定
-     *
-     * @param board 将棋盤
-     * @param stand 持ち駒
-     * @param turn 手番
-     * @return 判定結果
-     */
-    fun checkGameSet(
+    override fun checkGameSet(
         board: Board,
         stand: Stand,
         turn: Turn,
@@ -116,15 +80,7 @@ class GameService {
         return !board.isAvailableKingBy(nextTurn) || isCheckmate(board, stand, nextTurn)
     }
 
-    /**
-     * 王手将棋かつ詰み判定
-     *
-     * @param board 将棋盤
-     * @param turn 手番
-     * @param rule ルール
-     * @return 王手将棋でかつ詰んでいるか
-     */
-    fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean {
+    override fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean {
         val nextTurn = turn.changeNextTurn()
         return when {
             turn is Turn.Normal.Black && rule.playersRule.blackRule.isFirstCheckEnd -> {
