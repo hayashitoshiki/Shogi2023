@@ -11,6 +11,17 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/application" />
+            <option value="$PROJECT_DIR$/application/usecase" />
+            <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/repository" />
+            <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/domain/entity" />
+            <option value="$PROJECT_DIR$/domain/service" />
+            <option value="$PROJECT_DIR$/presentation" />
+            <option value="$PROJECT_DIR$/presentation/core" />
+            <option value="$PROJECT_DIR$/presentation/game" />
+            <option value="$PROJECT_DIR$/presentation/home" />
           </set>
         </option>
       </GradleProjectSettings>
