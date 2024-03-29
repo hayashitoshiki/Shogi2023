@@ -148,7 +148,7 @@ class GameUseCaseImpl @Inject constructor(
                     EvolutionCheckState.Should -> newBoard.updatePieceEvolution(position)
                     EvolutionCheckState.No -> Unit
                     EvolutionCheckState.Choose -> {
-                        NextResult.Move.ChooseEvolution(
+                        return NextResult.Move.ChooseEvolution(
                             board = newBoard,
                             stand = newStand,
                             nextTurn = nextTurn,
