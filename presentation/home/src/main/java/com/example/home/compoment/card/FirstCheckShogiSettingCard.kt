@@ -12,7 +12,7 @@ fun FirstCheckShogiSettingCard(
     selected: GameRuleSettingUiModel.SelectedHande,
     onChange: (GameRuleSettingUiModel.SelectedHande) -> Unit,
 ) {
-    BaseSettingCard(
+    BaseNotCustomSettingBaseCard(
         modifier = modifier,
         title = stringResource(id = R.string.title_rule_first_check),
         selected = selected,

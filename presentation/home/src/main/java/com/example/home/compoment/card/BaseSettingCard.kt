@@ -22,8 +22,7 @@ import com.example.home.model.GameRuleSettingUiModel
 fun BaseSettingCard(
     modifier: Modifier = Modifier,
     title: String,
-    selected: GameRuleSettingUiModel.SelectedHande,
-    onChange: (GameRuleSettingUiModel.SelectedHande) -> Unit,
+    content: @Composable () -> Unit,
 ) {
     Card(modifier = modifier.shadow(8.dp, RoundedCornerShape(8.dp))) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -33,14 +32,7 @@ fun BaseSettingCard(
                 text = title,
             )
             Spacer(modifier = Modifier.size(16.dp))
-            Text(
-                style = MaterialTheme.typography.titleMedium,
-                text = stringResource(id = R.string.title_hande),
-            )
-            HandeSettingBox(
-                selected = selected,
-                onChange = onChange,
-            )
+            content()
         }
     }
 }

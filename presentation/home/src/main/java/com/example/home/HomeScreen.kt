@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.core.navigation.NavigationScreens
 import com.example.core.theme.Shogi2023Theme
+import com.example.home.compoment.card.CustomShogiSettingCard
 import com.example.home.compoment.card.FirstCheckShogiSettingCard
 import com.example.home.compoment.card.NormalShogiSettingCard
 import com.example.home.model.GameRuleSettingUiModel
@@ -56,7 +57,7 @@ fun HomeScreen(
 
     val tabs: List<@Composable () -> Unit> = gameRule.value.ruleItems.map {
         return@map when (it) {
-            is GameRuleSettingUiModel.FirstCheck -> {
+            is GameRuleSettingUiModel.NonCustom.FirstCheck -> {
                 {
                     FirstCheckShogiSettingCard(
                         selected = it.selectedHande,
@@ -65,11 +66,21 @@ fun HomeScreen(
                 }
             }
 
-            is GameRuleSettingUiModel.Normal -> {
+            is GameRuleSettingUiModel.NonCustom.Normal -> {
                 {
                     NormalShogiSettingCard(
                         selected = it.selectedHande,
                         onChange = viewModel::changePieceHandeByNormalItem,
+                    )
+                }
+            }
+
+            is GameRuleSettingUiModel.Custom -> {
+                {
+                    CustomShogiSettingCard(
+                        custom = it,
+                        onChangeFirstCheck = viewModel::onChangeFirstCheck,
+                        onChangeHande = viewModel::changePieceHandeByCustomItem,
                     )
                 }
             }
