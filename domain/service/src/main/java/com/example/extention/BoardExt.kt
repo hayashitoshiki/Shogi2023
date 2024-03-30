@@ -1,6 +1,5 @@
 package com.example.extention
 
-import android.util.Log
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.EvolutionCheckState
@@ -263,9 +262,6 @@ fun Board.isCheckByTurn(turn: Turn): Boolean {
     val opponentTurn = turn.getOpponentTurn()
     return this.getCellsFromTurn(opponentTurn).any { position ->
         this.searchMoveBy(position, opponentTurn).any { movePosition ->
-            if (position.column == 3 && position.row == 3) {
-                Log.e("画面遷移", "isCheckByTurn()　角の動ける範囲 = " + movePosition)
-            }
             this.isKingCellBy(movePosition, turn)
         }
     }
