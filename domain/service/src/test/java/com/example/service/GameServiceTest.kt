@@ -15,7 +15,7 @@ import org.junit.Test
 
 class GameServiceTest {
 
-    private val gameService = GameService()
+    private val gameService = GameServiceImpl()
 
     @Test
     fun `盤上の駒を動かす`() {
@@ -461,7 +461,14 @@ class GameServiceTest {
             }
             val stand = Stand()
             val turn = Turn.Normal.White
-            val expected = gameService.checkGameSet(board, stand, turn)
+            val gameRule = GameRule(
+                boardRule = BoardRule(),
+                playersRule = PlayersRule(
+                    blackRule = PlayerRule(),
+                    whiteRule = PlayerRule(),
+                )
+            )
+            val expected = gameService.checkGameSet(board, stand, turn, gameRule)
             assertEquals(expected, it.result)
         }
     }
@@ -471,8 +478,6 @@ class GameServiceTest {
         data class Param(
             val caseGameRule: GameRule,
             val caseIsCheck: Boolean = false,
-            val caseIsCheckmate: Boolean = false,
-            val caseNotKing: Boolean = false,
             val result: Boolean,
         )
 
@@ -483,18 +488,17 @@ class GameServiceTest {
                 whiteRule = PlayerRule(),
             )
         )
-        val ruleIsFirstCheck =
-            GameRule(
-                boardRule = BoardRule(),
-                playersRule = PlayersRule(
-                    blackRule = PlayerRule(
-                        isFirstCheckEnd = true,
-                    ),
-                    whiteRule = PlayerRule(
-                        isFirstCheckEnd = true,
-                    ),
-                )
+        val ruleIsFirstCheck = GameRule(
+            boardRule = BoardRule(),
+            playersRule = PlayersRule(
+                blackRule = PlayerRule(
+                    isFirstCheckEnd = true,
+                ),
+                whiteRule = PlayerRule(
+                    isFirstCheckEnd = true,
+                ),
             )
+        )
         val params = listOf(
             // 王手将棋設定ありで王手状態
             Param(
@@ -523,27 +527,103 @@ class GameServiceTest {
                 update(kingPosition, king)
                 when {
                     it.caseIsCheck -> {
-                        val position1 = Position(5, 7)
-                        val position2 = Position(5, 8)
-                        val kin = CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
-                        update(position1, kin)
-                        update(position2, kin)
-                    }
-
-                    it.caseIsCheckmate -> {
-                        val position = Position(5, 5)
-                        val cell = CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White)
-                        update(position, cell)
-                    }
-
-                    it.caseNotKing -> {
-                        update(kingPosition, CellStatus.Empty)
+                        val position1 = Position(5, 5)
+                        val hisya =
+                            CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White)
+                        update(position1, hisya)
                     }
                 }
             }
             val turn = Turn.Normal.White
-            val expected = gameService.checkGameSetForFirstCheck(board, turn, it.caseGameRule)
+            val expected = gameService.checkGameSet(board, Stand(), turn, it.caseGameRule)
             assertEquals(expected, it.result)
+        }
+    }
+
+    @Test
+    fun `トライルール判定`() {
+        data class Param(
+            val caseGameRule: GameRule,
+            val kingPosition: Position,
+            val kingTurn: Turn,
+            val result: Boolean,
+        )
+
+        val ruleIsTryBlack = GameRule(
+            boardRule = BoardRule(),
+            playersRule = PlayersRule(
+                blackRule = PlayerRule(
+                    isTryRule = true,
+                ),
+                whiteRule = PlayerRule(
+                    isTryRule = false,
+                ),
+            )
+        )
+        val ruleIsTryWhite = GameRule(
+            boardRule = BoardRule(),
+            playersRule = PlayersRule(
+                blackRule = PlayerRule(
+                    isTryRule = false,
+                ),
+                whiteRule = PlayerRule(
+                    isTryRule = true,
+                ),
+            )
+        )
+        val blackKingPosition = Position(5, 1)
+        val whiteKingPosition = Position(5, 9)
+        val params = listOf(
+            // 先手がトライルールありで先手が5一玉
+            Param(
+                caseGameRule = ruleIsTryBlack,
+                kingPosition = blackKingPosition,
+                kingTurn = Turn.Normal.Black,
+                result = true,
+            ),
+            // 先手がトライルールなしで先手が5一玉
+            Param(
+                caseGameRule = ruleIsTryWhite,
+                kingPosition = blackKingPosition,
+                kingTurn = Turn.Normal.Black,
+                result = false,
+            ),
+            // 後手がトライルールありで後手が5九王
+            Param(
+                caseGameRule = ruleIsTryWhite,
+                kingPosition = whiteKingPosition,
+                kingTurn = Turn.Normal.White,
+                result = true,
+            ),
+            // 後手がトライルールなしで後手が5九王
+            Param(
+                caseGameRule = ruleIsTryBlack,
+                kingPosition = whiteKingPosition,
+                kingTurn = Turn.Normal.Black,
+                result = false,
+            ),
+        )
+
+        params.forEach { param ->
+            val board = Board().apply {
+                val gyoku = CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                val ou = CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                val notKingPosition = Position(5, 5)
+                when (param.kingTurn) {
+                    Turn.Normal.Black -> {
+                        update(param.kingPosition, gyoku)
+                        update(notKingPosition, ou)
+                    }
+
+                    Turn.Normal.White -> {
+                        update(notKingPosition, gyoku)
+                        update(param.kingPosition, ou)
+                    }
+                }
+            }
+            val expected =
+                gameService.checkGameSet(board, Stand(), param.kingTurn, param.caseGameRule)
+            assertEquals(expected, param.result)
         }
     }
 }

@@ -62,21 +62,13 @@ interface GameService {
      * @param board 将棋盤
      * @param stand 持ち駒
      * @param turn 手番
+     * @param rule ルール
      * @return 判定結果
      */
     fun checkGameSet(
         board: Board,
         stand: Stand,
         turn: Turn,
+        rule: GameRule
     ): Boolean
-
-    /**
-     * 王手将棋かつ詰み判定
-     *
-     * @param board 将棋盤
-     * @param turn 手番
-     * @param rule ルール
-     * @return 王手将棋でかつ詰んでいるか
-     */
-    fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean
 }

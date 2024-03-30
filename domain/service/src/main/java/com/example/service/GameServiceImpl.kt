@@ -75,12 +75,24 @@ class GameServiceImpl @Inject constructor() : GameService {
         board: Board,
         stand: Stand,
         turn: Turn,
+        rule: GameRule,
     ): Boolean {
         val nextTurn = turn.changeNextTurn()
-        return !board.isAvailableKingBy(nextTurn) || isCheckmate(board, stand, nextTurn)
+        return !board.isAvailableKingBy(nextTurn)
+                || isCheckmate(board, stand, nextTurn)
+                || checkGameSetForFirstCheck(board, turn, rule)
+                || checkTryGameSet(board, turn, rule)
     }
 
-    override fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean {
+    /**
+     * 王手将棋判定
+     *
+     * @param board 将棋盤
+     * @param turn 手番
+     * @param rule ルール
+     * @return 王手将棋判定結果
+     */
+    private fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean {
         val nextTurn = turn.changeNextTurn()
         return when {
             turn is Turn.Normal.Black && rule.playersRule.blackRule.isFirstCheckEnd -> {
@@ -92,6 +104,30 @@ class GameServiceImpl @Inject constructor() : GameService {
             }
 
             else -> false
+        }
+    }
+
+    /**
+     * トライルール判定
+     *
+     * @param board 将棋盤
+     * @param turn 手番
+     * @param rule ルール
+     * @return トライルール判定結果
+     */
+    private fun checkTryGameSet(board: Board, turn: Turn, rule: GameRule): Boolean {
+        return when (turn) {
+            Turn.Normal.Black -> {
+                if (!rule.playersRule.blackRule.isTryRule) return false
+                (board.getCellByPosition(Position(5, 1)).getStatus() as? CellStatus.Fill.FromPiece)
+                    ?.piece == Piece.Surface.Gyoku
+            }
+
+            Turn.Normal.White -> {
+                if (!rule.playersRule.whiteRule.isTryRule) return false
+                (board.getCellByPosition(Position(5, 9)).getStatus() as CellStatus.Fill.FromPiece)
+                    .piece == Piece.Surface.Ou
+            }
         }
     }
 }
