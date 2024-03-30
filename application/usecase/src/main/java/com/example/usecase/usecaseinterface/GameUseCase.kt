@@ -8,6 +8,7 @@ import com.example.entity.game.rule.Turn
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
+import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
 
 /**
  * 将棋のビジネスロジック
@@ -41,11 +42,20 @@ interface GameUseCase {
     ): NextResult
 
     /**
-     * 指定したマスの駒を成らせる
+     * 指定したマスの駒の成り判定の決定を反映する
      *
+     * @param turn 手番
      * @param board 将棋盤
+     * @param stand 相手の持ち駒
      * @param position 駒
+     * @param isEvolution 成る選択をしたか
      * @return 更新後の将棋盤
      */
-    fun setEvolution(board: Board, position: Position): Board
+    fun setEvolution(
+        turn: Turn,
+        board: Board,
+        stand: Stand,
+        position: Position,
+        isEvolution: Boolean,
+    ): SetEvolutionResult
 }

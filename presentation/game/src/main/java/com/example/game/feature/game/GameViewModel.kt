@@ -129,11 +129,28 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun setEvolution(position: Position) {
-        val result = useCase.setEvolution(uiState.value.board, position)
-        _uiState.value = uiState.value.copy(
-            board = result,
+    fun setEvolution(position: Position, isEvolution: Boolean) {
+        val turn = uiState.value.turn
+        val stand = when (turn) {
+            Turn.Normal.Black -> uiState.value.whiteStand
+            Turn.Normal.White -> uiState.value.blackStand
+        }
+        val result = useCase.setEvolution(
+            turn = turn,
+            board = uiState.value.board,
+            stand = stand,
+            position = position,
+            isEvolution = isEvolution,
         )
+        _uiState.value = uiState.value.copy(
+            board = result.board,
+            turn = result.nextTurn,
+        )
+        if (result.isWin) {
+            viewModelScope.launch {
+                mutableGameEndEffect.emit(Effect.GameEnd(turn))
+            }
+        }
     }
 
     private fun setMoved(result: NextResult.Move) {

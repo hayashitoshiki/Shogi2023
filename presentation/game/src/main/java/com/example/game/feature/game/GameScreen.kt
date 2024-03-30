@@ -38,7 +38,7 @@ fun GameScreen(
     showEvolutionDialog.value?.apply {
         EvolutionDialog(
             openDialog = showEvolutionDialog,
-            onClick = { viewModel.setEvolution(position) },
+            onClick = { viewModel.setEvolution(position, it) },
         )
     }
     showGameEndDialog.value?.apply {
