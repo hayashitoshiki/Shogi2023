@@ -16,7 +16,7 @@ import com.example.game.R
 
 
 @Composable
-fun LoseButton(modifier: Modifier = Modifier, turn: Turn, onClick: (Turn) -> Unit) {
+fun LoseButton(modifier: Modifier = Modifier, enable: Boolean, turn: Turn, onClick: (Turn) -> Unit) {
     val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
     val rotate = when (turn) {
@@ -26,6 +26,7 @@ fun LoseButton(modifier: Modifier = Modifier, turn: Turn, onClick: (Turn) -> Uni
 
     Button(
         modifier = modifier.rotate(rotate),
+        enabled = enable,
         onClick = { showDialog.value = true }) {
         Text(text = context.getString(R.string.button_lose_text))
     }

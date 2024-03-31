@@ -69,6 +69,7 @@ fun GameScreen(
             LoseButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 turn = Turn.Normal.White,
+                enable = uiState.value.turn == Turn.Normal.White,
                 onClick = viewModel::tapLoseButton,
             )
             GameBox(
@@ -82,6 +83,7 @@ fun GameScreen(
             LoseButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 turn = Turn.Normal.Black,
+                enable = uiState.value.turn == Turn.Normal.Black,
                 onClick = viewModel::tapLoseButton,
             )
         }
