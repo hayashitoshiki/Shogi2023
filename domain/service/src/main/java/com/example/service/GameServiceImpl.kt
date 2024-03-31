@@ -28,13 +28,34 @@ class GameServiceImpl @Inject constructor() : GameService {
         }
 
         stand.pieces.forEach { piece ->
-            board.searchPutBy(piece, turn).forEach { position ->
+            searchPutBy(piece, board, turn).forEach { position ->
                 val newBoard = putPieceByStand(board, stand, turn, piece, position).first
                 if (!newBoard.isCheckByTurn(turn)) return false
             }
         }
 
         return true
+    }
+
+    override fun searchPutBy(piece: Piece, board: Board, turn: Turn): List<Position> {
+        return board.searchPutBy(piece, turn)
+            .filter { !checkPutFuCheckMate(piece, board, turn) }
+    }
+
+    /**
+     * 打ち歩詰めか判定
+     *
+     * @param piece 打った駒
+     * @param board 将棋盤
+     * @param turn 手番
+     * @return 打ち歩詰め判定結果
+     */
+    private fun checkPutFuCheckMate(piece: Piece, board: Board, turn: Turn): Boolean {
+        return if (piece is Piece.Surface.Fu) {
+            isCheckmate(board, Stand(), turn)
+        } else {
+            false
+        }
     }
 
     override fun putPieceByStand(

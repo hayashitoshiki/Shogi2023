@@ -24,6 +24,16 @@ interface GameService {
     fun isCheckmate(board: Board, stand: Stand, turn: Turn): Boolean
 
     /**
+     * 駒を持ち駒から打てる場所を探す
+     *
+     * @param piece 打った駒
+     * @param board 将棋盤
+     * @param turn 手番
+     * @return 打ち歩詰め判定結果
+     */
+    fun searchPutBy(piece: Piece, board: Board, turn: Turn): List<Position>
+
+    /**
      * 持ち駒の駒を打つ
      *
      * @param board 将棋盤

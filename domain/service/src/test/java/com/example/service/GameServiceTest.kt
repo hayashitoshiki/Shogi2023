@@ -101,6 +101,58 @@ class GameServiceTest {
                 caseTurn = Turn.Normal.Black,
                 result = true,
             ),
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態あり & 防ごうとすると打ち歩詰め
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(9, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(9, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(9, 7),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(9, 6),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(8, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(8, 7),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(8, 6),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(7, 9),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(7, 8),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(7, 7),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(7, 6),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.Black,
+                result = true,
+            ),
             // 逃げ場あり & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態なし
             Param(
                 caseCellPattern = listOf(
@@ -246,6 +298,58 @@ class GameServiceTest {
                 caseTurn = Turn.Normal.White,
                 result = true,
             ),
+            // 逃げ場なし & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態あり & 防ごうとすると打ち歩詰め
+            Param(
+                caseCellPattern = listOf(
+                    Pair(
+                        Position(1, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(1, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(1, 3),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(1, 4),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                    ),
+                    Pair(
+                        Position(2, 3),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(2, 4),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(3, 1),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(3, 2),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(3, 3),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.Black)
+                    ),
+                    Pair(
+                        Position(3, 4),
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    ),
+                ),
+                caseUseStandPiece = true,
+                caseTurn = Turn.Normal.White,
+                result = true,
+            ),
             // 逃げ場あり & 取れる駒なし & 動かして防げる駒なし & 打って防げる状態なし
             Param(
                 caseCellPattern = listOf(
@@ -381,7 +485,7 @@ class GameServiceTest {
             }
             val stand = Stand().apply {
                 if (!it.caseUseStandPiece) return@apply
-                add(Piece.Surface.Kin)
+                add(Piece.Surface.Fu)
             }
             val expected = gameService.isCheckmate(board, stand, it.caseTurn)
             assertEquals(expected, it.result)

@@ -12,7 +12,6 @@ import com.example.extention.changeNextTurn
 import com.example.extention.checkPieceEvolution
 import com.example.extention.getOpponentTurn
 import com.example.extention.searchMoveBy
-import com.example.extention.searchPutBy
 import com.example.extention.setUp
 import com.example.extention.updatePieceEvolution
 import com.example.repository.repositoryinterface.GameRuleRepository
@@ -101,7 +100,7 @@ class GameUseCaseImpl @Inject constructor(
     ): NextResult.Hint {
         val hintPositionList = when (touchAction) {
             is MoveTarget.Board -> board.searchMoveBy(touchAction.position, turn)
-            is MoveTarget.Stand -> board.searchPutBy(touchAction.piece, turn)
+            is MoveTarget.Stand -> gameService.searchPutBy(touchAction.piece, board, turn)
         }
 
         return NextResult.Hint(
