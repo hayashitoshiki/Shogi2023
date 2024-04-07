@@ -7,7 +7,8 @@
     <string name="dialog_evolution_body">成りますか？</string>
     <!-- 成り判定ダイアログ -->
     <string name="dialog_game_end_title">対局終了</string>
-    <string name="dialog_game_end_body">勝者：%s</string>
+    <string name="dialog_game_end_body_win">勝者：%s</string>
+    <string name="dialog_game_end_body_draw">引き分け</string>
     <string name="dialog_game_end_confirm">ホームへ</string>
     <string name="dialog_game_end_dismiss">感想戦へ</string>
     <!-- 投了ダイアログ -->

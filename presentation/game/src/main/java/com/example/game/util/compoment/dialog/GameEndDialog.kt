@@ -44,10 +44,18 @@ fun GameEndDialog(
             Text(context.getString(R.string.dialog_game_end_title))
         },
         text = {
-            val turnText = openDialog.value?.turn?.stringRes?.let {
-                context.getString(it)
+            val text = when(val gameEnd = openDialog.value) {
+                GameViewModel.Effect.GameEnd.Draw -> {
+                    context.getString(R.string.dialog_game_end_body_draw)
+                }
+                is GameViewModel.Effect.GameEnd.Win -> {
+                    val turnText = context.getString(gameEnd.turn.stringRes)
+                    context.getString(R.string.dialog_game_end_body_win, turnText)
+                }
+                null -> ""
             }
-            Text(context.getString(R.string.dialog_game_end_body, turnText))
+            Text(text)
+
         },
     )
 }

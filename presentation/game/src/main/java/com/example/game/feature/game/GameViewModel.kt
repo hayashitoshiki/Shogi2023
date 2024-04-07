@@ -80,7 +80,7 @@ class GameViewModel @Inject constructor(
             Turn.Normal.White -> Turn.Normal.Black
         }
         viewModelScope.launch {
-            mutableGameEndEffect.emit(Effect.GameEnd(winner))
+            mutableGameEndEffect.emit(Effect.GameEnd.Win(winner))
         }
     }
 
@@ -123,7 +123,14 @@ class GameViewModel @Inject constructor(
             is NextResult.Move.Win -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    mutableGameEndEffect.emit(Effect.GameEnd(turn))
+                    mutableGameEndEffect.emit(Effect.GameEnd.Win(turn))
+                }
+            }
+
+            is NextResult.Move.Drown -> {
+                setMoved(result)
+                viewModelScope.launch {
+                    mutableGameEndEffect.emit(Effect.GameEnd.Draw)
                 }
             }
         }
@@ -148,7 +155,7 @@ class GameViewModel @Inject constructor(
         )
         if (result.isWin) {
             viewModelScope.launch {
-                mutableGameEndEffect.emit(Effect.GameEnd(turn))
+                mutableGameEndEffect.emit(Effect.GameEnd.Win(turn))
             }
         }
     }
@@ -196,8 +203,20 @@ class GameViewModel @Inject constructor(
 
         /**
          * ゲーム終了
+         *
          */
-        data class GameEnd(val turn: Turn) : Effect
+        sealed interface GameEnd : Effect {
+
+            /**
+             * 勝利
+             */
+            data class Win(val turn: Turn) : GameEnd
+
+            /**
+             * 引き分け
+             */
+            data object Draw : GameEnd
+        }
 
         /**
          * 成り判定
