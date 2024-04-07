@@ -1,6 +1,8 @@
 package com.example.repository.repositoryinterface
 
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.Cell
+import com.example.entity.game.board.Position
 
 /**
  * ゲーム中しか用いない一時保持用のRepository
@@ -20,5 +22,5 @@ interface GameRepository {
      *
      * @return 保持している盤面リスト
      */
-    fun getBoardLogs(): Map<Board, Int>
+    fun getBoardLogs(): Map<Map<Position, Cell>, Int>
 }

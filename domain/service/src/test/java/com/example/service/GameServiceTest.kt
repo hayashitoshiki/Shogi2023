@@ -1,6 +1,7 @@
 package com.example.service
 
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.Cell
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
@@ -647,7 +648,7 @@ class GameServiceTest {
     @Test
     fun `千日手判定`() {
         data class Param(
-            val caseBoardLog: Map<Board, Int>,
+            val caseBoardLog: Map<Map<Position, Cell>, Int>,
             val result: Boolean,
         )
 
@@ -658,12 +659,12 @@ class GameServiceTest {
         val params = listOf(
             // 既に2回同じ局面が出ている（3回目）
             Param(
-                caseBoardLog = mutableMapOf(board to 2),
+                caseBoardLog = mutableMapOf(board.getAllCells() to 2),
                 result = false,
             ),
             // 既に3回同じ局面が出ている（4回目）
             Param(
-                caseBoardLog = mutableMapOf(board to 3),
+                caseBoardLog = mutableMapOf(board.getAllCells() to 3),
                 result = true,
             ),
         )

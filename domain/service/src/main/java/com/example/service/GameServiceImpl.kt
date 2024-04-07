@@ -1,6 +1,7 @@
 package com.example.service
 
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.Cell
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
@@ -105,8 +106,8 @@ class GameServiceImpl @Inject constructor() : GameService {
                 || checkTryGameSet(board, turn, rule)
     }
 
-    override fun checkDraw(boardLog: Map<Board, Int>, board: Board): Boolean {
-        val alreadyBoardCount = boardLog[board] ?: 0
+    override fun checkDraw(boardLog: Map<Map<Position, Cell>, Int>, board: Board): Boolean {
+        val alreadyBoardCount = boardLog[board.getAllCells()] ?: 0
         return alreadyBoardCount == 3
     }
 
@@ -151,8 +152,8 @@ class GameServiceImpl @Inject constructor() : GameService {
 
             Turn.Normal.White -> {
                 if (!rule.playersRule.whiteRule.isTryRule) return false
-                (board.getCellByPosition(Position(5, 9)).getStatus() as CellStatus.Fill.FromPiece)
-                    .piece == Piece.Surface.Ou
+                (board.getCellByPosition(Position(5, 9)).getStatus() as? CellStatus.Fill.FromPiece)
+                    ?.piece == Piece.Surface.Ou
             }
         }
     }

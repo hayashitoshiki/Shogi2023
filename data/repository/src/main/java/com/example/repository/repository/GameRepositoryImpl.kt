@@ -1,19 +1,21 @@
 package com.example.repository.repository
 
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.Cell
+import com.example.entity.game.board.Position
 import com.example.repository.repositoryinterface.GameRepository
 import javax.inject.Inject
 
 class GameRepositoryImpl @Inject constructor() : GameRepository {
 
-    private var boards: MutableMap<Board, Int> = mutableMapOf<Board, Int>()
+    private var boards: MutableMap<Map<Position, Cell>, Int> = mutableMapOf()
 
     override fun setBoardLog(board: Board) {
-        val boardCount = boards[board] ?: 0
-        boards[board] = boardCount
+        val boardCount = (boards[board.getAllCells()] ?: 0) + 1
+        boards[board.getAllCells()] = boardCount
     }
 
-    override fun getBoardLogs(): Map<Board, Int> {
+    override fun getBoardLogs(): Map<Map<Position, Cell>, Int> {
         return boards
     }
 }

@@ -1,6 +1,7 @@
 package com.example.serviceinterface
 
 import com.example.entity.game.board.Board
+import com.example.entity.game.board.Cell
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
@@ -88,5 +89,5 @@ interface GameService {
      * @param board 現在の局面
      * @return 千日手か
      */
-    fun checkDraw(boardLog: Map<Board, Int>, board: Board): Boolean
+    fun checkDraw(boardLog: Map<Map<Position, Cell>, Int>, board: Board): Boolean
 }
