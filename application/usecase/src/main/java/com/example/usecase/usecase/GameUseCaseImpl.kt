@@ -14,6 +14,7 @@ import com.example.extention.getOpponentTurn
 import com.example.extention.searchMoveBy
 import com.example.extention.setUp
 import com.example.extention.updatePieceEvolution
+import com.example.repository.repositoryinterface.GameRepository
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
 import com.example.serviceinterface.GameService
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class GameUseCaseImpl @Inject constructor(
     private val logRepository: LogRepository,
     private val gameRuleRepository: GameRuleRepository,
+    private val gameRepository: GameRepository,
     private val gameService: GameService,
 ) : GameUseCase {
 
@@ -85,11 +87,13 @@ class GameUseCaseImpl @Inject constructor(
         }
         val rule = gameRuleRepository.getGameRule()
         val isWin = gameService.checkGameSet(board, stand, turn, rule)
+        val isDrown = checkDraw(board)
 
         return SetEvolutionResult(
             board = board,
             isWin = isWin,
             nextTurn = turn.getOpponentTurn(),
+            isDraw = isDrown,
         )
     }
 
@@ -165,11 +169,35 @@ class GameUseCaseImpl @Inject constructor(
                 nextTurn = nextTurn,
             )
         } else {
-            NextResult.Move.Only(
-                board = newBoard,
-                stand = newStand,
-                nextTurn = nextTurn,
-            )
+            if (checkDraw(board)) {
+                NextResult.Move.Drown(
+                    board = newBoard,
+                    stand = newStand,
+                    nextTurn = nextTurn,
+                )
+            } else {
+                NextResult.Move.Only(
+                    board = newBoard,
+                    stand = newStand,
+                    nextTurn = nextTurn,
+                )
+            }
+        }
+    }
+
+    /**
+     * 千日手判定
+     *
+     * @param board 現在の局面
+     * @return 千日手か
+     */
+    private fun checkDraw(board: Board): Boolean {
+        val boardLog = gameRepository.getBoardLogs()
+        return if (gameService.checkDraw(boardLog, board)) {
+            true
+        } else {
+            gameRepository.setBoardLog(board)
+            false
         }
     }
 

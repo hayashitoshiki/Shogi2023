@@ -8,9 +8,11 @@ import com.example.entity.game.rule.Turn
  *
  * @property board 成り判定の結果を反映させた将棋盤
  * @property isWin 勝利したか
+ * @property isDraw 千日手か
  */
 data class SetEvolutionResult(
     val board: Board,
     val isWin: Boolean,
     val nextTurn: Turn,
+    val isDraw: Boolean,
 )

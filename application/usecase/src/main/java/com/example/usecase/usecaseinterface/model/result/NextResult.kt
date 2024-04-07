@@ -58,6 +58,16 @@ sealed interface NextResult {
             override val stand: Stand,
             override val nextTurn: Turn,
         ) : Move
+
+
+        /**
+         * 千日手判定
+         */
+        data class Drown(
+            override val board: Board,
+            override val stand: Stand,
+            override val nextTurn: Turn,
+        ) : Move
     }
 
 }
