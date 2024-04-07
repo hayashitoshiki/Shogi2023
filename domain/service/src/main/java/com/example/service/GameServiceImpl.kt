@@ -105,6 +105,11 @@ class GameServiceImpl @Inject constructor() : GameService {
                 || checkTryGameSet(board, turn, rule)
     }
 
+    override fun checkDraw(boardLog: Map<Board, Int>, board: Board): Boolean {
+        val alreadyBoardCount = boardLog[board] ?: 0
+        return alreadyBoardCount == 3
+    }
+
     /**
      * 王手将棋判定
      *

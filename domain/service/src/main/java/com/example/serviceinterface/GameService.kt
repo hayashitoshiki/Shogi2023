@@ -81,4 +81,12 @@ interface GameService {
         turn: Turn,
         rule: GameRule
     ): Boolean
+
+    /**
+     * 千日手判定
+     *
+     * @param board 現在の局面
+     * @return 千日手か
+     */
+    fun checkDraw(boardLog: Map<Board, Int>, board: Board): Boolean
 }

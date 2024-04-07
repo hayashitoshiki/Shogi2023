@@ -645,6 +645,36 @@ class GameServiceTest {
     }
 
     @Test
+    fun `千日手判定`() {
+        data class Param(
+            val caseBoardLog: Map<Board, Int>,
+            val result: Boolean,
+        )
+
+        val cell = CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.White)
+        val board = Board().also {
+            it.update(Position(5, 5), cell)
+        }
+        val params = listOf(
+            // 既に2回同じ局面が出ている（3回目）
+            Param(
+                caseBoardLog = mutableMapOf(board to 2),
+                result = false,
+            ),
+            // 既に3回同じ局面が出ている（4回目）
+            Param(
+                caseBoardLog = mutableMapOf(board to 3),
+                result = true,
+            ),
+        )
+
+        params.forEach { param ->
+            val expected = gameService.checkDraw(param.caseBoardLog, board)
+            assertEquals(expected, param.result)
+        }
+    }
+
+    @Test
     fun `トライルール判定`() {
         data class Param(
             val caseGameRule: GameRule,
