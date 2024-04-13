@@ -36,8 +36,8 @@ class GameUseCaseImpl @Inject constructor(
     override fun gameInit(): GameInitResult {
         val rule = gameRuleRepository.getGameRule()
         val board = Board.setUp(rule)
-        val blackStand = Stand()
-        val whiteStand = Stand()
+        val blackStand = Stand.setUp(rule.playersRule.blackRule)
+        val whiteStand = Stand.setUp(rule.playersRule.whiteRule)
         val now = LocalDateTime.now()
         logRepository.createGameLog(now)
 
