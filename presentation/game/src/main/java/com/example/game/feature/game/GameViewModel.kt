@@ -70,8 +70,6 @@ class GameViewModel @Inject constructor(
             )
             return
         }
-//        val touchAction = MoveTarget.Stand(piece)
-//        tapAction(touchAction)
 
         val result = useCase.useStandPiece(
             board = uiState.value.board,
@@ -97,20 +95,34 @@ class GameViewModel @Inject constructor(
     }
 
     private fun tapAction(touchAction: MoveTarget.Board) {
-        val stand = when (uiState.value.turn) {
-            Turn.Normal.Black -> uiState.value.blackStand
-            Turn.Normal.White -> uiState.value.whiteStand
-        }
         val turn = uiState.value.turn
         val holdMove = uiState.value.readyMoveInfo?.toUseCaseModel()
         val result = if (holdMove != null && holdMove.hintList.contains(touchAction.position)) {
-            useCase.movePiece(
-                board = uiState.value.board,
-                stand = stand,
-                touchAction = touchAction,
-                turn = turn,
-                holdMove = holdMove,
-            )
+            val stand = when (uiState.value.turn) {
+                Turn.Normal.Black -> uiState.value.blackStand
+                Turn.Normal.White -> uiState.value.whiteStand
+            }
+            when (holdMove.hold) {
+                is MoveTarget.Board -> {
+                    useCase.movePiece(
+                        board = uiState.value.board,
+                        stand = stand,
+                        touchAction = touchAction,
+                        turn = turn,
+                        holdMove = holdMove,
+                    )
+                }
+
+                is MoveTarget.Stand -> {
+                    useCase.putStandPiece(
+                        board = uiState.value.board,
+                        stand = stand,
+                        touchAction = touchAction,
+                        turn = turn,
+                        holdMove = holdMove,
+                    )
+                }
+            }
         } else {
             useCase.useBoardPiece(
                 board = uiState.value.board,
