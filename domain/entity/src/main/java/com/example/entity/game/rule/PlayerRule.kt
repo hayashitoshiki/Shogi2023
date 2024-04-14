@@ -12,4 +12,6 @@ data class PlayerRule(
     val hande: Hande = Hande.NON,
     val isFirstCheckEnd: Boolean = false,
     val isTryRule: Boolean = true,
-)
+) {
+    companion object
+}
