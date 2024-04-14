@@ -8,7 +8,7 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Turn
-import com.example.test_entity.fake
+import com.example.test_entity.rule.fake
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

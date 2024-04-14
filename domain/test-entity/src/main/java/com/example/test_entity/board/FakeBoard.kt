@@ -1,4 +1,4 @@
-package com.example.test_entity
+package com.example.test_entity.board
 
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus

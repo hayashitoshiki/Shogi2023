@@ -1,4 +1,4 @@
-package com.example.test_entity
+package com.example.test_entity.rule
 
 import com.example.entity.game.rule.BoardRule
 

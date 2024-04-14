@@ -10,7 +10,7 @@ import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Hande
 import com.example.entity.game.rule.PlayersRule
 import com.example.entity.game.rule.Turn
-import com.example.test_entity.fake
+import com.example.test_entity.rule.fake
 import org.junit.Assert
 import org.junit.Test
 
