@@ -11,6 +11,7 @@ import com.example.entity.game.rule.Turn
 import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
 import com.example.usecase.usecaseinterface.GameUseCase
+import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -102,8 +103,8 @@ class GameViewModel @Inject constructor(
                 Turn.Normal.Black -> uiState.value.blackStand
                 Turn.Normal.White -> uiState.value.whiteStand
             }
-            when (holdMove.hold) {
-                is MoveTarget.Board -> {
+            when (holdMove) {
+                is ReadyMoveInfoUseCaseModel.Board -> {
                     useCase.movePiece(
                         board = uiState.value.board,
                         stand = stand,
@@ -113,7 +114,7 @@ class GameViewModel @Inject constructor(
                     )
                 }
 
-                is MoveTarget.Stand -> {
+                is ReadyMoveInfoUseCaseModel.Stand -> {
                     useCase.putStandPiece(
                         board = uiState.value.board,
                         stand = stand,

@@ -54,7 +54,7 @@ class GameUseCaseImpl @Inject constructor(
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: ReadyMoveInfoUseCaseModel,
+        holdMove: ReadyMoveInfoUseCaseModel.Board,
     ): NextResult {
         val holdPiece = holdMove.hold
         val nextPosition = touchAction.position
@@ -66,7 +66,7 @@ class GameUseCaseImpl @Inject constructor(
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: ReadyMoveInfoUseCaseModel,
+        holdMove: ReadyMoveInfoUseCaseModel.Stand,
     ): NextResult {
         val holdPiece = holdMove.hold
         val nextPosition = touchAction.position

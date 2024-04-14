@@ -610,7 +610,7 @@ class GameUseCaseTest {
         params.forEach { param ->
             // data
             val hintPositionList = listOf(param.position)
-            val hold = ReadyMoveInfoUseCaseModel(
+            val hold = ReadyMoveInfoUseCaseModel.Stand(
                 hold = MoveTarget.Stand(Piece.Surface.Kin),
                 hintList = hintPositionList,
             )
@@ -886,7 +886,7 @@ class GameUseCaseTest {
         params.forEach { param ->
             // data
             val hintPositionList = listOf(param.movePosition)
-            val hold = ReadyMoveInfoUseCaseModel(
+            val hold = ReadyMoveInfoUseCaseModel.Board(
                 hold = MoveTarget.Board(param.holdPosition),
                 hintList = hintPositionList,
             )

@@ -30,8 +30,8 @@ interface GameUseCase {
      * @param board 将棋盤
      * @param stand 持ち駒
      * @param turn 手番
-     * @param touchAction 盤面 or 持ち駒のタップ状態
-     * @param holdMove 指し手の保持状態
+     * @param touchAction 打とうとしている場所
+     * @param holdMove 動かそうとしている盤面の駒
      * @return 処理結果
      */
     fun movePiece(
@@ -39,7 +39,7 @@ interface GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: ReadyMoveInfoUseCaseModel,
+        holdMove: ReadyMoveInfoUseCaseModel.Board,
     ): NextResult
 
     /**
@@ -48,8 +48,8 @@ interface GameUseCase {
      * @param board 将棋盤
      * @param stand 持ち駒
      * @param turn 手番
-     * @param touchAction 盤面 or 持ち駒のタップ状態
-     * @param holdMove 指し手の保持状態
+     * @param touchAction 打とうとしている場所
+     * @param holdMove 打とうとしている持ち駒
      * @return 処理結果
      */
     fun putStandPiece(
@@ -57,11 +57,11 @@ interface GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: ReadyMoveInfoUseCaseModel,
+        holdMove: ReadyMoveInfoUseCaseModel.Stand,
     ): NextResult
 
     /**
-     * 盤面の駒を使用する
+     * 盤面の駒を選択する
      *
      * @param board 将棋盤
      * @param turn 手番
@@ -75,7 +75,7 @@ interface GameUseCase {
     ): NextResult
 
     /**
-     * 持ち駒を使用する
+     * 持ち駒を選択する
      *
      * @param board 将棋盤
      * @param turn 手番

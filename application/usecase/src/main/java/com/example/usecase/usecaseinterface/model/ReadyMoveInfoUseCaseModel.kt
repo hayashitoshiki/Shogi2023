@@ -9,7 +9,23 @@ import com.example.entity.game.board.Position
  * @property hold 動かそうとしている駒
  * @property hintList 置ける場所リスト
  */
-data class ReadyMoveInfoUseCaseModel(
-    val hold: MoveTarget,
-    val hintList: List<Position>,
-)
+sealed interface ReadyMoveInfoUseCaseModel {
+    val hold: MoveTarget
+    val hintList: List<Position>
+
+    /**
+     * 盤上の駒を動かそうとしている
+     */
+    data class Board(
+        override val hold: MoveTarget.Board,
+        override val hintList: List<Position>,
+    ) : ReadyMoveInfoUseCaseModel
+
+    /**
+     * 持ち駒を打とうとしている
+     */
+    data class Stand(
+        override val hold: MoveTarget.Stand,
+        override val hintList: List<Position>,
+    ) : ReadyMoveInfoUseCaseModel
+}
