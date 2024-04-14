@@ -25,7 +25,7 @@ interface GameUseCase {
     fun gameInit(): GameInitResult
 
     /**
-     * 駒を配置する
+     * 盤上の駒を動かす
      *
      * @param board 将棋盤
      * @param stand 持ち駒
@@ -35,6 +35,24 @@ interface GameUseCase {
      * @return 処理結果
      */
     fun movePiece(
+        board: Board,
+        stand: Stand,
+        turn: Turn,
+        touchAction: MoveTarget.Board,
+        holdMove: ReadyMoveInfoUseCaseModel,
+    ): NextResult
+
+    /**
+     * 持ち駒を打つ
+     *
+     * @param board 将棋盤
+     * @param stand 持ち駒
+     * @param turn 手番
+     * @param touchAction 盤面 or 持ち駒のタップ状態
+     * @param holdMove 指し手の保持状態
+     * @return 処理結果
+     */
+    fun putStandPiece(
         board: Board,
         stand: Stand,
         turn: Turn,

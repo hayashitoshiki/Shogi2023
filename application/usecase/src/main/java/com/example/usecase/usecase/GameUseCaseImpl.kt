@@ -61,6 +61,18 @@ class GameUseCaseImpl @Inject constructor(
         return setMove(board, stand, nextPosition, turn, holdPiece)
     }
 
+    override fun putStandPiece(
+        board: Board,
+        stand: Stand,
+        turn: Turn,
+        touchAction: MoveTarget.Board,
+        holdMove: ReadyMoveInfoUseCaseModel,
+    ): NextResult {
+        val holdPiece = holdMove.hold
+        val nextPosition = touchAction.position
+        return setMove(board, stand, nextPosition, turn, holdPiece)
+    }
+
     override fun useBoardPiece(
         board: Board,
         turn: Turn,
@@ -175,7 +187,7 @@ class GameUseCaseImpl @Inject constructor(
                 nextTurn = nextTurn,
             )
         } else {
-            if (checkDraw(board)) {
+            if (checkDraw(newBoard)) {
                 NextResult.Move.Drown(
                     board = newBoard,
                     stand = newStand,

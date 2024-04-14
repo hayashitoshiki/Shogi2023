@@ -7,10 +7,10 @@ import com.example.entity.game.rule.PlayersRule
 fun PlayersRule.Companion.fake(
     blackHande: Hande = Hande.NON,
     blackIsFirstCheckEnd: Boolean = false,
-    blackIsTryRule: Boolean = false,
+    blackIsTryRule: Boolean = true,
     whiteHande: Hande = Hande.NON,
     whiteIsFirstCheckEnd: Boolean = false,
-    whiteIsTryRule: Boolean = false,
+    whiteIsTryRule: Boolean = true,
 ): PlayersRule {
     return PlayersRule(
         blackRule = PlayerRule.fake(
