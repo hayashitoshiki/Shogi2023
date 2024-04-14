@@ -70,8 +70,20 @@ class GameViewModel @Inject constructor(
             )
             return
         }
-        val touchAction = MoveTarget.Stand(piece)
-        tapAction(touchAction)
+//        val touchAction = MoveTarget.Stand(piece)
+//        tapAction(touchAction)
+
+        val result = useCase.useStandPiece(
+            board = uiState.value.board,
+            piece = piece,
+            turn = turn,
+        )
+        _uiState.value = uiState.value.copy(
+            readyMoveInfo = ReadyMoveInfoUiModel(
+                hold = MoveTarget.Stand(piece),
+                hintList = result.hintPositionList,
+            )
+        )
     }
 
     fun tapLoseButton(turn: Turn) {
@@ -84,19 +96,28 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun tapAction(touchAction: MoveTarget) {
+    private fun tapAction(touchAction: MoveTarget.Board) {
         val stand = when (uiState.value.turn) {
             Turn.Normal.Black -> uiState.value.blackStand
             Turn.Normal.White -> uiState.value.whiteStand
         }
         val turn = uiState.value.turn
-        val result = useCase.next(
-            board = uiState.value.board,
-            stand = stand,
-            touchAction = touchAction,
-            turn = turn,
-            holdMove = uiState.value.readyMoveInfo?.toUseCaseModel(),
-        )
+        val holdMove = uiState.value.readyMoveInfo?.toUseCaseModel()
+        val result = if (holdMove != null && holdMove.hintList.contains(touchAction.position)) {
+            useCase.movePiece(
+                board = uiState.value.board,
+                stand = stand,
+                touchAction = touchAction,
+                turn = turn,
+                holdMove = holdMove,
+            )
+        } else {
+            useCase.useBoardPiece(
+                board = uiState.value.board,
+                turn = turn,
+                position = touchAction.position,
+            )
+        }
 
         when (result) {
             is NextResult.Hint -> {

@@ -7,6 +7,7 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Turn
+import com.example.extention.searchMoveBy
 import com.example.extention.setUp
 import com.example.service.GameServiceImpl
 import com.example.test_entity.fake
@@ -21,6 +22,7 @@ import com.example.test_repository.FakeLogRepository
 import com.example.usecase.usecase.GameUseCaseImpl
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
+import com.example.usecase.usecaseinterface.model.result.NextResult
 import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
 import org.junit.Assert
 import org.junit.Before
@@ -36,14 +38,13 @@ class GameUseCaseTest {
     private lateinit var logRepository: FakeLogRepository
     private lateinit var gameRuleRepository: FakeGameRuleRepository
     private lateinit var gameRepository: FakeGameRepository
+    private val gameService = GameServiceImpl()
 
     @Before
     fun setUp() {
         gameRuleRepository = FakeGameRuleRepository()
         logRepository = FakeLogRepository()
         gameRepository = FakeGameRepository()
-
-        val gameService = GameServiceImpl()
         gameUseCase = GameUseCaseImpl(
             logRepository = logRepository,
             gameRuleRepository = gameRuleRepository,
@@ -356,6 +357,112 @@ class GameUseCaseTest {
             )
             // result
             Assert.assertEquals(expected, param.result)
+        }
+    }
+
+    /**
+     * 持ち駒使用
+     *
+     * ＜条件＞
+     * ・なし
+     *
+     * ＜期待値＞
+     * ・選択した持ち駒がおけるマス一覧が返却されること
+     */
+    @Test
+    fun `持ち駒使用`() {
+        data class Param(
+            val piece: Piece,
+        )
+
+        val params = listOf(
+            Param(piece = Piece.Surface.Fu),
+            Param(piece = Piece.Surface.Kin),
+        )
+
+        params.forEach { param ->
+            // run
+            val turn = Turn.Normal.Black
+            val board = Board().also {
+                it.update(
+                    Position(5, 5),
+                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                )
+                it.update(
+                    Position(5, 1),
+                    CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                )
+                it.update(
+                    Position(5, 9),
+                    CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                )
+            }
+            val expected = gameUseCase.useStandPiece(
+                board = board,
+                turn = turn,
+                piece = param.piece
+            )
+
+            val hintPositionList = gameService.searchPutBy(param.piece, board, turn)
+            val result = NextResult.Hint(
+                hintPositionList = hintPositionList,
+            )
+
+            // result
+            Assert.assertEquals(expected, result)
+        }
+    }
+
+    /**
+     * 盤上の駒を選択
+     *
+     * ＜条件＞
+     * ・なし
+     *
+     * ＜期待値＞
+     * ・選択した駒を動かせるマス一覧が返却されること
+     */
+    @Test
+    fun `盤上の駒を選択`() {
+        data class Param(
+            val position: Position,
+        )
+
+        val params = listOf(
+            Param(position = Position(5, 5)),
+            Param(position = Position(5, 9)),
+        )
+
+        params.forEach { param ->
+            val turn = Turn.Normal.Black
+            val board = Board().also {
+                it.update(
+                    Position(5, 5),
+                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                )
+                it.update(
+                    Position(5, 1),
+                    CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                )
+                it.update(
+                    Position(5, 9),
+                    CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                )
+            }
+            val hintPositionList = board.searchMoveBy(param.position, turn)
+            val result = NextResult.Hint(
+                hintPositionList = hintPositionList,
+            )
+
+            // run
+            val expected = gameUseCase.useBoardPiece(
+                board = board,
+                turn = turn,
+                position = param.position,
+            )
+
+            // result
+            Assert.assertEquals(expected, result)
         }
     }
 }

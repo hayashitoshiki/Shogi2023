@@ -49,28 +49,34 @@ class GameUseCaseImpl @Inject constructor(
         )
     }
 
-    override fun next(
+    override fun movePiece(
         board: Board,
         stand: Stand,
         turn: Turn,
-        touchAction: MoveTarget,
-        holdMove: ReadyMoveInfoUseCaseModel?,
+        touchAction: MoveTarget.Board,
+        holdMove: ReadyMoveInfoUseCaseModel,
     ): NextResult {
-        return when (touchAction) {
-            is MoveTarget.Board -> {
-                val holdPiece = holdMove?.hold
-                val nextPosition = touchAction.position
-                if (holdPiece != null && holdMove.hintList.contains(nextPosition)) {
-                    setMove(board, stand, nextPosition, turn, holdPiece)
-                } else {
-                    setHintPosition(board, touchAction, turn)
-                }
-            }
+        val holdPiece = holdMove.hold
+        val nextPosition = touchAction.position
+        return setMove(board, stand, nextPosition, turn, holdPiece)
+    }
 
-            is MoveTarget.Stand -> {
-                setHintPosition(board, touchAction, turn)
-            }
-        }
+    override fun useBoardPiece(
+        board: Board,
+        turn: Turn,
+        position: Position,
+    ): NextResult {
+        val touchAction = MoveTarget.Board(position)
+        return setHintPosition(board, touchAction, turn)
+    }
+
+    override fun useStandPiece(
+        board: Board,
+        turn: Turn,
+        piece: Piece,
+    ): NextResult.Hint {
+        val touchAction = MoveTarget.Stand(piece)
+        return setHintPosition(board, touchAction, turn)
     }
 
     override fun setEvolution(
