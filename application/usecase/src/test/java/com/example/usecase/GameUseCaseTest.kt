@@ -5,10 +5,7 @@ import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.BoardRule
 import com.example.entity.game.rule.GameRule
-import com.example.entity.game.rule.PlayerRule
-import com.example.entity.game.rule.PlayersRule
 import com.example.entity.game.rule.Turn
 import com.example.extention.setUp
 import com.example.service.GameServiceImpl
@@ -68,13 +65,7 @@ class GameUseCaseTest {
     @Test
     fun `盤面初期化`() {
         // expected
-        val rule = GameRule(
-            boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(),
-                whiteRule = PlayerRule(),
-            ),
-        )
+        val rule = GameRule.fake()
         val board = Board.setUp(rule)
         val blackStand = Stand.setUp(rule.playersRule.blackRule)
         val whiteStand = Stand.setUp(rule.playersRule.whiteRule)
@@ -340,12 +331,9 @@ class GameUseCaseTest {
         )
 
         params.forEach { param ->
-            val rule = GameRule(
-                boardRule = BoardRule(),
-                playersRule = PlayersRule.fake(
-                    blackIsFirstCheckEnd = param.ruleIsFirstCheckEnd,
-                    whiteIsFirstCheckEnd = !param.ruleIsFirstCheckEnd,
-                ),
+            val rule = GameRule.fake(
+                blackIsFirstCheckEnd = param.ruleIsFirstCheckEnd,
+                whiteIsFirstCheckEnd = !param.ruleIsFirstCheckEnd,
             )
 
             // mock

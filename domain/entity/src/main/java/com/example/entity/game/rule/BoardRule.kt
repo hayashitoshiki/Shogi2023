@@ -20,4 +20,6 @@ data class BoardRule(
     enum class SetUpRule {
         NORMAL;
     }
+
+    companion object
 }

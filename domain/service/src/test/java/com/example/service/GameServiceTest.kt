@@ -6,11 +6,9 @@ import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.BoardRule
 import com.example.entity.game.rule.GameRule
-import com.example.entity.game.rule.PlayerRule
-import com.example.entity.game.rule.PlayersRule
 import com.example.entity.game.rule.Turn
+import com.example.test_entity.fake
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -503,13 +501,7 @@ class GameServiceTest {
             val result: Boolean,
         )
 
-        val ruleNormal = GameRule(
-            boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(),
-                whiteRule = PlayerRule(),
-            )
-        )
+        val ruleNormal = GameRule.fake()
         val params = listOf(
             // 王手状態
             Param(
@@ -566,13 +558,7 @@ class GameServiceTest {
             }
             val stand = Stand()
             val turn = Turn.Normal.White
-            val gameRule = GameRule(
-                boardRule = BoardRule(),
-                playersRule = PlayersRule(
-                    blackRule = PlayerRule(),
-                    whiteRule = PlayerRule(),
-                )
-            )
+            val gameRule = GameRule.fake()
             val expected = gameService.checkGameSet(board, stand, turn, gameRule)
             assertEquals(expected, it.result)
         }
@@ -586,23 +572,10 @@ class GameServiceTest {
             val result: Boolean,
         )
 
-        val ruleNormal = GameRule(
-            boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(),
-                whiteRule = PlayerRule(),
-            )
-        )
-        val ruleIsFirstCheck = GameRule(
-            boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(
-                    isFirstCheckEnd = true,
-                ),
-                whiteRule = PlayerRule(
-                    isFirstCheckEnd = true,
-                ),
-            )
+        val ruleNormal = GameRule.fake()
+        val ruleIsFirstCheck = GameRule.fake(
+            blackIsFirstCheckEnd = true,
+            whiteIsFirstCheckEnd = true,
         )
         val params = listOf(
             // 王手将棋設定ありで王手状態
@@ -684,27 +657,13 @@ class GameServiceTest {
             val result: Boolean,
         )
 
-        val ruleIsTryBlack = GameRule(
-            boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(
-                    isTryRule = true,
-                ),
-                whiteRule = PlayerRule(
-                    isTryRule = false,
-                ),
-            )
+        val ruleIsTryBlack = GameRule.fake(
+            blackIsTryRule = true,
+            whiteIsTryRule = false,
         )
-        val ruleIsTryWhite = GameRule(
-            boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(
-                    isTryRule = false,
-                ),
-                whiteRule = PlayerRule(
-                    isTryRule = true,
-                ),
-            )
+        val ruleIsTryWhite = GameRule.fake(
+            blackIsTryRule = false,
+            whiteIsTryRule = true,
         )
         val blackKingPosition = Position(5, 1)
         val whiteKingPosition = Position(5, 9)

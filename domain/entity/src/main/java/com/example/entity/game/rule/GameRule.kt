@@ -9,4 +9,6 @@ package com.example.entity.game.rule
 data class GameRule(
     val boardRule: BoardRule,
     val playersRule: PlayersRule,
-)
+) {
+    companion object
+}
