@@ -26,7 +26,7 @@ fun GameScreen(
     navController: NavHostController,
     viewModel: GameViewModel,
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.state
     val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.Evolution?>(null) }
     val showGameEndDialog = remember { mutableStateOf<GameViewModel.Effect.GameEnd?>(null) }
     LaunchedEffect(true) {

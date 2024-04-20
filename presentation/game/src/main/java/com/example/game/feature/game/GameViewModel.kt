@@ -1,7 +1,8 @@
 package com.example.game.feature.game
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.core.uilogic.BaseContract
+import com.example.core.uilogic.BaseViewModel
 import com.example.entity.game.MoveTarget
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Position
@@ -14,46 +15,39 @@ import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val useCase: GameUseCase,
-) : ViewModel() {
+) : BaseViewModel <GameViewModel.UiState, GameViewModel.Effect>() {
 
-    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(
-        UiState(
+    init {
+        initBard()
+    }
+
+    override fun initState(): UiState {
+        return  UiState(
             board = Board(),
             blackStand = Stand(),
             whiteStand = Stand(),
             turn = Turn.Normal.Black,
             readyMoveInfo = null,
         )
-    )
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
-    private val mutableEffect: Channel<Effect> = Channel()
-    val effect: Flow<Effect> = mutableEffect.receiveAsFlow()
-
-    init {
-        initBard()
     }
 
     private fun initBard() {
         val result = useCase.gameInit()
-        _uiState.value = UiState(
-            board = result.board,
-            blackStand = result.blackStand,
-            whiteStand = result.whiteStand,
-            turn = result.turn,
-            readyMoveInfo = null,
-        )
+        setState {
+            UiState(
+                board = result.board,
+                blackStand = result.blackStand,
+                whiteStand = result.whiteStand,
+                turn = result.turn,
+                readyMoveInfo = null,
+            )
+        }
     }
 
     fun tapBoard(position: Position) {
@@ -62,24 +56,21 @@ class GameViewModel @Inject constructor(
     }
 
     fun tapStand(piece: Piece, turn: Turn) {
-        if (turn != uiState.value.turn) {
-            _uiState.value = uiState.value.copy(
-                readyMoveInfo = null,
-            )
+        if (turn != state.value.turn) {
+            setState {
+                copy(
+                    readyMoveInfo = null,
+                )
+            }
             return
         }
 
         val result = useCase.useStandPiece(
-            board = uiState.value.board,
+            board = state.value.board,
             piece = piece,
             turn = turn,
         )
-        _uiState.value = uiState.value.copy(
-            readyMoveInfo = ReadyMoveInfoUiModel(
-                hold = MoveTarget.Stand(piece),
-                hintList = result.hintPositionList,
-            )
-        )
+        updateUiStateFromNextResult(result, MoveTarget.Stand(piece))
     }
 
     fun tapLoseButton(turn: Turn) {
@@ -88,22 +79,22 @@ class GameViewModel @Inject constructor(
             Turn.Normal.White -> Turn.Normal.Black
         }
         viewModelScope.launch {
-            mutableEffect.send(Effect.GameEnd.Win(winner))
+            setEffect { Effect.GameEnd.Win(winner) }
         }
     }
 
     private fun tapAction(touchAction: MoveTarget.Board) {
-        val turn = uiState.value.turn
-        val holdMove = uiState.value.readyMoveInfo?.toUseCaseModel()
+        val turn = state.value.turn
+        val holdMove = state.value.readyMoveInfo?.toUseCaseModel()
         val result = if (holdMove != null && holdMove.hintList.contains(touchAction.position)) {
-            val stand = when (uiState.value.turn) {
-                Turn.Normal.Black -> uiState.value.blackStand
-                Turn.Normal.White -> uiState.value.whiteStand
+            val stand = when (state.value.turn) {
+                Turn.Normal.Black -> state.value.blackStand
+                Turn.Normal.White -> state.value.whiteStand
             }
             when (holdMove) {
                 is ReadyMoveInfoUseCaseModel.Board -> {
                     useCase.movePiece(
-                        board = uiState.value.board,
+                        board = state.value.board,
                         stand = stand,
                         touchAction = touchAction,
                         turn = turn,
@@ -113,7 +104,7 @@ class GameViewModel @Inject constructor(
 
                 is ReadyMoveInfoUseCaseModel.Stand -> {
                     useCase.putStandPiece(
-                        board = uiState.value.board,
+                        board = state.value.board,
                         stand = stand,
                         touchAction = touchAction,
                         turn = turn,
@@ -123,20 +114,26 @@ class GameViewModel @Inject constructor(
             }
         } else {
             useCase.useBoardPiece(
-                board = uiState.value.board,
+                board = state.value.board,
                 turn = turn,
                 position = touchAction.position,
             )
         }
+        updateUiStateFromNextResult(result, touchAction)
+    }
 
+    private fun updateUiStateFromNextResult(result: NextResult, touchAction: MoveTarget) {
+        val turn = state.value.turn
         when (result) {
             is NextResult.Hint -> {
-                _uiState.value = uiState.value.copy(
-                    readyMoveInfo = ReadyMoveInfoUiModel(
-                        hold = touchAction,
-                        hintList = result.hintPositionList,
+                setState {
+                    copy(
+                        readyMoveInfo = ReadyMoveInfoUiModel(
+                            hold = touchAction,
+                            hintList = result.hintPositionList,
+                        )
                     )
-                )
+                }
             }
 
             is NextResult.Move.Only -> {
@@ -147,68 +144,72 @@ class GameViewModel @Inject constructor(
                 setMoved(result)
                 viewModelScope.launch {
                     if (touchAction !is MoveTarget.Board) return@launch
-                    mutableEffect.send(Effect.Evolution(touchAction.position))
+                    setEffect { Effect.Evolution(touchAction.position) }
                 }
             }
 
             is NextResult.Move.Win -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    mutableEffect.send(Effect.GameEnd.Win(turn))
+                    setEffect { Effect.GameEnd.Win(turn) }
                 }
             }
 
             is NextResult.Move.Drown -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    mutableEffect.send(Effect.GameEnd.Draw)
+                    setEffect { Effect.GameEnd.Draw }
                 }
             }
         }
     }
 
     fun setEvolution(position: Position, isEvolution: Boolean) {
-        val turn = uiState.value.turn
+        val turn = state.value.turn
         val stand = when (turn) {
-            Turn.Normal.Black -> uiState.value.whiteStand
-            Turn.Normal.White -> uiState.value.blackStand
+            Turn.Normal.Black -> state.value.whiteStand
+            Turn.Normal.White -> state.value.blackStand
         }
         val result = useCase.setEvolution(
             turn = turn,
-            board = uiState.value.board,
+            board = state.value.board,
             stand = stand,
             position = position,
             isEvolution = isEvolution,
         )
-        _uiState.value = uiState.value.copy(
-            board = result.board,
-            turn = result.nextTurn,
-        )
+        setState {
+            copy(
+                board = result.board,
+                turn = result.nextTurn,
+            )
+        }
         if (result.isWin) {
             viewModelScope.launch {
-                mutableEffect.send(Effect.GameEnd.Win(turn))
+                setEffect { Effect.GameEnd.Win(turn) }
             }
         }
     }
 
     private fun setMoved(result: NextResult.Move) {
-        _uiState.value = when (uiState.value.turn) {
-            Turn.Normal.Black -> {
-                uiState.value.copy(
-                    board = result.board,
-                    blackStand = result.stand,
-                    turn = result.nextTurn,
-                    readyMoveInfo = null,
-                )
-            }
+        setState {
+            when (state.value.turn) {
+                Turn.Normal.Black -> {
+                    copy(
+                        board = result.board,
+                        blackStand = result.stand,
+                        turn = result.nextTurn,
+                        readyMoveInfo = null,
+                    )
+                }
 
-            Turn.Normal.White -> {
-                uiState.value.copy(
-                    board = result.board,
-                    whiteStand = result.stand,
-                    turn = result.nextTurn,
-                    readyMoveInfo = null,
-                )
+                Turn.Normal.White -> {
+                    copy(
+                        board = result.board,
+                        whiteStand = result.stand,
+                        turn = result.nextTurn,
+                        readyMoveInfo = null,
+                    )
+                }
             }
         }
     }
@@ -228,9 +229,9 @@ class GameViewModel @Inject constructor(
         val whiteStand: Stand,
         val turn: Turn,
         val readyMoveInfo: ReadyMoveInfoUiModel?,
-    )
+    ): BaseContract.State
 
-    sealed interface Effect {
+    sealed interface Effect: BaseContract.Effect {
 
         /**
          * ゲーム終了

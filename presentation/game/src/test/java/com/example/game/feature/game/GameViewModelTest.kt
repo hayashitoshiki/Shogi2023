@@ -67,7 +67,7 @@ class GameViewModelTest {
      * @param effects Effectの期待値
      */
     private fun uiResult(state: GameViewModel.UiState, effects: List<GameViewModel.Effect>)  = runTest {
-        val resultState = gameViewModel.uiState.value
+        val resultState = gameViewModel.state.value
 
         // 比較
         assertEquals(resultState, state)
