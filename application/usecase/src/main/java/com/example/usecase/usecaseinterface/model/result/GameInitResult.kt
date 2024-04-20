@@ -17,4 +17,6 @@ data class GameInitResult(
     val blackStand: Stand,
     val whiteStand: Stand,
     val turn: Turn,
-)
+) {
+    companion object
+}

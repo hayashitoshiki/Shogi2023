@@ -15,4 +15,6 @@ data class SetEvolutionResult(
     val isWin: Boolean,
     val nextTurn: Turn,
     val isDraw: Boolean,
-)
+) {
+    companion object
+}

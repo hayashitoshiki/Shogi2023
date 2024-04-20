@@ -18,7 +18,9 @@ sealed interface NextResult {
      */
     data class Hint(
         val hintPositionList: List<Position>
-    ) : NextResult
+    ) : NextResult{
+        companion object
+    }
 
     /**
      * 駒を動かした後の盤面を返却
@@ -39,7 +41,9 @@ sealed interface NextResult {
             override val board: Board,
             override val stand: Stand,
             override val nextTurn: Turn,
-        ) : Move
+        ) : Move{
+            companion object
+        }
 
         /**
          * 成るか選択
@@ -48,7 +52,9 @@ sealed interface NextResult {
             override val board: Board,
             override val stand: Stand,
             override val nextTurn: Turn,
-        ) : Move
+        ) : Move {
+            companion object
+        }
 
         /**
          * 勝ち
@@ -57,8 +63,9 @@ sealed interface NextResult {
             override val board: Board,
             override val stand: Stand,
             override val nextTurn: Turn,
-        ) : Move
-
+        ) : Move{
+            companion object
+        }
 
         /**
          * 千日手判定
@@ -67,7 +74,8 @@ sealed interface NextResult {
             override val board: Board,
             override val stand: Stand,
             override val nextTurn: Turn,
-        ) : Move
+        ) : Move {
+            companion object
+        }
     }
-
 }
