@@ -57,14 +57,24 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
+
+    val coroutines_version = "1.3.9"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
+
+    // coroutine-test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.0")
+    testImplementation("app.cash.turbine:turbine:1.1.0")
     // Hilt
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     implementation(project(":presentation:core"))
     implementation(project(":domain:entity"))
     implementation(project(":application:usecase"))
+    implementation(project(":domain:test-entity"))
+    testImplementation(project(":application:test-usecase"))
 }
 
 kapt {

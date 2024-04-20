@@ -14,12 +14,12 @@ import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,11 +38,8 @@ class GameViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
-
-    private val mutableGameEndEffect: MutableSharedFlow<Effect.GameEnd> = MutableSharedFlow()
-    val gameEndEffect: SharedFlow<Effect.GameEnd> = mutableGameEndEffect.asSharedFlow()
-    private val mutableEvolutionEffect: MutableSharedFlow<Effect.Evolution> = MutableSharedFlow()
-    val evolutionEffect: SharedFlow<Effect.Evolution> = mutableEvolutionEffect.asSharedFlow()
+    private val mutableEffect: Channel<Effect> = Channel()
+    val effect: Flow<Effect> = mutableEffect.receiveAsFlow()
 
     init {
         initBard()
@@ -91,7 +88,7 @@ class GameViewModel @Inject constructor(
             Turn.Normal.White -> Turn.Normal.Black
         }
         viewModelScope.launch {
-            mutableGameEndEffect.emit(Effect.GameEnd.Win(winner))
+            mutableEffect.send(Effect.GameEnd.Win(winner))
         }
     }
 
@@ -150,21 +147,21 @@ class GameViewModel @Inject constructor(
                 setMoved(result)
                 viewModelScope.launch {
                     if (touchAction !is MoveTarget.Board) return@launch
-                    mutableEvolutionEffect.emit(Effect.Evolution(touchAction.position))
+                    mutableEffect.send(Effect.Evolution(touchAction.position))
                 }
             }
 
             is NextResult.Move.Win -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    mutableGameEndEffect.emit(Effect.GameEnd.Win(turn))
+                    mutableEffect.send(Effect.GameEnd.Win(turn))
                 }
             }
 
             is NextResult.Move.Drown -> {
                 setMoved(result)
                 viewModelScope.launch {
-                    mutableGameEndEffect.emit(Effect.GameEnd.Draw)
+                    mutableEffect.send(Effect.GameEnd.Draw)
                 }
             }
         }
@@ -189,7 +186,7 @@ class GameViewModel @Inject constructor(
         )
         if (result.isWin) {
             viewModelScope.launch {
-                mutableGameEndEffect.emit(Effect.GameEnd.Win(turn))
+                mutableEffect.send(Effect.GameEnd.Win(turn))
             }
         }
     }

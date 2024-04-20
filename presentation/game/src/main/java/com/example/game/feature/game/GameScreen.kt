@@ -30,10 +30,16 @@ fun GameScreen(
     val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.Evolution?>(null) }
     val showGameEndDialog = remember { mutableStateOf<GameViewModel.Effect.GameEnd?>(null) }
     LaunchedEffect(true) {
-        viewModel.evolutionEffect.collect { showEvolutionDialog.value = it }
-    }
-    LaunchedEffect(true) {
-        viewModel.gameEndEffect.collect { showGameEndDialog.value = it }
+        viewModel.effect.collect { effect ->
+            when(effect) {
+                is GameViewModel.Effect.Evolution -> {
+                    showEvolutionDialog.value = effect
+                }
+                is GameViewModel.Effect.GameEnd-> {
+                    showGameEndDialog.value = effect
+                }
+            }
+        }
     }
     showEvolutionDialog.value?.apply {
         EvolutionDialog(

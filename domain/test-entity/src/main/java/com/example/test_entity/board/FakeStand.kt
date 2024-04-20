@@ -37,28 +37,13 @@ fun Stand.Companion.fake(
     kakuCount: Int = 0,
     hisyaCount: Int = 0,
 ): Stand {
-    return Stand().also {
-        for (i in 0..fuCount) {
-            it.add(Piece.Surface.Fu)
-        }
-        for (i in 0..kyoCount) {
-            it.add(Piece.Surface.Kyosya)
-        }
-        for (i in 0..keimaCount) {
-            it.add(Piece.Surface.Keima)
-        }
-        for (i in 0..ginCount) {
-            it.add(Piece.Surface.Gin)
-        }
-        for (i in 0..kinCount) {
-            it.add(Piece.Surface.Kin)
-        }
-        for (i in 0..kakuCount) {
-            it.add(Piece.Surface.Kaku)
-        }
-        for (i in 0..hisyaCount) {
-            it.add(Piece.Surface.Hisya)
-        }
+    return Stand().also { stand ->
+        repeat(fuCount) { stand.add(Piece.Surface.Fu) }
+        repeat(kyoCount) { stand.add(Piece.Surface.Kyosya) }
+        repeat(keimaCount) { stand.add(Piece.Surface.Keima) }
+        repeat(ginCount) { stand.add(Piece.Surface.Gin) }
+        repeat(kinCount) { stand.add(Piece.Surface.Kin) }
+        repeat(kakuCount) { stand.add(Piece.Surface.Kaku) }
+        repeat(hisyaCount) { stand.add(Piece.Surface.Hisya) }
     }
-
 }
