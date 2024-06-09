@@ -176,5 +176,14 @@ data class Board(val size: Size = Size(9, 9)) {
         return copiedBoard
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other !is Board) return false
+        return getAllCells() == other.getAllCells()
+    }
+
+    override fun hashCode(): Int {
+        return board.hashCode()
+    }
+
     companion object
 }
