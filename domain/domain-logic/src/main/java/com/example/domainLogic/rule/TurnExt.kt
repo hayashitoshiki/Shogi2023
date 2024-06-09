@@ -1,6 +1,6 @@
 package com.example.domainLogic.rule
 
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.rule.Turn
 
 /**
  * 手番交代

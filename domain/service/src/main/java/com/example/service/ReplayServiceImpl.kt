@@ -1,11 +1,11 @@
 package com.example.service
 
-import com.example.entity.game.Log
-import com.example.entity.game.MoveTarget
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.CellStatus
-import com.example.entity.game.board.Stand
-import com.example.entity.game.piece.Piece
+import com.example.domainObject.game.Log
+import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.CellStatus
+import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.piece.Piece
 import com.example.domainLogic.piece.degeneracy
 import com.example.domainLogic.piece.evolution
 import com.example.domainLogic.rule.getOpponentTurn

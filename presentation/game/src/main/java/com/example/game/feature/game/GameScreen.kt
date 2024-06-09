@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.core.navigation.NavigationScreens
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.rule.Turn
 import com.example.game.util.compoment.GameBox
 import com.example.game.util.compoment.button.LoseButton
 import com.example.game.util.compoment.dialog.EvolutionDialog

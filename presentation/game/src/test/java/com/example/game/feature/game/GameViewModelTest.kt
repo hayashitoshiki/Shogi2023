@@ -1,17 +1,17 @@
 package com.example.game.feature.game
 
 import app.cash.turbine.test
-import com.example.entity.game.MoveTarget
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Position
-import com.example.entity.game.board.Stand
-import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Position
+import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.Turn
 import com.example.game.util.model.ReadyMoveInfoUiModel
-import com.example.test_entity.board.fake
-import com.example.test_entity.board.`fake●5一玉○5二香○5三金`
-import com.example.test_entity.board.fake詰まない
-import com.example.test_entity.board.fake駒を取れる状態
+import com.example.testDomainObject.board.fake
+import com.example.testDomainObject.board.`fake●5一玉○5二香○5三金`
+import com.example.testDomainObject.board.fake詰まない
+import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.test_usecase.model.fake
 import com.example.test_usecase.usecase.FakeGameUseCase
 import com.example.usecase.usecaseinterface.model.result.GameInitResult

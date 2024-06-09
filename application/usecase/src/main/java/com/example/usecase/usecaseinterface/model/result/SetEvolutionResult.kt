@@ -1,7 +1,7 @@
 package com.example.usecase.usecaseinterface.model.result
 
-import com.example.entity.game.board.Board
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.rule.Turn
 
 /**
  * 成り判定した結果を返却

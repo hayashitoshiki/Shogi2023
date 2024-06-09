@@ -1,8 +1,8 @@
 package com.example.test_repository
 
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Cell
-import com.example.entity.game.board.Position
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Cell
+import com.example.domainObject.game.board.Position
 import com.example.repository.repositoryinterface.GameRepository
 
 class FakeGameRepository : GameRepository {

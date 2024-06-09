@@ -1,9 +1,9 @@
 package com.example.home.model
 
-import com.example.entity.game.rule.Hande
-import com.example.entity.game.rule.PlayerRule
-import com.example.entity.game.rule.PlayersRule
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.rule.Hande
+import com.example.domainObject.game.rule.PlayerRule
+import com.example.domainObject.game.rule.PlayersRule
+import com.example.domainObject.game.rule.Turn
 
 /**
  * ルール設定CardのUiModel

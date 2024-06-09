@@ -1,11 +1,11 @@
 package com.example.usecase.usecaseinterface
 
-import com.example.entity.game.MoveTarget
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Position
-import com.example.entity.game.board.Stand
-import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Position
+import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.Turn
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult

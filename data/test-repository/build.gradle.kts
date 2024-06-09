@@ -37,5 +37,5 @@ android {
 
 dependencies {
     implementation(project(":data:repository"))
-    implementation(project(":domain:entity"))
+    implementation(project(":domain:domain-object"))
 }

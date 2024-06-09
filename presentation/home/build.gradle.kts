@@ -70,7 +70,7 @@ dependencies {
 
     implementation(project(":presentation:core"))
     implementation(project(":application:usecase"))
-    implementation(project(":domain:entity"))
+    implementation(project(":domain:domain-object"))
     implementation(project(":presentation:game"))
 }
 

@@ -2,11 +2,11 @@ package com.example
 
 import com.example.domainLogic.piece.isAvailablePut
 import com.example.domainLogic.piece.shouldEvolution
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.CellStatus
-import com.example.entity.game.board.Position
-import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.CellStatus
+import com.example.domainObject.game.board.Position
+import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.Turn
 import org.junit.Assert
 import org.junit.Test
 

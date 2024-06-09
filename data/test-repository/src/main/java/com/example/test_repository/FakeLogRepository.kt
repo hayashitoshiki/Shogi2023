@@ -1,6 +1,6 @@
 package com.example.test_repository
 
-import com.example.entity.game.Log
+import com.example.domainObject.game.Log
 import com.example.repository.repositoryinterface.LogRepository
 import java.time.LocalDateTime
 

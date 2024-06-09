@@ -40,8 +40,8 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     testImplementation("junit:junit:4.13.2")
+    implementation(project(":domain:domain-object"))
 
-    implementation(project(":domain:entity"))
     implementation(project(":domain:domain-logic"))
-    testImplementation(project(":domain:test-entity"))
+    testImplementation(project(":domain:test-domain-object"))
 }

@@ -1,8 +1,8 @@
 package com.example.usecase.usecaseinterface.model.result
 
-import com.example.entity.game.Log
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Stand
+import com.example.domainObject.game.Log
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Stand
 
 /**
  * ゲーム初期化時の返却物

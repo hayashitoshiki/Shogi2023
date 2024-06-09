@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.rule.Turn
 import com.example.game.R
 
 

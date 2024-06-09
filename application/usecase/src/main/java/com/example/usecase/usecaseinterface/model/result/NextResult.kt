@@ -1,9 +1,9 @@
 package com.example.usecase.usecaseinterface.model.result
 
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Position
-import com.example.entity.game.board.Stand
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Position
+import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.rule.Turn
 
 /**
  * 将棋を進める処理の戻り値

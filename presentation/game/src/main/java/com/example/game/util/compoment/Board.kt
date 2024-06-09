@@ -18,10 +18,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.core.theme.Shogi2023Theme
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Cell
-import com.example.entity.game.board.CellStatus
-import com.example.entity.game.board.Position
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Cell
+import com.example.domainObject.game.board.CellStatus
+import com.example.domainObject.game.board.Position
 import com.example.game.R
 
 @Composable

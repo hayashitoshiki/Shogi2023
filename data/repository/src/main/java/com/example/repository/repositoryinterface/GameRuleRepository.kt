@@ -1,6 +1,6 @@
 package com.example.repository.repositoryinterface
 
-import com.example.entity.game.rule.GameRule
+import com.example.domainObject.game.rule.GameRule
 
 interface GameRuleRepository {
 

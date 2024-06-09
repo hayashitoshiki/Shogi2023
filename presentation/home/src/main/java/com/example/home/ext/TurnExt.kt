@@ -1,7 +1,7 @@
 package com.example.home.ext
 
 import androidx.annotation.DrawableRes
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.rule.Turn
 import com.example.home.R
 
 @get:DrawableRes

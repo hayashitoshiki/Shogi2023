@@ -28,10 +28,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.core.theme.Shogi2023Theme
-import com.example.entity.game.rule.Hande
-import com.example.entity.game.rule.PlayerRule
-import com.example.entity.game.rule.PlayersRule
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.rule.Hande
+import com.example.domainObject.game.rule.PlayerRule
+import com.example.domainObject.game.rule.PlayersRule
+import com.example.domainObject.game.rule.Turn
 import com.example.game.util.extension.stringRes
 import com.example.home.R
 import com.example.home.ext.stringRes

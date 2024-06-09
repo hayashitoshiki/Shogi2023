@@ -1,7 +1,7 @@
 package com.example.game.util.extension
 
-import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.Turn
 import com.example.game.R
 
 fun Piece.getIcon(turn: Turn): Int {

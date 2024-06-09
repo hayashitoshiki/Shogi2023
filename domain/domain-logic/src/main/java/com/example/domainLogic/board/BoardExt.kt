@@ -4,16 +4,16 @@ import com.example.domainLogic.piece.evolution
 import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainLogic.piece.isAvailablePut
 import com.example.domainLogic.piece.shouldEvolution
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.CellStatus
-import com.example.entity.game.board.EvolutionCheckState
-import com.example.entity.game.board.Position
-import com.example.entity.game.piece.Move
-import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.BoardRule
-import com.example.entity.game.rule.GameRule
-import com.example.entity.game.rule.Hande
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.CellStatus
+import com.example.domainObject.game.board.EvolutionCheckState
+import com.example.domainObject.game.board.Position
+import com.example.domainObject.game.piece.Move
+import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.BoardRule
+import com.example.domainObject.game.rule.GameRule
+import com.example.domainObject.game.rule.Hande
+import com.example.domainObject.game.rule.Turn
 
 /**
  * 将棋盤のセットアップ

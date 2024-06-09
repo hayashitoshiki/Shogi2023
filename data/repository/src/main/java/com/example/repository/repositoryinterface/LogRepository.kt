@@ -1,6 +1,6 @@
 package com.example.repository.repositoryinterface
 
-import com.example.entity.game.Log
+import com.example.domainObject.game.Log
 import java.time.LocalDateTime
 
 interface LogRepository {

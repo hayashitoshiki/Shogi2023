@@ -1,10 +1,10 @@
 package com.example.game.feature.replay
 
 import androidx.lifecycle.ViewModel
-import com.example.entity.game.Log
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Stand
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.Log
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.rule.Turn
 import com.example.usecase.usecaseinterface.ReplayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,6 +1,6 @@
 package com.example.domainLogic.board
 
-import com.example.entity.game.board.Position
+import com.example.domainObject.game.board.Position
 
 /**
  * 足す

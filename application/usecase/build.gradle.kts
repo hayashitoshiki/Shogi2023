@@ -44,13 +44,13 @@ dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation(project(":domain:domain-object"))
 
-    implementation(project(":domain:entity"))
     implementation(project(":domain:domain-logic"))
     implementation(project(":domain:service"))
     implementation(project(":data:repository"))
     testImplementation(project(":data:test-repository"))
-    testImplementation(project(":domain:test-entity"))
+    testImplementation(project(":domain:test-domain-object"))
 }
 
 kapt {

@@ -1,9 +1,9 @@
 package com.example.domainLogic.piece
 
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Position
-import com.example.entity.game.piece.Piece
-import com.example.entity.game.rule.Turn
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Position
+import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.Turn
 
 /**
  * 駒を打つことができるか

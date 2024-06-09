@@ -1,6 +1,6 @@
 package com.example.usecase.usecaseinterface
 
-import com.example.entity.game.rule.GameRule
+import com.example.domainObject.game.rule.GameRule
 
 /**
  * 将棋のビジネスロジック

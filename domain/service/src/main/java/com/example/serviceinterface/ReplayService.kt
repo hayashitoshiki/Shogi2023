@@ -1,8 +1,8 @@
 package com.example.serviceinterface
 
-import com.example.entity.game.Log
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Stand
+import com.example.domainObject.game.Log
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Stand
 
 /**
  * 将棋の棋譜再生に関するドメインロジック

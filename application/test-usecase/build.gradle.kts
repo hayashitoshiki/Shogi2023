@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain:entity"))
-    implementation(project(":domain:test-entity"))
+    implementation(project(":domain:domain-object"))
+    implementation(project(":domain:test-domain-object"))
     implementation(project(":application:usecase"))
 }

@@ -1,7 +1,7 @@
 package com.example.home.ext
 
 import androidx.annotation.StringRes
-import com.example.entity.game.rule.Hande
+import com.example.domainObject.game.rule.Hande
 import com.example.home.R
 
 @get:StringRes

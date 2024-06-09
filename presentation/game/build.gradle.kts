@@ -71,9 +71,9 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.50")
 
     implementation(project(":presentation:core"))
-    implementation(project(":domain:entity"))
+    implementation(project(":domain:domain-object"))
     implementation(project(":application:usecase"))
-    implementation(project(":domain:test-entity"))
+    implementation(project(":domain:test-domain-object"))
     testImplementation(project(":application:test-usecase"))
 }
 

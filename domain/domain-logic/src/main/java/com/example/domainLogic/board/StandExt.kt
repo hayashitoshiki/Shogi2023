@@ -1,8 +1,8 @@
 package com.example.domainLogic.board
 
-import com.example.entity.game.board.Stand
-import com.example.entity.game.rule.Hande
-import com.example.entity.game.rule.PlayerRule
+import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.rule.Hande
+import com.example.domainObject.game.rule.PlayerRule
 
 /**
  * 持ち駒のセットアップ

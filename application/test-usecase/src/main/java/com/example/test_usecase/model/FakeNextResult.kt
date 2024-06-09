@@ -1,11 +1,11 @@
 package com.example.test_usecase.model
 
-import com.example.entity.game.board.Board
-import com.example.entity.game.board.Position
-import com.example.entity.game.board.Stand
-import com.example.entity.game.rule.Turn
-import com.example.test_entity.board.fake
-import com.example.test_entity.board.fake詰まない
+import com.example.domainObject.game.board.Board
+import com.example.domainObject.game.board.Position
+import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.rule.Turn
+import com.example.testDomainObject.board.fake
+import com.example.testDomainObject.board.fake詰まない
 import com.example.usecase.usecaseinterface.model.result.NextResult
 
 fun NextResult.Hint.Companion.fake(
