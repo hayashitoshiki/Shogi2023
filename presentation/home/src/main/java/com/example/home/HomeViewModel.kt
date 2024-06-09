@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
+import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.PlayerRule
 import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
@@ -128,13 +129,17 @@ class HomeViewModel @Inject constructor(
                 is GameRuleSettingUiModel.Custom -> setting.playersRule
                 is GameRuleSettingUiModel.NonCustom -> {
                     val isFirstCheckEnd = setting is GameRuleSettingUiModel.NonCustom.FirstCheck
+                    val (blackHande,whiteHande) = when(setting.selectedHande.turn) {
+                        Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
+                        Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
+                    }
                     PlayersRule(
                         blackRule = PlayerRule(
-                            hande = setting.selectedHande.hande,
+                            hande = blackHande,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                         whiteRule = PlayerRule(
-                            hande = setting.selectedHande.hande,
+                            hande = whiteHande,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                     )
