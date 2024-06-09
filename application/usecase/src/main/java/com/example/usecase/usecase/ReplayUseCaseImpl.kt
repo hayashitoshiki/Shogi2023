@@ -3,7 +3,7 @@ package com.example.usecase.usecase
 import com.example.entity.game.Log
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Stand
-import com.example.extention.setUp
+import com.example.domainLogic.board.setUp
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
 import com.example.serviceinterface.ReplayService

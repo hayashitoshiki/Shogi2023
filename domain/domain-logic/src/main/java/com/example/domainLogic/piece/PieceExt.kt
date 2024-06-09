@@ -1,4 +1,4 @@
-package com.example.extention
+package com.example.domainLogic.piece
 
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Position

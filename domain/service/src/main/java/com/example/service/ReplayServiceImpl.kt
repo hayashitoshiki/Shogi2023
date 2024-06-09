@@ -6,9 +6,9 @@ import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
-import com.example.extention.degeneracy
-import com.example.extention.evolution
-import com.example.extention.getOpponentTurn
+import com.example.domainLogic.piece.degeneracy
+import com.example.domainLogic.piece.evolution
+import com.example.domainLogic.rule.getOpponentTurn
 import com.example.serviceinterface.ReplayService
 import javax.inject.Inject
 

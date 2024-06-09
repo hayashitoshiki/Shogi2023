@@ -8,13 +8,13 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Turn
-import com.example.extention.changeNextTurn
-import com.example.extention.degeneracy
-import com.example.extention.isAvailableKingBy
-import com.example.extention.isCheckByTurn
-import com.example.extention.movePieceByPosition
-import com.example.extention.searchMoveBy
-import com.example.extention.searchPutBy
+import com.example.domainLogic.rule.changeNextTurn
+import com.example.domainLogic.piece.degeneracy
+import com.example.domainLogic.board.isAvailableKingBy
+import com.example.domainLogic.board.isCheckByTurn
+import com.example.domainLogic.board.movePieceByPosition
+import com.example.domainLogic.board.searchMoveBy
+import com.example.domainLogic.board.searchPutBy
 import com.example.serviceinterface.GameService
 import javax.inject.Inject
 

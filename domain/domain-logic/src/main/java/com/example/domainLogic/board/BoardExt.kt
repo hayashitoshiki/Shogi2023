@@ -1,5 +1,9 @@
-package com.example.extention
+package com.example.domainLogic.board
 
+import com.example.domainLogic.piece.evolution
+import com.example.domainLogic.rule.getOpponentTurn
+import com.example.domainLogic.piece.isAvailablePut
+import com.example.domainLogic.piece.shouldEvolution
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.EvolutionCheckState
@@ -117,7 +121,7 @@ private fun Map<Position, CellStatus>.setHandeWhite(hande: Hande): Map<Position,
  * @param afterPosition 動かす先のマス目
  * @return　動かした後の将棋盤
  */
-internal fun Board.movePieceByPosition(beforePosition: Position, afterPosition: Position): Board {
+fun Board.movePieceByPosition(beforePosition: Position, afterPosition: Position): Board {
     val beforePositionCell = this.getCellByPosition(beforePosition)
     this.update(afterPosition, beforePositionCell.getStatus())
     this.update(beforePosition, CellStatus.Empty)

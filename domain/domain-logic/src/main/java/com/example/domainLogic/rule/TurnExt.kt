@@ -1,4 +1,4 @@
-package com.example.extention
+package com.example.domainLogic.rule
 
 import com.example.entity.game.rule.Turn
 

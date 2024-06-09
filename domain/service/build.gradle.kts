@@ -42,5 +42,6 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     implementation(project(":domain:entity"))
+    implementation(project(":domain:domain-logic"))
     testImplementation(project(":domain:test-entity"))
 }

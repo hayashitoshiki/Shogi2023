@@ -1,5 +1,7 @@
-package com.example.extention
+package com.example
 
+import com.example.domainLogic.rule.changeNextTurn
+import com.example.domainLogic.rule.getOpponentTurn
 import com.example.entity.game.rule.Turn
 import org.junit.Assert
 import org.junit.Test

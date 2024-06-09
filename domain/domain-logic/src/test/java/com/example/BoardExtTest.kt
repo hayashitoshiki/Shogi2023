@@ -1,5 +1,12 @@
-package com.example.extention
+package com.example
 
+import com.example.domainLogic.board.SetUpPiece
+import com.example.domainLogic.board.checkPieceEvolution
+import com.example.domainLogic.board.isCheckByTurn
+import com.example.domainLogic.board.searchMoveBy
+import com.example.domainLogic.board.searchPutBy
+import com.example.domainLogic.board.setUp
+import com.example.domainLogic.board.updatePieceEvolution
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.Cell
 import com.example.entity.game.board.CellStatus

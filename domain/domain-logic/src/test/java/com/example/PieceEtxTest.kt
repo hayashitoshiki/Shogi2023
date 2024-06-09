@@ -1,5 +1,7 @@
-package com.example.extention
+package com.example
 
+import com.example.domainLogic.piece.isAvailablePut
+import com.example.domainLogic.piece.shouldEvolution
 import com.example.entity.game.board.Board
 import com.example.entity.game.board.CellStatus
 import com.example.entity.game.board.Position

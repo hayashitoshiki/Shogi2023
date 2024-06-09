@@ -1,12 +1,10 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
-    id("dagger.hilt.android.plugin")
 }
 
 android {
-    namespace = "com.example.usecase"
+    namespace = "com.example.domainLogic"
     compileSdk = 34
 
     defaultConfig {
@@ -32,27 +30,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.6"
-    }
 }
 dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-
     implementation(project(":domain:entity"))
-    implementation(project(":domain:domain-logic"))
-    implementation(project(":domain:service"))
-    implementation(project(":data:repository"))
-    testImplementation(project(":data:test-repository"))
     testImplementation(project(":domain:test-entity"))
-}
-
-kapt {
-    correctErrorTypes = true
 }

@@ -8,8 +8,8 @@ import com.example.entity.game.board.Stand
 import com.example.entity.game.piece.Piece
 import com.example.entity.game.rule.GameRule
 import com.example.entity.game.rule.Turn
-import com.example.extention.searchMoveBy
-import com.example.extention.setUp
+import com.example.domainLogic.board.searchMoveBy
+import com.example.domainLogic.board.setUp
 import com.example.service.GameServiceImpl
 import com.example.test_entity.board.fake
 import com.example.test_entity.board.`fake●1一王○3三角`
