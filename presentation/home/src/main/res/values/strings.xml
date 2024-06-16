@@ -16,4 +16,12 @@
     <string name="hande_hisya">飛車落ち</string>
     <string name="hande_kaku">角落ち</string>
     <string name="hande_nothing">平手</string>
+
+
+    <!-- 持ち時間 -->
+    <string name="title_time_limit">持ち時間</string>
+    <string name="time_limit_totalTime">持ち時間</string>
+    <string name="time_limit_byoyomi">秒読み</string>
+    <string name="label_time_minutes">分</string>
+    <string name="label_time_second">秒</string>
 </resources>

@@ -11,7 +11,7 @@ package com.example.domainObject.game.rule
  */
 data class PlayerRule(
     val hande: Hande = Hande.NON,
-    val timeLimitRule: TimeLimitRule = TimeLimitRule.None,
+    val timeLimitRule: TimeLimitRule = TimeLimitRule.INIT,
     val isFirstCheckEnd: Boolean = false,
     val isTryRule: Boolean = true,
 ) {

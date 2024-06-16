@@ -7,6 +7,7 @@ import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.PlayerRule
 import com.example.domainObject.game.rule.PlayersRule
+import com.example.domainObject.game.rule.Second
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
@@ -123,6 +124,55 @@ class HomeViewModel @Inject constructor(
                 }
             },
         )
+    }
+
+    fun onChangeTimeLimitTotalTime(turn: Turn, second: Second) {
+        val byoyomi = when(turn) {
+            Turn.Normal.Black -> {
+                uiState.value.timeLimitCard.blackTimeLimitRule.byoyomi
+            }
+            Turn.Normal.White -> {
+                uiState.value.timeLimitCard.whiteTimeLimitRule.byoyomi
+            }
+        }
+        updateTimeLimitRule(turn, second, byoyomi)
+    }
+
+    fun onChangeTimeLimitSecond(turn: Turn, second: Second) {
+        val totalTime = when(turn) {
+            Turn.Normal.Black -> {
+                uiState.value.timeLimitCard.blackTimeLimitRule.totalTime
+            }
+            Turn.Normal.White -> {
+                uiState.value.timeLimitCard.whiteTimeLimitRule.totalTime
+            }
+        }
+        updateTimeLimitRule(turn, totalTime, second)
+    }
+
+    private fun updateTimeLimitRule(turn: Turn, totalTime: Second, second: Second) {
+        _uiState.value = when(turn) {
+            Turn.Normal.Black -> {
+                uiState.value.copy(
+                    timeLimitCard = uiState.value.timeLimitCard.copy(
+                        blackTimeLimitRule = uiState.value.timeLimitCard.blackTimeLimitRule.copy(
+                            totalTime = totalTime,
+                            byoyomi = second,
+                        ),
+                    )
+                )
+            }
+            Turn.Normal.White -> {
+                uiState.value.copy(
+                    timeLimitCard = uiState.value.timeLimitCard.copy(
+                        whiteTimeLimitRule = uiState.value.timeLimitCard.whiteTimeLimitRule.copy(
+                            totalTime = totalTime,
+                            byoyomi = second,
+                        ),
+                    )
+                )
+            }
+        }
     }
 
     fun onGameStartClick() {

@@ -32,6 +32,7 @@ import com.example.core.theme.Shogi2023Theme
 import com.example.home.compoment.card.CustomShogiSettingCard
 import com.example.home.compoment.card.FirstCheckShogiSettingCard
 import com.example.home.compoment.card.NormalShogiSettingCard
+import com.example.home.compoment.card.TimeLimitSettingCard
 import com.example.home.model.GameRuleSettingUiModel
 
 @Composable
@@ -92,6 +93,12 @@ fun HomeScreen(
         contentAlignment = Alignment.Center,
     ) {
         Column {
+            TimeLimitSettingCard(
+                uiModel = gameRule.value.timeLimitCard,
+                onChangeTimeLimitTotalTime = viewModel::onChangeTimeLimitTotalTime,
+                onChangeTimeLimitSecond = viewModel::onChangeTimeLimitSecond,
+            )
+            Spacer(modifier = Modifier.size(16.dp))
             RuleSettingPager(
                 tabs = tabs,
                 changePage = viewModel::changePage,

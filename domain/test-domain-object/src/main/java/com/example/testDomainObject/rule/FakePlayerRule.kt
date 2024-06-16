@@ -6,7 +6,7 @@ import com.example.domainObject.game.rule.TimeLimitRule
 
 fun PlayerRule.Companion.fake(
     hande: Hande = Hande.NON,
-    timeLimitRule: TimeLimitRule = TimeLimitRule.None,
+    timeLimitRule: TimeLimitRule = TimeLimitRule.INIT,
     isFirstCheckEnd: Boolean = false,
     isTryRule: Boolean = false,
 ): PlayerRule {
