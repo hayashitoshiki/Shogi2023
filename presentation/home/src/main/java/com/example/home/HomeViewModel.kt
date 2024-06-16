@@ -9,6 +9,7 @@ import com.example.domainObject.game.rule.PlayerRule
 import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
+import com.example.home.model.TimeLimitCardUiModel
 import com.example.usecase.usecaseinterface.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,6 +32,7 @@ class HomeViewModel @Inject constructor(
                 GameRuleSettingUiModel.NonCustom.FirstCheck.INIT,
                 GameRuleSettingUiModel.Custom.INIT,
             ),
+            timeLimitCard = TimeLimitCardUiModel.INIT,
             showRuleItemIndex = 0,
         )
     )
@@ -169,6 +171,7 @@ class HomeViewModel @Inject constructor(
      * @property showRuleItemIndex 表示されている設定Card
      */
     data class UiState(
+        val timeLimitCard: TimeLimitCardUiModel,
         val ruleItems: List<GameRuleSettingUiModel>,
         val showRuleItemIndex: Int,
     )
