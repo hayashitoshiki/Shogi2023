@@ -2,12 +2,12 @@ package com.example.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.PlayerRule
 import com.example.domainObject.game.rule.PlayersRule
-import com.example.domainObject.game.rule.Second
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel

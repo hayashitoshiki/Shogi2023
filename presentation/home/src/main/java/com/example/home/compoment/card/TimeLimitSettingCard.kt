@@ -29,7 +29,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.domainObject.game.rule.Second
+import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.rule.TimeLimitRule
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.extension.stringRes

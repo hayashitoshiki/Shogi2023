@@ -1,6 +1,6 @@
 package com.example.home.model
 
-import com.example.domainObject.game.rule.Second
+import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.rule.TimeLimitRule
 
 /**

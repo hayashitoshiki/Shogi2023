@@ -1,5 +1,7 @@
 package com.example.domainObject.game.rule
 
+import com.example.domainObject.game.game.Second
+
 /**
  * 持ち時間設定
  *
@@ -17,8 +19,3 @@ data class TimeLimitRule(
         )
     }
 }
-
-/**
- * 秒数
- */
-data class Second(val value: Int)

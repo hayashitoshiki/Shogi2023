@@ -7,6 +7,7 @@ import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.mapper.toUseCaseModel
@@ -33,6 +34,8 @@ class GameViewModel @Inject constructor(
             blackStand = Stand(),
             whiteStand = Stand(),
             turn = Turn.Normal.Black,
+            blackTimeLimit = TimeLimit.INIT,
+            whiteTimeLimit = TimeLimit.INIT,
             readyMoveInfo = null,
         )
     }
@@ -44,6 +47,8 @@ class GameViewModel @Inject constructor(
                 board = result.board,
                 blackStand = result.blackStand,
                 whiteStand = result.whiteStand,
+                blackTimeLimit = result.blackTimeLimit,
+                whiteTimeLimit = result.whiteTimeLimit,
                 turn = result.turn,
                 readyMoveInfo = null,
             )
@@ -220,6 +225,8 @@ class GameViewModel @Inject constructor(
      * @property board 将棋盤
      * @property blackStand 先手の持ち駒
      * @property whiteStand 後手の持ち駒
+     * @property blackTimeLimit 先手の持ち時間
+     * @property whiteTimeLimit 後手の持ち時間
      * @property turn 手番
      * @property readyMoveInfo 動かそうとしている駒の情報
      */
@@ -227,6 +234,8 @@ class GameViewModel @Inject constructor(
         val board: Board,
         val blackStand: Stand,
         val whiteStand: Stand,
+        val blackTimeLimit: TimeLimit,
+        val whiteTimeLimit: TimeLimit,
         val turn: Turn,
         val readyMoveInfo: ReadyMoveInfoUiModel?,
     ): BaseContract.State

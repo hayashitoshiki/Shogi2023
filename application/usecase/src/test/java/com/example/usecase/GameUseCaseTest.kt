@@ -10,6 +10,7 @@ import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
 import com.example.domainLogic.board.searchMoveBy
 import com.example.domainLogic.board.setUp
+import com.example.domainObject.game.game.TimeLimit
 import com.example.service.GameServiceImpl
 import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.board.`fake●1一王○3三角`
@@ -78,11 +79,15 @@ class GameUseCaseTest {
         val board = Board.setUp(rule)
         val blackStand = Stand.setUp(rule.playersRule.blackRule)
         val whiteStand = Stand.setUp(rule.playersRule.whiteRule)
+        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
+        val whiteTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
         val turn = Turn.Normal.Black
         val expected = GameInitResult(
             board = board,
             blackStand = blackStand,
             whiteStand = whiteStand,
+            blackTimeLimit = blackTimeLimit,
+            whiteTimeLimit = whiteTimeLimit,
             turn = turn,
         )
 

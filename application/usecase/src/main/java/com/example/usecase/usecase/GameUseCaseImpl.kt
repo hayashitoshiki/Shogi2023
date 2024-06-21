@@ -14,6 +14,7 @@ import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainLogic.board.searchMoveBy
 import com.example.domainLogic.board.setUp
 import com.example.domainLogic.board.updatePieceEvolution
+import com.example.domainObject.game.game.TimeLimit
 import com.example.repository.repositoryinterface.GameRepository
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
@@ -38,6 +39,8 @@ class GameUseCaseImpl @Inject constructor(
         val board = Board.setUp(rule)
         val blackStand = Stand.setUp(rule.playersRule.blackRule)
         val whiteStand = Stand.setUp(rule.playersRule.whiteRule)
+        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
+        val whiteTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
         val now = LocalDateTime.now()
         logRepository.createGameLog(now)
 
@@ -45,6 +48,8 @@ class GameUseCaseImpl @Inject constructor(
             board = board,
             blackStand = blackStand,
             whiteStand = whiteStand,
+            blackTimeLimit = blackTimeLimit,
+            whiteTimeLimit = whiteTimeLimit,
             turn = Turn.Normal.Black,
         )
     }
