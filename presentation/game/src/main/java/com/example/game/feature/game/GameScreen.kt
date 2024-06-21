@@ -80,6 +80,8 @@ fun GameScreen(
             GameBox(
                 whiteStand = uiState.value.whiteStand,
                 blackStand = uiState.value.blackStand,
+                blackTimeLimit = uiState.value.blackTimeLimit,
+                whiteTimeLimit = uiState.value.whiteTimeLimit,
                 onStandClick = viewModel::tapStand,
                 onBoardClick = viewModel::tapBoard,
                 board = uiState.value.board,

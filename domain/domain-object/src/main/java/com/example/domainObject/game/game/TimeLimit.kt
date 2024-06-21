@@ -19,6 +19,20 @@ data class TimeLimit(
         totalTime = timeLimitRule.totalTime,
         byoyomi = timeLimitRule.byoyomi,
     )
+
+    /**
+     * 残り時間を取得
+     *
+     * @return 残り時間
+     */
+    fun remainingTime(): Second {
+        return if(totalTime != Second(0)) {
+            totalTime
+        } else {
+            byoyomi
+        }
+    }
+
     companion object {
         val INIT = TimeLimit(
             setting = TimeLimitRule.INIT,

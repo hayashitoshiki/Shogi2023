@@ -65,6 +65,8 @@ fun ReplayScreen(
             GameBox(
                 whiteStand = uiState.value.whiteStand,
                 blackStand = uiState.value.blackStand,
+                blackTimeLimit = uiState.value.blackTimeLimit,
+                whiteTimeLimit = uiState.value.whiteTimeLimit,
                 onStandClick = { _, _ -> },
                 onBoardClick = {},
                 board = uiState.value.board,

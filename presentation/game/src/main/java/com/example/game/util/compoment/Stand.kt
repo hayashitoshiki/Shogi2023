@@ -4,12 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -17,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.core.theme.Shogi2023Theme
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.R
@@ -26,6 +29,7 @@ import com.example.game.R
 fun StandBox(
     modifier: Modifier = Modifier,
     stand: Stand,
+    timeLimit: TimeLimit,
     turn: Turn,
     onClick: (Piece, Turn) -> Unit,
 ) {
@@ -53,8 +57,13 @@ fun StandBox(
         when (turn) {
             Turn.Normal.Black -> Unit
             Turn.Normal.White -> {
-                Spacer(modifier = Modifier.size(cellSize.dp))
-                Spacer(modifier = Modifier.size(cellSize.dp))
+                TimeLimitBox(
+                    modifier = Modifier
+                        .height(cellSize.dp)
+                        .width((cellSize * 2).dp)
+                        .graphicsLayer(rotationZ = 180f),
+                    timeLimit = timeLimit,
+                )
             }
         }
         for (piece in pieceList) {
@@ -73,6 +82,17 @@ fun StandBox(
                     },
                 )
             }
+        }
+        when (turn) {
+            Turn.Normal.Black -> {
+                TimeLimitBox(
+                    modifier = Modifier
+                        .height(cellSize.dp)
+                        .width((cellSize * 2).dp),
+                    timeLimit = timeLimit,
+                )
+            }
+            Turn.Normal.White -> Unit
         }
     }
 }
@@ -176,6 +196,7 @@ fun StandBoxPreview() {
         stand.add(Piece.Surface.Fu)
         StandBox(
             stand = stand,
+            timeLimit = TimeLimit.INIT,
             turn = Turn.Normal.Black,
             onClick = { _, _ -> },
         )
