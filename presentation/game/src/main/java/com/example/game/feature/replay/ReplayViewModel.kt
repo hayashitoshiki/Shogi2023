@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.rule.Turn
 import com.example.usecase.usecaseinterface.ReplayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,8 @@ class ReplayViewModel @Inject constructor(
             blackStand = Stand(),
             whiteStand = Stand(),
             log = emptyList(),
+            blackTimeLimit = TimeLimit.INIT,
+            whiteTimeLimit = TimeLimit.INIT,
             logNextIndex = 0,
         )
     )
@@ -38,6 +41,8 @@ class ReplayViewModel @Inject constructor(
             board = result.board,
             blackStand = result.blackStand,
             whiteStand = result.whiteStand,
+            blackTimeLimit = result.blackTimeLimit,
+            whiteTimeLimit = result.whiteTimeLimit,
             log = result.log ?: emptyList(),
             logNextIndex = 0,
         )
@@ -90,6 +95,8 @@ class ReplayViewModel @Inject constructor(
         val board: Board,
         val blackStand: Stand,
         val whiteStand: Stand,
+        val blackTimeLimit: TimeLimit,
+        val whiteTimeLimit: TimeLimit,
         val log: List<Log>,
         val logNextIndex: Int,
     )

@@ -4,6 +4,7 @@ import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainLogic.board.setUp
+import com.example.domainObject.game.game.TimeLimit
 import com.example.repository.repositoryinterface.GameRuleRepository
 import com.example.repository.repositoryinterface.LogRepository
 import com.example.serviceinterface.ReplayService
@@ -24,11 +25,15 @@ class ReplayUseCaseImpl @Inject constructor(
         val board = Board.setUp(rule)
         val blackStand = Stand()
         val whiteStand = Stand()
+        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
+        val whiteTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
         val log = logRepository.getLatestLog()
         return ReplayInitResult(
             board = board,
             blackStand = blackStand,
             whiteStand = whiteStand,
+            blackTimeLimit = blackTimeLimit,
+            whiteTimeLimit = whiteTimeLimit,
             log = log,
         )
     }
