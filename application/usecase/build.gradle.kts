@@ -50,7 +50,7 @@ dependencies {
     implementation(project(":domain:service"))
     implementation(project(":domain:repository"))
     implementation(project(":data:di"))
-    testImplementation(project(":data:test-repository"))
+    testImplementation(project(":domain:test-repository"))
     testImplementation(project(":domain:test-domain-object"))
 }
 
