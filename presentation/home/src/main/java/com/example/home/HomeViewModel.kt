@@ -178,7 +178,16 @@ class HomeViewModel @Inject constructor(
     fun onGameStartClick() {
         val playerRules =
             when (val setting = uiState.value.ruleItems[uiState.value.showRuleItemIndex]) {
-                is GameRuleSettingUiModel.Custom -> setting.playersRule
+                is GameRuleSettingUiModel.Custom -> {
+                    setting.playersRule.copy(
+                        blackRule = setting.playersRule.blackRule.copy(
+                            timeLimitRule = uiState.value.timeLimitCard.blackTimeLimitRule,
+                        ),
+                        whiteRule = setting.playersRule.whiteRule.copy(
+                            timeLimitRule = uiState.value.timeLimitCard.whiteTimeLimitRule,
+                        ),
+                    )
+                }
                 is GameRuleSettingUiModel.NonCustom -> {
                     val isFirstCheckEnd = setting is GameRuleSettingUiModel.NonCustom.FirstCheck
                     val (blackHande,whiteHande) = when(setting.selectedHande.turn) {
@@ -188,10 +197,12 @@ class HomeViewModel @Inject constructor(
                     PlayersRule(
                         blackRule = PlayerRule(
                             hande = blackHande,
+                            timeLimitRule = uiState.value.timeLimitCard.blackTimeLimitRule,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                         whiteRule = PlayerRule(
                             hande = whiteHande,
+                            timeLimitRule = uiState.value.timeLimitCard.whiteTimeLimitRule,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                     )

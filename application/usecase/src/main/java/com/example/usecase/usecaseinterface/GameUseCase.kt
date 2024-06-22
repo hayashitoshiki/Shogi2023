@@ -7,15 +7,36 @@ import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
+import com.example.usecase.usecaseinterface.model.TimeLimitsUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * 将棋のビジネスロジック
  *
  */
 interface GameUseCase {
+
+    /**
+     * 持ち時間の状態を監視
+     *
+     * @return 持ち時間の状態
+     */
+    fun observeUpdateTimeLimit(): StateFlow<TimeLimitsUseCaseModel?>
+
+    /**
+     * ゲーム開始
+     *
+     */
+    fun gameStart()
+
+    /**
+     * ゲーム終了
+     *
+     */
+    fun gameEnd()
 
     /**
      * ゲーム初期化

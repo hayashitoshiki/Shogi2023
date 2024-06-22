@@ -16,6 +16,9 @@ import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +29,15 @@ class GameViewModel @Inject constructor(
 
     init {
         initBard()
+        useCase.gameStart()
+        useCase.observeUpdateTimeLimit().filterNotNull().onEach {
+            setState {
+                copy(
+                    blackTimeLimit = it.blackTimeLimit,
+                    whiteTimeLimit = it.whiteTimeLimit,
+                )
+            }
+        }.launchIn(viewModelScope)
     }
 
     override fun initState(): UiState {
@@ -83,9 +95,7 @@ class GameViewModel @Inject constructor(
             Turn.Normal.Black -> Turn.Normal.White
             Turn.Normal.White -> Turn.Normal.Black
         }
-        viewModelScope.launch {
-            setEffect { Effect.GameEnd.Win(winner) }
-        }
+        setWin(winner)
     }
 
     private fun tapAction(touchAction: MoveTarget.Board) {
@@ -155,9 +165,7 @@ class GameViewModel @Inject constructor(
 
             is NextResult.Move.Win -> {
                 setMoved(result)
-                viewModelScope.launch {
-                    setEffect { Effect.GameEnd.Win(turn) }
-                }
+                setWin(turn)
             }
 
             is NextResult.Move.Drown -> {
@@ -189,9 +197,7 @@ class GameViewModel @Inject constructor(
             )
         }
         if (result.isWin) {
-            viewModelScope.launch {
-                setEffect { Effect.GameEnd.Win(turn) }
-            }
+            setWin(turn)
         }
     }
 
@@ -216,6 +222,13 @@ class GameViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun setWin(turn: Turn) {
+        useCase.gameEnd()
+        viewModelScope.launch {
+            setEffect { Effect.GameEnd.Win(turn) }
         }
     }
 
