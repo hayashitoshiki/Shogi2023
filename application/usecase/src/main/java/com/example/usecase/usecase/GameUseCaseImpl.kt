@@ -17,9 +17,9 @@ import com.example.domainLogic.board.updatePieceEvolution
 import com.example.domainLogic.rule.getBeforeTurn
 import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.game.TimeLimit
-import com.example.repository.repositoryinterface.GameRepository
-import com.example.repository.repositoryinterface.GameRuleRepository
-import com.example.repository.repositoryinterface.LogRepository
+import com.example.repository.GameRepository
+import com.example.repository.GameRuleRepository
+import com.example.repository.LogRepository
 import com.example.serviceinterface.GameService
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel

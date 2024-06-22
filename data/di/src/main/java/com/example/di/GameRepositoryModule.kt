@@ -1,7 +1,7 @@
-package com.example.repository.di
+package com.example.di
 
-import com.example.repository.repository.GameRepositoryImpl
-import com.example.repository.repositoryinterface.GameRepository
+import com.example.repository.GameRepository
+import com.example.repository.GameRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

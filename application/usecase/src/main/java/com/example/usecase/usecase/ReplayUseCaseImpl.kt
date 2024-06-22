@@ -5,8 +5,8 @@ import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainLogic.board.setUp
 import com.example.domainObject.game.game.TimeLimit
-import com.example.repository.repositoryinterface.GameRuleRepository
-import com.example.repository.repositoryinterface.LogRepository
+import com.example.repository.GameRuleRepository
+import com.example.repository.LogRepository
 import com.example.serviceinterface.ReplayService
 import com.example.usecase.usecaseinterface.ReplayUseCase
 import com.example.usecase.usecaseinterface.model.result.ReplayGoBackResult

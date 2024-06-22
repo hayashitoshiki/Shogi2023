@@ -1,4 +1,4 @@
-package com.example.repository.repositoryinterface
+package com.example.repository
 
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Cell

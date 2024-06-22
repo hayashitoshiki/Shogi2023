@@ -3,7 +3,7 @@ package com.example.test_repository
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Cell
 import com.example.domainObject.game.board.Position
-import com.example.repository.repositoryinterface.GameRepository
+import com.example.repository.GameRepository
 
 class FakeGameRepository : GameRepository {
 

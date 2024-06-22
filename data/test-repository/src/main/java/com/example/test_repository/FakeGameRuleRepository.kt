@@ -4,7 +4,7 @@ import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.PlayerRule
 import com.example.domainObject.game.rule.PlayersRule
-import com.example.repository.repositoryinterface.GameRuleRepository
+import com.example.repository.GameRuleRepository
 
 class FakeGameRuleRepository : GameRuleRepository {
 

@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.test_repository"
+    namespace = "com.example.domain.repository"
     compileSdk = 34
 
     defaultConfig {
@@ -30,12 +30,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.6"
-    }
 }
-
 dependencies {
     implementation(project(":domain:domain-object"))
-    implementation(project(":domain:repository"))
 }

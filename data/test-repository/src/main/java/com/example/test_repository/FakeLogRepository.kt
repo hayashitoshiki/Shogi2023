@@ -1,7 +1,7 @@
 package com.example.test_repository
 
 import com.example.domainObject.game.Log
-import com.example.repository.repositoryinterface.LogRepository
+import com.example.repository.LogRepository
 import java.time.LocalDateTime
 
 class FakeLogRepository : LogRepository {

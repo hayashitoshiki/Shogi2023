@@ -1,4 +1,4 @@
-package com.example.repository.repositoryinterface
+package com.example.repository
 
 import com.example.domainObject.game.rule.GameRule
 

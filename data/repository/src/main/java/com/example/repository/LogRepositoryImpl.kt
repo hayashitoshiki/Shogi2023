@@ -1,7 +1,6 @@
-package com.example.repository.repository
+package com.example.repository
 
 import com.example.domainObject.game.Log
-import com.example.repository.repositoryinterface.LogRepository
 import java.time.LocalDateTime
 import javax.inject.Inject
 

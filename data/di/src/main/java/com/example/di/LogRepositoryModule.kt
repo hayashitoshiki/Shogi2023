@@ -1,7 +1,7 @@
-package com.example.repository.di
+package com.example.di
 
-import com.example.repository.repository.LogRepositoryImpl
-import com.example.repository.repositoryinterface.LogRepository
+import com.example.repository.LogRepository
+import com.example.repository.LogRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

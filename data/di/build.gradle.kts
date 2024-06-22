@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.usecase"
+    namespace = "com.example.data.di"
     compileSdk = 34
 
     defaultConfig {
@@ -32,26 +32,16 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.6"
-    }
 }
-dependencies {
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+dependencies {
     // Hilt
     implementation("com.google.dagger:hilt-android:2.50")
     kapt("com.google.dagger:hilt-android-compiler:2.50")
-    implementation(project(":domain:domain-object"))
 
-    implementation(project(":domain:domain-logic"))
-    implementation(project(":domain:service"))
+    implementation(project(":domain:domain-object"))
     implementation(project(":domain:repository"))
-    implementation(project(":data:di"))
-    testImplementation(project(":data:test-repository"))
-    testImplementation(project(":domain:test-domain-object"))
+    implementation(project(":data:repository"))
 }
 
 kapt {
