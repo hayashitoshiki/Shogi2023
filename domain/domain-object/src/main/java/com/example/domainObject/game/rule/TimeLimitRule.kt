@@ -14,7 +14,7 @@ data class TimeLimitRule(
 ) {
     companion object {
         val INIT = TimeLimitRule(
-            totalTime = Second(600),
+            totalTime = Second(600000),
             byoyomi = Second(0),
         )
     }

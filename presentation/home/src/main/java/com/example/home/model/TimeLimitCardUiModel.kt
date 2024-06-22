@@ -16,11 +16,11 @@ data class TimeLimitCardUiModel(
     companion object {
         val INIT = TimeLimitCardUiModel(
             blackTimeLimitRule = TimeLimitRule(
-                totalTime = Second(600),
+                totalTime = Second(600000),
                 byoyomi = Second(0),
             ),
             whiteTimeLimitRule = TimeLimitRule(
-                totalTime =  Second(600),
+                totalTime =  Second(600000),
                 byoyomi =  Second(0),
             ),
         )

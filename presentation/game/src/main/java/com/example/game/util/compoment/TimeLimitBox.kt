@@ -45,8 +45,8 @@ private fun SecondBox(modifier: Modifier = Modifier, second: Second) {
 }
 
 private fun Second.toText(): String {
-    val minute = (value / 60).toString().padStart(2, '0')
-    val second = (value % 60).toString().padStart(2, '0')
+    val minute = (value / 1000 / 60).toString().padStart(2, '0')
+    val second = (value / 1000 % 60).toString().padStart(2, '0')
     return "${minute}:${second}"
 }
 

@@ -103,18 +103,18 @@ private fun TotalTimeItem(
 ) {
     RuleItem(title = stringResource(id = R.string.time_limit_totalTime)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val minits = selectTotalTime.value / 60
-            val second = selectTotalTime.value % 60
+            val minits = (selectTotalTime.value / 1000 / 60).toInt()
+            val second = (selectTotalTime.value / 1000 % 60).toInt()
             TimeSettingItem(
                 label =  stringResource(id = R.string.label_time_minutes),
                 selectTime = minits,
-                onChangeHande = { onChangeHande(Second(it * 60 + second)) },
+                onChangeHande = { onChangeHande(Second(((it * 60 + second) * 1000L))) },
             )
             Spacer(modifier = Modifier.size(4.dp))
             TimeSettingItem(
                 label = stringResource(id = R.string.label_time_second),
                 selectTime = second,
-                onChangeHande = { onChangeHande(Second(minits * 60 + it)) },
+                onChangeHande = { onChangeHande(Second((minits * 60 + it) * 1000L)) },
             )
         }
     }
@@ -128,9 +128,9 @@ private fun ByoyomiItem(
 ) {
     RuleItem(title = stringResource(id = R.string.time_limit_byoyomi)) {
         TimeSettingItem(
-            label =  stringResource(id = R.string.label_time_minutes),
-            selectTime = selectSecond.value,
-            onChangeHande = { onChangeHande(Second(it)) },
+            label =  stringResource(id = R.string.label_time_second),
+            selectTime = (selectSecond.value / 1000 % 60).toInt(),
+            onChangeHande = { onChangeHande(Second(it * 1000L)) },
         )
     }
 }
