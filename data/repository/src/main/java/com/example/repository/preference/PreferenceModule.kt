@@ -17,4 +17,10 @@ object PreferenceModule {
     fun providePreferenceManager(@ApplicationContext context: Context): PreferenceManager {
         return PreferenceManager(context)
     }
+
+    @Provides
+    @Singleton
+    fun provideEncryptedPreferenceManager(@ApplicationContext context: Context): EncryptedPreferenceManager {
+        return EncryptedPreferenceManager(context)
+    }
 }
