@@ -33,6 +33,7 @@ import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
+import kotlinx.coroutines.test.TestScope
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -48,7 +49,7 @@ class GameUseCaseTest {
     private lateinit var gameRuleRepository: FakeGameRuleRepository
     private lateinit var gameRepository: FakeGameRepository
     private val gameService = GameServiceImpl()
-
+    private val coroutineScope = TestScope()
     @Before
     fun setUp() {
         gameRuleRepository = FakeGameRuleRepository()
@@ -59,6 +60,7 @@ class GameUseCaseTest {
             gameRuleRepository = gameRuleRepository,
             gameRepository = gameRepository,
             gameService = gameService,
+            coroutineScope = coroutineScope,
         )
     }
 

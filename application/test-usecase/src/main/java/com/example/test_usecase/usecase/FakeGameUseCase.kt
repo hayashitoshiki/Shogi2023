@@ -7,14 +7,20 @@ import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.test_usecase.model.fake
+import kotlinx.coroutines.flow.StateFlow
 import com.example.usecase.usecaseinterface.GameUseCase
 import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
+import com.example.usecase.usecaseinterface.model.TimeLimitsUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
 
 class FakeGameUseCase: GameUseCase {
 
+    var callGameStartCount = 0
+        private set
+    var callGameEndCount = 0
+        private set
     var callGameInitCount = 0
         private set
     var callMovePieceCount = 0
@@ -28,12 +34,27 @@ class FakeGameUseCase: GameUseCase {
     var callSetEvolutionCount = 0
         private set
 
+    var gameStartLogic: () -> GameInitResult = { GameInitResult.fake() }
+    var gameEndLogic: () -> GameInitResult = { GameInitResult.fake() }
     var gameInitLogic: () -> GameInitResult = { GameInitResult.fake() }
     var movePieceLogic: () -> NextResult = { NextResult.Move.Only.fake() }
     var putStandPieceLogic: () -> NextResult = { NextResult.Move.Only.fake() }
     var useBoardPieceLogic: () -> NextResult = { NextResult.Move.Only.fake() }
     var useStandPieceLogic: () -> NextResult.Hint = { NextResult.Hint.fake() }
     var setEvolutionLogic: () -> SetEvolutionResult = { SetEvolutionResult.fake() }
+    override fun observeUpdateTimeLimit(): StateFlow<TimeLimitsUseCaseModel?> {
+        TODO("Not yet implemented")
+    }
+
+    override fun gameStart() {
+        callGameStartCount += 1
+        gameStartLogic()
+    }
+
+    override fun gameEnd() {
+        callGameEndCount += 1
+        gameEndLogic()
+    }
 
     override fun gameInit(): GameInitResult {
         callGameInitCount += 1

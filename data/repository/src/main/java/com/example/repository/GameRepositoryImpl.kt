@@ -3,7 +3,6 @@ package com.example.repository
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Cell
 import com.example.domainObject.game.board.Position
-import com.example.repository.GameRepository
 import javax.inject.Inject
 
 class GameRepositoryImpl @Inject constructor() : GameRepository {
