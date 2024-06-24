@@ -14,6 +14,9 @@ sealed class PreferenceKey <T: Any>(val rawKey: String) {
     data object TIME_LIMIT_BLACK_BYOYOMI2: PreferenceKey<Long>("time_limit_black_byoyomi2")
     data object TIME_LIMIT_WHITE_BYOYOMI2: PreferenceKey<Long>("time_limit_white_byoyomi2")
 
+    data object TIME_LIMIT_WHITE_BYOYOMI21: PreferenceKey<Int>("time_limit_white_byoyomi2")
+    data object TIME_LIMIT_WHITE_BYOYOMI22: PreferenceKey<Int>("time_limit_white_byoyomi2")
+
     data class MIGRATION_COMPLETE_KEY(val version: String): PreferenceKey<String>("migration_complete_key" + version)
 
     companion object {
