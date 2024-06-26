@@ -33,6 +33,7 @@ import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import org.junit.Assert
 import org.junit.Before
@@ -49,9 +50,10 @@ class GameUseCaseTest {
     private lateinit var gameRuleRepository: FakeGameRuleRepository
     private lateinit var gameRepository: FakeGameRepository
     private val gameService = GameServiceImpl()
-    private val coroutineScope = TestScope()
+
     @Before
     fun setUp() {
+        val coroutineScope = TestScope()
         gameRuleRepository = FakeGameRuleRepository()
         logRepository = FakeLogRepository()
         gameRepository = FakeGameRepository()
@@ -138,9 +140,9 @@ class GameUseCaseTest {
         val case2_3Position = Position(5, 3)
         val case4_5_9_10Board = Board.fake詰まない()
         val case4_5_9_10Position = Position(5, 3)
-        val case6Board = Board.fake詰み()
+        val case6Board = Board.`fake●5一玉○5二香○5三金`()
         val case6Position = Position(5, 2)
-        val case7_8Board = Board.fake王手_詰まない()
+        val case7_8Board = Board.`fake●5一玉○5二香○5三金`()
         val case7_8Position = Position(5, 2)
 
         val params = listOf(
@@ -268,13 +270,13 @@ class GameUseCaseTest {
             Param(
                 ruleIsFirstCheckEnd = true,
                 isDraw = false,
-                isEvolution = true,
+                isEvolution = false,
                 board = case7_8Board,
                 position = case7_8Position,
                 result = SetEvolutionResult(
                     board = case7_8Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
-                            Piece.Reverse.Narikei,
+                            Piece.Surface.Kyosya,
                             Turn.Normal.Black,
                         )
                         it.update(case7_8Position, cell)
@@ -288,13 +290,13 @@ class GameUseCaseTest {
             Param(
                 ruleIsFirstCheckEnd = false,
                 isDraw = false,
-                isEvolution = true,
+                isEvolution = false,
                 board = case7_8Board,
                 position = case7_8Position,
                 result = SetEvolutionResult(
                     board = case7_8Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
-                            Piece.Reverse.Narikei,
+                            Piece.Surface.Kyosya,
                             Turn.Normal.Black,
                         )
                         it.update(case7_8Position, cell)
@@ -548,7 +550,7 @@ class GameUseCaseTest {
         )
         val case5Board = Board.`fake●5一玉○5三金○4三金`()
         val case5Position = Position(5, 2)
-        val case5ResultBoard = case2Board.copy().also {
+        val case5ResultBoard = case5Board.copy().also {
             it.update(case5Position, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val params = listOf(
@@ -691,8 +693,8 @@ class GameUseCaseTest {
         val case1HoldPosition = Position(5, 4)
         val case1MovePosition = Position(4, 4)
         val case1ResultBoard = case1Board.copy().also {
-            it.update(case1MovePosition, CellStatus.Empty)
-            it.update(case1HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
+            it.update(case1HoldPosition, CellStatus.Empty)
+            it.update(case1MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val case2ResultStand = stand.copy()
         val case2Rule = GameRule.fake()
@@ -700,8 +702,8 @@ class GameUseCaseTest {
         val case2HoldPosition = Position(5, 4)
         val case2MovePosition = Position(4, 4)
         val case2ResultBoard = case2Board.copy().also {
-            it.update(case2MovePosition, CellStatus.Empty)
-            it.update(case2HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
+            it.update(case2HoldPosition, CellStatus.Empty)
+            it.update(case2MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val case3ResultStand = stand.copy()
         val case3Rule = GameRule.fake(blackIsFirstCheckEnd = true)
@@ -709,8 +711,8 @@ class GameUseCaseTest {
         val case3HoldPosition = Position(5, 4)
         val case3MovePosition = Position(5, 3)
         val case3ResultBoard = case3Board.copy().also {
-            it.update(case3MovePosition, CellStatus.Empty)
-            it.update(case3HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
+            it.update(case3HoldPosition, CellStatus.Empty)
+            it.update(case3MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val case4ResultStand = stand.copy()
         val case4Rule = GameRule.fake(blackIsFirstCheckEnd = false)
@@ -718,8 +720,8 @@ class GameUseCaseTest {
         val case4HoldPosition = Position(5, 4)
         val case4MovePosition = Position(5, 3)
         val case4ResultBoard = case4Board.copy().also {
-            it.update(case4MovePosition, CellStatus.Empty)
-            it.update(case4HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
+            it.update(case4HoldPosition, CellStatus.Empty)
+            it.update(case4MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val case5ResultStand = stand.copy()
         val case5Rule = GameRule.fake()
@@ -727,8 +729,8 @@ class GameUseCaseTest {
         val case5HoldPosition = Position(4, 3)
         val case5MovePosition = Position(5, 2)
         val case5ResultBoard = case5Board.copy().also {
-            it.update(case5MovePosition, CellStatus.Empty)
-            it.update(case5HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
+            it.update(case5HoldPosition, CellStatus.Empty)
+            it.update(case5MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val case6ResultStand = stand.copy().also {
             it.add(Piece.Surface.Keima)
@@ -738,8 +740,8 @@ class GameUseCaseTest {
         val case6HoldPosition = Position(1, 8)
         val case6MovePosition = Position(1, 7)
         val case6ResultBoard = case6Board.copy().also {
-            it.update(case6MovePosition, CellStatus.Empty)
-            it.update(case6HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, myTurn))
+            it.update(case6HoldPosition, CellStatus.Empty)
+            it.update(case6MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, myTurn))
         }
         val case7ResultStand = stand.copy()
         val case7Rule = GameRule.fake()
@@ -747,8 +749,8 @@ class GameUseCaseTest {
         val case7HoldPosition = Position(1, 3)
         val case7MovePosition = Position(2, 1)
         val case7ResultBoard = case7Board.copy().also {
-            it.update(case7MovePosition, CellStatus.Empty)
-            it.update(case7HoldPosition, CellStatus.Fill.FromPiece(Piece.Reverse.Narikei, myTurn))
+            it.update(case7HoldPosition, CellStatus.Empty)
+            it.update(case7MovePosition, CellStatus.Fill.FromPiece(Piece.Reverse.Narikei, myTurn))
         }
         val case8NextTurn = Turn.Normal.Black
         val case8ResultStand = stand.copy()
@@ -757,8 +759,8 @@ class GameUseCaseTest {
         val case8HoldPosition = Position(3, 3)
         val case8MovePosition = Position(4, 2)
         val case8ResultBoard = case8Board.copy().also {
-            it.update(case8MovePosition, CellStatus.Empty)
-            it.update(case8HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Kaku, myTurn))
+            it.update(case8HoldPosition, CellStatus.Empty)
+            it.update(case8MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kaku, myTurn))
         }
         val case9ResultStand = stand.copy()
         val case9Rule = GameRule.fake()
@@ -766,8 +768,8 @@ class GameUseCaseTest {
         val case9HoldPosition = Position(5, 2)
         val case9MovePosition = Position(5, 1)
         val case9ResultBoard = case9Board.copy().also {
-            it.update(case9MovePosition, CellStatus.Empty)
-            it.update(case9HoldPosition, CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, myTurn))
+            it.update(case9HoldPosition, CellStatus.Empty)
+            it.update(case9MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, myTurn))
         }
 
         val params = listOf(
@@ -791,7 +793,7 @@ class GameUseCaseTest {
                 board = case2Board,
                 rule = case2Rule,
                 isDraw = true,
-                result = NextResult.Move.Only(
+                result = NextResult.Move.Drown(
                     board = case2ResultBoard,
                     stand = case2ResultStand,
                     nextTurn = nextTurn,

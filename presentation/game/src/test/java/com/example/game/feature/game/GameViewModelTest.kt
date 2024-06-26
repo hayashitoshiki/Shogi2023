@@ -5,6 +5,7 @@ import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.model.ReadyMoveInfoUiModel
@@ -12,6 +13,7 @@ import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.board.`fake●5一玉○5二香○5三金`
 import com.example.testDomainObject.board.fake詰まない
 import com.example.testDomainObject.board.fake駒を取れる状態
+import com.example.testDomainObject.game.fake
 import com.example.test_usecase.model.fake
 import com.example.test_usecase.usecase.FakeGameUseCase
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
@@ -40,6 +42,8 @@ class GameViewModelTest {
         board = Board(),
         blackStand = Stand(),
         whiteStand = Stand(),
+        blackTimeLimit = TimeLimit.INIT,
+        whiteTimeLimit = TimeLimit.INIT,
         turn = Turn.Normal.Black,
         readyMoveInfo = null,
     )
@@ -121,6 +125,8 @@ class GameViewModelTest {
             board = Board(),
             blackStand = Stand.fake(isFillPiece = true),
             whiteStand = Stand.fake(isFillPiece = true),
+            blackTimeLimit = TimeLimit.fake(),
+            whiteTimeLimit = TimeLimit.fake(),
             turn = Turn.Normal.Black,
         )
         val caseUseStandPieceLogicResult = NextResult.Hint.fake(
@@ -180,6 +186,8 @@ class GameViewModelTest {
             board = Board.fake詰まない(),
             blackStand = Stand.fake(),
             whiteStand = Stand.fake(),
+            blackTimeLimit = TimeLimit.fake(),
+            whiteTimeLimit = TimeLimit.fake(),
             turn = Turn.Normal.Black,
         )
         val caseUseBoardPieceLogicResult = NextResult.Hint.fake(

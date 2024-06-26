@@ -6,7 +6,7 @@ import com.example.domainObject.game.rule.TimeLimitRule
 
 fun TimeLimit.Companion.fake(
     setting: TimeLimitRule = TimeLimitRule.fake(),
-    totalTime: Second = Second.fake(),
+    totalTime: Second = Second.fake(600000),
     byoyomi: Second = Second.fake(),
 ): TimeLimit {
     return TimeLimit(

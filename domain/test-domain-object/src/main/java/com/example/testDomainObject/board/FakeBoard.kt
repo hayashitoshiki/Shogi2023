@@ -141,6 +141,7 @@ fun Board.Companion.`fake王手_詰まない`(): Board {
         it.update(Position(2, 2), CellStatus.Fill.FromPiece(Piece.Surface.Fu, white))
         it.update(Position(2, 3), CellStatus.Fill.FromPiece(Piece.Surface.Keima, black))
         it.update(Position(3, 3), CellStatus.Fill.FromPiece(Piece.Surface.Kaku, black))
+        it.update(Position(9, 9), CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, black))
     }
 }
 

@@ -14,9 +14,12 @@ import com.example.usecase.usecaseinterface.model.TimeLimitsUseCaseModel
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
 import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeGameUseCase: GameUseCase {
 
+    var callObserveUpdateTimeLimitCount = 0
+        private set
     var callGameStartCount = 0
         private set
     var callGameEndCount = 0
@@ -34,6 +37,10 @@ class FakeGameUseCase: GameUseCase {
     var callSetEvolutionCount = 0
         private set
 
+    var observeUpdateTimeLimitLogic: () -> StateFlow<TimeLimitsUseCaseModel> = {
+        MutableStateFlow(TimeLimitsUseCaseModel.fake())
+    }
+
     var gameStartLogic: () -> GameInitResult = { GameInitResult.fake() }
     var gameEndLogic: () -> GameInitResult = { GameInitResult.fake() }
     var gameInitLogic: () -> GameInitResult = { GameInitResult.fake() }
@@ -43,7 +50,8 @@ class FakeGameUseCase: GameUseCase {
     var useStandPieceLogic: () -> NextResult.Hint = { NextResult.Hint.fake() }
     var setEvolutionLogic: () -> SetEvolutionResult = { SetEvolutionResult.fake() }
     override fun observeUpdateTimeLimit(): StateFlow<TimeLimitsUseCaseModel?> {
-        TODO("Not yet implemented")
+        callObserveUpdateTimeLimitCount += 1
+        return observeUpdateTimeLimitLogic()
     }
 
     override fun gameStart() {
