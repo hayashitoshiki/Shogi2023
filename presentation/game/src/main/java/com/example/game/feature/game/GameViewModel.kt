@@ -7,6 +7,7 @@ import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
@@ -36,6 +37,19 @@ class GameViewModel @Inject constructor(
                     blackTimeLimit = it.blackTimeLimit,
                     whiteTimeLimit = it.whiteTimeLimit,
                 )
+            }
+
+            when(state.value.turn) {
+                Turn.Normal.Black -> {
+                    if (it.blackTimeLimit.remainingTime() == Second(0)) {
+                        setWin(Turn.Normal.White)
+                    }
+                }
+                Turn.Normal.White -> {
+                    if (it.whiteTimeLimit.remainingTime() == Second(0)) {
+                        setWin(Turn.Normal.Black)
+                    }
+                }
             }
         }.launchIn(viewModelScope)
     }
