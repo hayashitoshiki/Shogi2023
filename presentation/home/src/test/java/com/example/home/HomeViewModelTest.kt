@@ -59,13 +59,13 @@ class HomeViewModelTest {
    * @param effects Effectの期待値
    */
   private fun uiResult(state: HomeViewModel.UiState, effects: List<HomeViewModel.Effect>)  = runTest {
-    val resultState = viewModel.uiState.value
+    val resultState = viewModel.state.value
 
     // 比較
     Assert.assertEquals(resultState, state)
     // Effect
     effects.forEach { effect ->
-      viewModel.gameStartEffect.test {
+      viewModel.effect.test {
         val item = awaitItem()
         Assert.assertEquals(effect, item)
       }

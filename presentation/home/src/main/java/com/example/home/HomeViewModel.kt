@@ -1,7 +1,7 @@
 package com.example.home
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.example.core.uilogic.BaseContract
+import com.example.core.uilogic.BaseViewModel
 import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
@@ -13,21 +13,15 @@ import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
 import com.example.usecase.usecaseinterface.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val useCase: HomeUseCase,
-) : ViewModel() {
-    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(
-        UiState(
+) : BaseViewModel<HomeViewModel.UiState, HomeViewModel.Effect>() {
+
+    override fun initState(): UiState {
+        return UiState(
             ruleItems = listOf(
                 GameRuleSettingUiModel.NonCustom.Normal.INIT,
                 GameRuleSettingUiModel.NonCustom.FirstCheck.INIT,
@@ -36,103 +30,107 @@ class HomeViewModel @Inject constructor(
             timeLimitCard = TimeLimitCardUiModel.INIT,
             showRuleItemIndex = 0,
         )
-    )
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
-
-    private val mutableGameStartEffect: MutableSharedFlow<Effect.GameStart> = MutableSharedFlow()
-    val gameStartEffect: SharedFlow<Effect.GameStart> = mutableGameStartEffect.asSharedFlow()
+    }
 
     fun changePieceHandeByNormalItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
-        _uiState.value = uiState.value.copy(
-            ruleItems = uiState.value.ruleItems.toMutableList().map {
-                when (it) {
-                    is GameRuleSettingUiModel.NonCustom.Normal -> it.copy(selectedHande = selectedHande)
-                    is GameRuleSettingUiModel.NonCustom.FirstCheck,
-                    is GameRuleSettingUiModel.Custom -> it
-                }
-            },
-        )
+        setState {
+            copy(
+                ruleItems = ruleItems.toMutableList().map {
+                    when (it) {
+                        is GameRuleSettingUiModel.NonCustom.Normal -> it.copy(selectedHande = selectedHande)
+                        is GameRuleSettingUiModel.NonCustom.FirstCheck,
+                        is GameRuleSettingUiModel.Custom -> it
+                    }
+                },
+            )
+        }
     }
 
     fun changePieceHandeByFirstCheckItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
-        _uiState.value = uiState.value.copy(
-            ruleItems = uiState.value.ruleItems.toMutableList().map {
-                when (it) {
-                    is GameRuleSettingUiModel.NonCustom.FirstCheck -> it.copy(selectedHande = selectedHande)
-                    is GameRuleSettingUiModel.NonCustom.Normal,
-                    is GameRuleSettingUiModel.Custom -> it
-                }
-            },
-        )
+        setState {
+            copy(
+                ruleItems = ruleItems.toMutableList().map {
+                    when (it) {
+                        is GameRuleSettingUiModel.NonCustom.FirstCheck -> it.copy(selectedHande = selectedHande)
+                        is GameRuleSettingUiModel.NonCustom.Normal,
+                        is GameRuleSettingUiModel.Custom -> it
+                    }
+                },
+            )
+        }
     }
 
     fun changePieceHandeByCustomItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
-        _uiState.value = uiState.value.copy(
-            ruleItems = uiState.value.ruleItems.toMutableList().map {
-                when (it) {
-                    is GameRuleSettingUiModel.Custom -> {
-                        val (black, whiteRule) = when (selectedHande.turn) {
-                            Turn.Normal.Black -> {
-                                it.playersRule.blackRule.copy(hande = selectedHande.hande) to
+        setState {
+            copy(
+                ruleItems = ruleItems.toMutableList().map {
+                    when (it) {
+                        is GameRuleSettingUiModel.Custom -> {
+                            val (black, whiteRule) = when (selectedHande.turn) {
+                                Turn.Normal.Black -> {
+                                    it.playersRule.blackRule.copy(hande = selectedHande.hande) to
                                         it.playersRule.whiteRule
-                            }
+                                }
 
-                            Turn.Normal.White -> {
-                                it.playersRule.blackRule to
+                                Turn.Normal.White -> {
+                                    it.playersRule.blackRule to
                                         it.playersRule.whiteRule.copy(hande = selectedHande.hande)
+                                }
                             }
+                            val playersRule = PlayersRule(
+                                blackRule = black,
+                                whiteRule = whiteRule,
+                            )
+                            it.copy(playersRule = playersRule)
                         }
-                        val playersRule = PlayersRule(
-                            blackRule = black,
-                            whiteRule = whiteRule,
-                        )
-                        it.copy(playersRule = playersRule)
-                    }
 
-                    is GameRuleSettingUiModel.NonCustom.FirstCheck,
-                    is GameRuleSettingUiModel.NonCustom.Normal -> it
-                }
-            },
-        )
+                        is GameRuleSettingUiModel.NonCustom.FirstCheck,
+                        is GameRuleSettingUiModel.NonCustom.Normal -> it
+                    }
+                },
+            )
+        }
     }
 
     fun onChangeFirstCheck(turn: Turn, isFirstCheck: Boolean) {
-        _uiState.value = uiState.value.copy(
-            ruleItems = uiState.value.ruleItems.toMutableList().map {
-                when (it) {
-                    is GameRuleSettingUiModel.Custom -> {
-                        val (black, whiteRule) = when (turn) {
-                            Turn.Normal.Black -> {
-                                it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck) to
+        setState {
+            copy(
+                ruleItems = ruleItems.toMutableList().map {
+                    when (it) {
+                        is GameRuleSettingUiModel.Custom -> {
+                            val (black, whiteRule) = when (turn) {
+                                Turn.Normal.Black -> {
+                                    it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck) to
                                         it.playersRule.whiteRule
-                            }
+                                }
 
-                            Turn.Normal.White -> {
-                                it.playersRule.blackRule to
+                                Turn.Normal.White -> {
+                                    it.playersRule.blackRule to
                                         it.playersRule.whiteRule.copy(isFirstCheckEnd = isFirstCheck)
+                                }
                             }
+                            val playersRule = PlayersRule(
+                                blackRule = black,
+                                whiteRule = whiteRule,
+                            )
+                            it.copy(playersRule = playersRule)
                         }
-                        val playersRule = PlayersRule(
-                            blackRule = black,
-                            whiteRule = whiteRule,
-                        )
-                        it.copy(playersRule = playersRule)
-                    }
 
-                    is GameRuleSettingUiModel.NonCustom.FirstCheck,
-                    is GameRuleSettingUiModel.NonCustom.Normal -> it
-                }
-            },
-        )
+                        is GameRuleSettingUiModel.NonCustom.FirstCheck,
+                        is GameRuleSettingUiModel.NonCustom.Normal -> it
+                    }
+                },
+            )
+        }
     }
 
     fun onChangeTimeLimitTotalTime(turn: Turn, second: Second) {
         val byoyomi = when(turn) {
             Turn.Normal.Black -> {
-                uiState.value.timeLimitCard.blackTimeLimitRule.byoyomi
+                state.value.timeLimitCard.blackTimeLimitRule.byoyomi
             }
             Turn.Normal.White -> {
-                uiState.value.timeLimitCard.whiteTimeLimitRule.byoyomi
+                state.value.timeLimitCard.whiteTimeLimitRule.byoyomi
             }
         }
         updateTimeLimitRule(turn, second, byoyomi)
@@ -141,50 +139,52 @@ class HomeViewModel @Inject constructor(
     fun onChangeTimeLimitSecond(turn: Turn, second: Second) {
         val totalTime = when(turn) {
             Turn.Normal.Black -> {
-                uiState.value.timeLimitCard.blackTimeLimitRule.totalTime
+                state.value.timeLimitCard.blackTimeLimitRule.totalTime
             }
             Turn.Normal.White -> {
-                uiState.value.timeLimitCard.whiteTimeLimitRule.totalTime
+                state.value.timeLimitCard.whiteTimeLimitRule.totalTime
             }
         }
         updateTimeLimitRule(turn, totalTime, second)
     }
 
     private fun updateTimeLimitRule(turn: Turn, totalTime: Second, second: Second) {
-        _uiState.value = when(turn) {
-            Turn.Normal.Black -> {
-                uiState.value.copy(
-                    timeLimitCard = uiState.value.timeLimitCard.copy(
-                        blackTimeLimitRule = uiState.value.timeLimitCard.blackTimeLimitRule.copy(
-                            totalTime = totalTime,
-                            byoyomi = second,
-                        ),
+        setState {
+            when(turn) {
+                Turn.Normal.Black -> {
+                    copy(
+                        timeLimitCard = timeLimitCard.copy(
+                            blackTimeLimitRule = timeLimitCard.blackTimeLimitRule.copy(
+                                totalTime = totalTime,
+                                byoyomi = second,
+                            ),
+                        )
                     )
-                )
-            }
-            Turn.Normal.White -> {
-                uiState.value.copy(
-                    timeLimitCard = uiState.value.timeLimitCard.copy(
-                        whiteTimeLimitRule = uiState.value.timeLimitCard.whiteTimeLimitRule.copy(
-                            totalTime = totalTime,
-                            byoyomi = second,
-                        ),
+                }
+                Turn.Normal.White -> {
+                    copy(
+                        timeLimitCard = timeLimitCard.copy(
+                            whiteTimeLimitRule = timeLimitCard.whiteTimeLimitRule.copy(
+                                totalTime = totalTime,
+                                byoyomi = second,
+                            ),
+                        )
                     )
-                )
+                }
             }
         }
     }
 
     fun onGameStartClick() {
         val playerRules =
-            when (val setting = uiState.value.ruleItems[uiState.value.showRuleItemIndex]) {
+            when (val setting = state.value.ruleItems[state.value.showRuleItemIndex]) {
                 is GameRuleSettingUiModel.Custom -> {
                     setting.playersRule.copy(
                         blackRule = setting.playersRule.blackRule.copy(
-                            timeLimitRule = uiState.value.timeLimitCard.blackTimeLimitRule,
+                            timeLimitRule = state.value.timeLimitCard.blackTimeLimitRule,
                         ),
                         whiteRule = setting.playersRule.whiteRule.copy(
-                            timeLimitRule = uiState.value.timeLimitCard.whiteTimeLimitRule,
+                            timeLimitRule = state.value.timeLimitCard.whiteTimeLimitRule,
                         ),
                     )
                 }
@@ -197,12 +197,12 @@ class HomeViewModel @Inject constructor(
                     PlayersRule(
                         blackRule = PlayerRule(
                             hande = blackHande,
-                            timeLimitRule = uiState.value.timeLimitCard.blackTimeLimitRule,
+                            timeLimitRule = state.value.timeLimitCard.blackTimeLimitRule,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                         whiteRule = PlayerRule(
                             hande = whiteHande,
-                            timeLimitRule = uiState.value.timeLimitCard.whiteTimeLimitRule,
+                            timeLimitRule = state.value.timeLimitCard.whiteTimeLimitRule,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                     )
@@ -214,15 +214,15 @@ class HomeViewModel @Inject constructor(
         )
 
         useCase.setGameRule(gameRule)
-        viewModelScope.launch {
-            mutableGameStartEffect.emit(Effect.GameStart)
-        }
+        setEffect { Effect.GameStart }
     }
 
     fun changePage(pageIndex: Int) {
-        _uiState.value = uiState.value.copy(
-            showRuleItemIndex = pageIndex,
-        )
+        setState {
+            copy(
+                showRuleItemIndex = pageIndex,
+            )
+        }
     }
 
     /**
@@ -235,9 +235,9 @@ class HomeViewModel @Inject constructor(
         val timeLimitCard: TimeLimitCardUiModel,
         val ruleItems: List<GameRuleSettingUiModel>,
         val showRuleItemIndex: Int,
-    )
+    ): BaseContract.State
 
-    sealed interface Effect {
+    sealed interface Effect : BaseContract.Effect {
 
         /**
          * 対局開始

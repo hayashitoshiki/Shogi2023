@@ -41,10 +41,14 @@ fun HomeScreen(
     navController: NavHostController,
     viewModel: HomeViewModel,
 ) {
-    val gameRule = viewModel.uiState.collectAsState()
+    val gameRule = viewModel.state
     val navigateGameScreen = remember { mutableStateOf<HomeViewModel.Effect.GameStart?>(null) }
     LaunchedEffect(true) {
-        viewModel.gameStartEffect.collect { navigateGameScreen.value = it }
+        viewModel.effect.collect {
+            when(it) {
+                is HomeViewModel.Effect.GameStart -> navigateGameScreen.value = it
+            }
+        }
     }
     navigateGameScreen.value?.apply {
         navController.navigate(NavigationScreens.GAME_SCREEN.route) {
