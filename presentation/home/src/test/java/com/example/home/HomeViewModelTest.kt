@@ -1,6 +1,5 @@
 package com.example.home
 
-import app.cash.turbine.test
 import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
@@ -12,71 +11,31 @@ import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
 import com.example.testDomainObject.game.fake
 import com.example.testDomainObject.rule.fake
+import com.example.test_core.ViewModelTest
 import com.example.test_usecase.usecase.FakeHomeUseCase
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 
-class HomeViewModelTest {
+class HomeViewModelTest: ViewModelTest<HomeViewModel, HomeViewModel.UiState, HomeViewModel.Effect>() {
 
-  private lateinit var viewModel: HomeViewModel
   private lateinit var homeUseCase: FakeHomeUseCase
-  private val initUiState = HomeViewModel.UiState(
+
+  override val initUiState = HomeViewModel.UiState(
     timeLimitCard = TimeLimitCardUiModel.INIT,
     ruleItems = GameRuleSettingUiModel.fakeList(),
     showRuleItemIndex = 0,
   )
 
-  @OptIn(ExperimentalCoroutinesApi::class)
-  @Before
-  fun setup() {
-    Dispatchers.setMain(StandardTestDispatcher())
+  override fun setUpUseCase() {
     homeUseCase = FakeHomeUseCase()
   }
 
-  @OptIn(ExperimentalCoroutinesApi::class)
-  @After
-  fun tearDown() {
-    Dispatchers.resetMain()
-  }
-
-  private fun initViewModel() {
+  override fun setUpViewModel() {
     viewModel = HomeViewModel(homeUseCase)
-  }
-
-  /**
-   * 実行結果比較
-   *
-   * @param state Stateの期待値
-   * @param effects Effectの期待値
-   */
-  private fun uiResult(state: HomeViewModel.UiState, effects: List<HomeViewModel.Effect>)  = runTest {
-    val resultState = viewModel.state.value
-
-    // 比較
-    Assert.assertEquals(resultState, state)
-    // Effect
-    effects.forEach { effect ->
-      viewModel.effect.test {
-        val item = awaitItem()
-        Assert.assertEquals(effect, item)
-      }
-    }
-
   }
 
   @Test
   fun 通常モードのハンデ設定変更() {
-    initViewModel()
-
     val selectedHande = GameRuleSettingUiModel.SelectedHande.fake(
       hande = Hande.KAKU,
       turn = Turn.Normal.Black,
@@ -90,8 +49,15 @@ class HomeViewModelTest {
         }
       }
     )
-    viewModel.changePieceHandeByNormalItem(selectedHande)
-    uiResult(
+
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        changePieceHandeByNormalItem(selectedHande)
+      },
+    )
+    result(
+      useCaseAsserts = emptyList(),
       state = resultUiState,
       effects = listOf()
     )
@@ -99,8 +65,6 @@ class HomeViewModelTest {
 
   @Test
   fun 王手将棋モードのハンデ設定変更() {
-    initViewModel()
-
     val selectedHande = GameRuleSettingUiModel.SelectedHande.fake(
       hande = Hande.FOR,
       turn = Turn.Normal.White,
@@ -114,8 +78,15 @@ class HomeViewModelTest {
         }
       }
     )
-    viewModel.changePieceHandeByFirstCheckItem(selectedHande)
-    uiResult(
+
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        changePieceHandeByFirstCheckItem(selectedHande)
+      },
+    )
+    result(
+      useCaseAsserts = emptyList(),
       state = resultUiState,
       effects = listOf()
     )
@@ -123,8 +94,6 @@ class HomeViewModelTest {
 
   @Test
   fun カスタム将棋モードのハンデ設定変更() {
-    initViewModel()
-
     val selectedHande1 = GameRuleSettingUiModel.SelectedHande.fake(
       hande = Hande.FOR,
       turn = Turn.Normal.Black,
@@ -141,8 +110,14 @@ class HomeViewModelTest {
         }
       }
     )
-    viewModel.changePieceHandeByCustomItem(selectedHande1)
-    uiResult(
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        changePieceHandeByCustomItem(selectedHande1)
+      }
+    )
+    result(
+      useCaseAsserts = emptyList(),
       state = resultUiState1,
       effects = listOf()
     )
@@ -163,8 +138,15 @@ class HomeViewModelTest {
         }
       }
     )
-    viewModel.changePieceHandeByCustomItem(selectedHande2)
-    uiResult(
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        changePieceHandeByCustomItem(selectedHande1)
+        changePieceHandeByCustomItem(selectedHande2)
+      }
+    )
+    result(
+      useCaseAsserts = emptyList(),
       state = resultUiState2,
       effects = listOf()
     )
@@ -172,8 +154,6 @@ class HomeViewModelTest {
 
   @Test
   fun 持ち時間切れ負け設定変更_先手秒読み() {
-    initViewModel()
-
     val second = Second.fake(600)
     val turn = Turn.Normal.Black
     val resultUiState = initUiState.copy(
@@ -183,17 +163,16 @@ class HomeViewModelTest {
         )
       )
     )
-    viewModel.onChangeTimeLimitSecond(turn, second)
-    uiResult(
-      state = resultUiState,
-      effects = listOf()
+
+    onChangeTimeLimitSecondTest(
+      turn = turn,
+      second = second,
+      resultUiState = resultUiState,
     )
   }
 
   @Test
   fun 持ち時間切れ負け設定変更_後手秒読み() {
-    initViewModel()
-
     val second = Second.fake(500)
     val turn = Turn.Normal.White
     val resultUiState = initUiState.copy(
@@ -203,8 +182,27 @@ class HomeViewModelTest {
         )
       )
     )
-    viewModel.onChangeTimeLimitSecond(turn, second)
-    uiResult(
+
+    onChangeTimeLimitSecondTest(
+      turn = turn,
+      second = second,
+      resultUiState = resultUiState,
+    )
+  }
+
+  private fun onChangeTimeLimitSecondTest(
+    turn: Turn,
+    second: Second,
+    resultUiState: HomeViewModel.UiState,
+  ) {
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        onChangeTimeLimitSecond(turn, second)
+      }
+    )
+    result(
+      useCaseAsserts = emptyList(),
       state = resultUiState,
       effects = listOf()
     )
@@ -212,8 +210,6 @@ class HomeViewModelTest {
 
   @Test
   fun 持ち時間切れ負け設定変更_先手切れ負け() {
-    initViewModel()
-
     val second = Second.fake(23500)
     val turn = Turn.Normal.Black
     val resultUiState = initUiState.copy(
@@ -223,17 +219,16 @@ class HomeViewModelTest {
         )
       )
     )
-    viewModel.onChangeTimeLimitTotalTime(turn, second)
-    uiResult(
-      state = resultUiState,
-      effects = listOf()
+
+    onChangeTimeLimitTotalTimeTest(
+      turn = turn,
+      second = second,
+      resultUiState = resultUiState,
     )
   }
 
   @Test
   fun 持ち時間切れ負け設定変更_後手切れ負け() {
-    initViewModel()
-
     val second = Second.fake(23400)
     val turn = Turn.Normal.White
     val resultUiState = initUiState.copy(
@@ -243,8 +238,27 @@ class HomeViewModelTest {
         )
       )
     )
-    viewModel.onChangeTimeLimitTotalTime(turn, second)
-    uiResult(
+
+    onChangeTimeLimitTotalTimeTest(
+      turn = turn,
+      second = second,
+      resultUiState = resultUiState,
+    )
+  }
+
+  private fun onChangeTimeLimitTotalTimeTest(
+    turn: Turn,
+    second: Second,
+    resultUiState: HomeViewModel.UiState,
+  ) {
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        onChangeTimeLimitTotalTime(turn, second)
+      }
+    )
+    result(
+      useCaseAsserts = emptyList(),
       state = resultUiState,
       effects = listOf()
     )
@@ -252,10 +266,8 @@ class HomeViewModelTest {
 
   @Test
   fun カスタムルールで王手将棋の設定をする_先手() {
-    initViewModel()
-
     val turn = Turn.Normal.Black
-    val isFirstCheck = true
+    val isFirstCheck1 = true
     val resultUiState1 = initUiState.copy(
       ruleItems = initUiState.ruleItems.toMutableList().map {
         when (it) {
@@ -263,19 +275,21 @@ class HomeViewModelTest {
           is GameRuleSettingUiModel.NonCustom.Normal -> it
           is GameRuleSettingUiModel.Custom -> it.copy(
             playersRule = it.playersRule.copy(
-              blackRule = it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck)
+              blackRule = it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck1)
             )
           )
         }
       }
     )
-    viewModel.onChangeFirstCheck(turn, isFirstCheck)
-    uiResult(
-      state = resultUiState1,
-      effects = listOf()
+
+    onChangeFirstCheckTest(
+      turn = turn,
+      isFirstCheck1 = isFirstCheck1,
+      resultUiState1 = resultUiState1,
     )
+
     val isFirstCheck2 = false
-    val resultUiStat2 = resultUiState1.copy(
+    val resultUiState2 = resultUiState1.copy(
       ruleItems = resultUiState1.ruleItems.toMutableList().map {
         when (it) {
           is GameRuleSettingUiModel.NonCustom.FirstCheck,
@@ -288,19 +302,17 @@ class HomeViewModelTest {
         }
       }
     )
-    viewModel.onChangeFirstCheck(turn, isFirstCheck2)
-    uiResult(
-      state = resultUiStat2,
-      effects = listOf()
+    onChangeFirstCheckTest(
+      turn = turn,
+      isFirstCheck1 = isFirstCheck2,
+      resultUiState1 = resultUiState2,
     )
   }
 
   @Test
   fun カスタムルールで王手将棋の設定をする_後手() {
-    initViewModel()
-
     val turn = Turn.Normal.White
-    val isFirstCheck = true
+    val isFirstCheck1 = true
     val resultUiState1 = initUiState.copy(
       ruleItems = initUiState.ruleItems.toMutableList().map {
         when (it) {
@@ -308,17 +320,19 @@ class HomeViewModelTest {
           is GameRuleSettingUiModel.NonCustom.Normal -> it
           is GameRuleSettingUiModel.Custom -> it.copy(
             playersRule = it.playersRule.copy(
-              whiteRule = it.playersRule.whiteRule.copy(isFirstCheckEnd = isFirstCheck)
+              whiteRule = it.playersRule.whiteRule.copy(isFirstCheckEnd = isFirstCheck1)
             )
           )
         }
       }
     )
-    viewModel.onChangeFirstCheck(turn, isFirstCheck)
-    uiResult(
-      state = resultUiState1,
-      effects = listOf()
+
+    onChangeFirstCheckTest(
+      turn = turn,
+      isFirstCheck1 = isFirstCheck1,
+      resultUiState1 = resultUiState1,
     )
+
     val isFirstCheck2 = false
     val resultUiStat2 = resultUiState1.copy(
       ruleItems = resultUiState1.ruleItems.toMutableList().map {
@@ -333,33 +347,53 @@ class HomeViewModelTest {
         }
       }
     )
-    viewModel.onChangeFirstCheck(turn, isFirstCheck2)
-    uiResult(
-      state = resultUiStat2,
+    onChangeFirstCheckTest(
+      turn = turn,
+      isFirstCheck1 = isFirstCheck2,
+      resultUiState1 = resultUiStat2,
+    )
+  }
+
+  private fun onChangeFirstCheckTest(
+    turn: Turn,
+    isFirstCheck1: Boolean,
+    resultUiState1: HomeViewModel.UiState,
+  ) {
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        onChangeFirstCheck(turn, isFirstCheck1)
+      }
+    )
+    result(
+      useCaseAsserts = emptyList(),
+      state = resultUiState1,
       effects = listOf()
     )
   }
 
   @Test
   fun 設定ページ変更() {
-    initViewModel()
-
     val pageIndex = 1
     val resultUiState = initUiState.copy(
       showRuleItemIndex = pageIndex,
     )
-    viewModel.changePage(pageIndex)
-    uiResult(
+
+    viewModelAction(
+      useCaseSet = {},
+      action = {
+        changePage(pageIndex)
+      }
+    )
+    result(
+      useCaseAsserts = emptyList(),
       state = resultUiState,
       effects = listOf()
     )
   }
 
-  // TODO　ここからやる
   @Test
   fun 将棋開始_普通の将棋_１ページ目() {
-    initViewModel()
-
     val pageIndex = 0
     val resultUiState = initUiState.copy(
       showRuleItemIndex = pageIndex,
@@ -394,23 +428,16 @@ class HomeViewModelTest {
         ),
       ),
     )
-    homeUseCase.setGameRuleLogic = {
-      assertEquals(it, resultGameRule)
-    }
-    viewModel.changePage(pageIndex)
-    viewModel.onGameStartClick()
 
-    assertEquals(homeUseCase.calSsetGameRuleCount, 1)
-    uiResult(
-      state = resultUiState,
-      effects = listOf()
+    onGameStartClickTest(
+      pageIndex = pageIndex,
+      resultGameRule = resultGameRule,
+      resultUiState = resultUiState,
     )
   }
 
   @Test
   fun 将棋開始_王手将棋_２ページ目() {
-    initViewModel()
-
     val pageIndex = 1
     val resultUiState = initUiState.copy(
       showRuleItemIndex = pageIndex,
@@ -445,23 +472,16 @@ class HomeViewModelTest {
         ),
       ),
     )
-    homeUseCase.setGameRuleLogic = {
-      assertEquals(it, resultGameRule)
-    }
-    viewModel.changePage(pageIndex)
-    viewModel.onGameStartClick()
 
-    assertEquals(homeUseCase.calSsetGameRuleCount, 1)
-    uiResult(
-      state = resultUiState,
-      effects = listOf()
+    onGameStartClickTest(
+      pageIndex = pageIndex,
+      resultGameRule = resultGameRule,
+      resultUiState = resultUiState,
     )
   }
 
   @Test
   fun 将棋開始_カスタム将棋_３ページ目() {
-    initViewModel()
-
     val pageIndex = 2
     val resultUiState = initUiState.copy(
       showRuleItemIndex = pageIndex,
@@ -484,17 +504,36 @@ class HomeViewModelTest {
         ),
       ),
     )
-    homeUseCase.setGameRuleLogic = {
-      assertEquals(it, resultGameRule)
-    }
-    viewModel.changePage(pageIndex)
-    viewModel.onGameStartClick()
 
-    assertEquals(homeUseCase.calSsetGameRuleCount, 1)
-    uiResult(
+    onGameStartClickTest(
+      pageIndex = pageIndex,
+      resultGameRule = resultGameRule,
+      resultUiState = resultUiState,
+    )
+  }
+
+  private fun onGameStartClickTest(
+    pageIndex: Int,
+    resultGameRule: GameRule,
+    resultUiState: HomeViewModel.UiState,
+  ) {
+    viewModelAction(
+      useCaseSet = {
+        homeUseCase.setGameRuleLogic = {
+          assertEquals(it, resultGameRule)
+        }
+      },
+      action = {
+        changePage(pageIndex)
+        onGameStartClick()
+      }
+    )
+    result(
+      useCaseAsserts = listOf(
+        UseCaseAsserts(homeUseCase.calSsetGameRuleCount, 1)
+      ),
       state = resultUiState,
       effects = listOf()
     )
   }
 }
-

@@ -75,6 +75,7 @@ dependencies {
     implementation(project(":application:usecase"))
     implementation(project(":domain:test-domain-object"))
     testImplementation(project(":application:test-usecase"))
+    testImplementation(project(":presentation:test-core"))
 }
 
 kapt {

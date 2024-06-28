@@ -32,7 +32,6 @@ fun GameRuleSettingUiModel.Custom.Companion.fake(
   playersRule = playersRule,
 )
 
-
 fun GameRuleSettingUiModel.SelectedHande.Companion.fake(
   hande: Hande = Hande.NON,
   turn: Turn = Turn.Normal.Black,

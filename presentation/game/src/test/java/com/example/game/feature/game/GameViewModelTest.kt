@@ -1,6 +1,5 @@
 package com.example.game.feature.game
 
-import app.cash.turbine.test
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
@@ -14,31 +13,22 @@ import com.example.testDomainObject.board.`fake●5一玉○5二香○5三金`
 import com.example.testDomainObject.board.fake詰まない
 import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.game.fake
+import com.example.test_core.ViewModelTest
 import com.example.test_usecase.model.fake
 import com.example.test_usecase.usecase.FakeGameUseCase
 import com.example.usecase.usecaseinterface.model.result.GameInitResult
 import com.example.usecase.usecaseinterface.model.result.NextResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Before
 import org.junit.Test
 
 /**
  * 将棋画面の仕様
  *
  */
-class GameViewModelTest {
+class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, GameViewModel.Effect>() {
 
-    private lateinit var gameViewModel: GameViewModel
-    private var gameUseCase = FakeGameUseCase()
-
-    private val initUiState = GameViewModel.UiState(
+    private lateinit var gameUseCase: FakeGameUseCase
+    override val initUiState = GameViewModel.UiState(
         board = Board(),
         blackStand = Stand(),
         whiteStand = Stand(),
@@ -48,41 +38,12 @@ class GameViewModelTest {
         readyMoveInfo = null,
     )
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Before
-    fun setup() {
-        Dispatchers.setMain(StandardTestDispatcher())
+    override fun setUpUseCase() {
+        gameUseCase = FakeGameUseCase()
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
-    private fun setUp() {
-        gameViewModel = GameViewModel(gameUseCase)
-    }
-
-    /**
-     * 実行結果比較
-     *
-     * @param state Stateの期待値
-     * @param effects Effectの期待値
-     */
-    private fun uiResult(state: GameViewModel.UiState, effects: List<GameViewModel.Effect>)  = runTest {
-        val resultState = gameViewModel.state.value
-
-        // 比較
-        assertEquals(resultState, state)
-        // Effect
-        effects.forEach { effect ->
-            gameViewModel.effect.test {
-                val item = awaitItem()
-                assertEquals(effect, item)
-            }
-        }
-
+    override fun setUpViewModel() {
+        viewModel = GameViewModel(gameUseCase)
     }
 
     /**
@@ -98,11 +59,14 @@ class GameViewModelTest {
      */
     @Test
     fun `画面へ遷移`() = runTest {
-        setUp()
-
-        // result
-        assertEquals(gameUseCase.callGameInitCount, 1)
-        uiResult(
+        viewModelAction(
+            useCaseSet = {},
+            action = {},
+        )
+        result(
+            useCaseAsserts = listOf(
+                UseCaseAsserts(gameUseCase.callGameInitCount, 1),
+            ),
             state = initUiState,
             effects = listOf()
         )
@@ -132,26 +96,31 @@ class GameViewModelTest {
         val caseUseStandPieceLogicResult = NextResult.Hint.fake(
             hintPositionList = listOf(Position(3, 3))
         )
+        val uiStateResult = initUiState.copy(
+            blackStand = caseGameInitLogicResult.blackStand,
+            whiteStand = caseGameInitLogicResult.whiteStand,
+            readyMoveInfo = ReadyMoveInfoUiModel(
+                hold = MoveTarget.Stand(
+                    piece = caseTapPiece,
+                ),
+                hintList = caseUseStandPieceLogicResult.hintPositionList,
+            )
+        )
 
-        // run
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useStandPieceLogic = { caseUseStandPieceLogicResult }
-        setUp()
-        gameViewModel.tapStand(caseTapPiece, Turn.Normal.Black)
-
-        // result
-        assertEquals(gameUseCase.callUseStandPieceCount, 1)
-        uiResult(
-            state = initUiState.copy(
-                blackStand = caseGameInitLogicResult.blackStand,
-                whiteStand = caseGameInitLogicResult.whiteStand,
-                readyMoveInfo = ReadyMoveInfoUiModel(
-                    hold = MoveTarget.Stand(
-                        piece = caseTapPiece,
-                    ),
-                    hintList = caseUseStandPieceLogicResult.hintPositionList,
-                )
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useStandPieceLogic = { caseUseStandPieceLogicResult }
+            },
+            action = {
+                tapStand(caseTapPiece, Turn.Normal.Black)
+            },
+        )
+        result(
+            useCaseAsserts = listOf(
+                UseCaseAsserts(gameUseCase.callUseStandPieceCount, 1),
             ),
+            state = uiStateResult,
             effects = listOf()
         )
     }
@@ -193,25 +162,31 @@ class GameViewModelTest {
         val caseUseBoardPieceLogicResult = NextResult.Hint.fake(
             hintPositionList = listOf(Position(3, 3))
         )
-
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
-        setUp()
-        gameViewModel.tapBoard(case1TapPosition)
-
-        // result
-        assertEquals(gameUseCase.callUseBoardPieceCount, 1)
-        uiResult(
-            state = initUiState.copy(
-                board = caseGameInitLogicResult.board,
-                readyMoveInfo = ReadyMoveInfoUiModel(
-                    hold = MoveTarget.Board(
-                        position = case1TapPosition,
-                    ),
-                    hintList = caseUseBoardPieceLogicResult.hintPositionList,
+        val uiStateResult1 = initUiState.copy(
+            board = caseGameInitLogicResult.board,
+            readyMoveInfo = ReadyMoveInfoUiModel(
+                hold = MoveTarget.Board(
+                    position = case1TapPosition,
                 ),
+                hintList = caseUseBoardPieceLogicResult.hintPositionList,
+            )
+        )
+
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
+            },
+            action = {
+                tapBoard(case1TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = listOf(
+                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 1),
             ),
-            effects = listOf()
+            state = uiStateResult1,
+            effects = listOf(),
         )
 
         // case2
@@ -224,24 +199,30 @@ class GameViewModelTest {
             ),
             nextTurn = Turn.Normal.White,
         )
+        val uiStateResult2 = initUiState.copy(
+            board = caseMovePieceLogicResult.board,
+            blackStand = caseMovePieceLogicResult.stand,
+            readyMoveInfo = null,
+            turn = caseMovePieceLogicResult.nextTurn,
+        )
 
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
-        gameUseCase.movePieceLogic = { caseMovePieceLogicResult }
-        setUp()
-        gameViewModel.tapBoard(case1TapPosition)
-        gameViewModel.tapBoard(case2TapPosition)
-
-        // result
-        assertEquals(gameUseCase.callUseBoardPieceCount, 1)
-        assertEquals(gameUseCase.callMovePieceCount, 1)
-        uiResult(
-            state = initUiState.copy(
-                board = caseMovePieceLogicResult.board,
-                blackStand = caseMovePieceLogicResult.stand,
-                readyMoveInfo = null,
-                turn = caseMovePieceLogicResult.nextTurn,
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
+                gameUseCase.movePieceLogic = { caseMovePieceLogicResult }
+            },
+            action = {
+                tapBoard(case1TapPosition)
+                tapBoard(case2TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = listOf(
+                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 1),
+                UseCaseAsserts(gameUseCase.callMovePieceCount, 1),
             ),
+            state = uiStateResult2,
             effects = listOf()
         )
 
@@ -249,15 +230,20 @@ class GameViewModelTest {
         gameUseCase = FakeGameUseCase()
         val case3TapPosition = Position(8, 8)
 
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
-        setUp()
-        gameViewModel.tapBoard(case1TapPosition)
-        gameViewModel.tapBoard(case3TapPosition)
-
-        // result
-        assertEquals(gameUseCase.callUseBoardPieceCount, 2)
-        uiResult(
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
+            },
+            action = {
+                tapBoard(case1TapPosition)
+                tapBoard(case3TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = listOf(
+                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 2),
+            ),
             state = initUiState.copy(
                 board = caseGameInitLogicResult.board,
                 blackStand = caseGameInitLogicResult.blackStand,
@@ -288,18 +274,22 @@ class GameViewModelTest {
             nextTurn = Turn.Normal.Black,
         )
 
-        // run
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useStandPieceLogic = { case4UseStandPieceLogicResult }
-        gameUseCase.putStandPieceLogic = { case4PutStandPieceLogicResult }
-        setUp()
-        gameViewModel.tapStand(case4TapStandPiece, Turn.Normal.Black)
-        gameViewModel.tapBoard(case4TapPosition)
-
-        // result
-        assertEquals(gameUseCase.callUseStandPieceCount, 1)
-        assertEquals(gameUseCase.callPutStandPieceCount, 1)
-        uiResult(
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useStandPieceLogic = { case4UseStandPieceLogicResult }
+                gameUseCase.putStandPieceLogic = { case4PutStandPieceLogicResult }
+            },
+            action = {
+                tapStand(case4TapStandPiece, Turn.Normal.Black)
+                tapBoard(case4TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = listOf(
+                UseCaseAsserts(gameUseCase.callUseStandPieceCount, 1),
+                UseCaseAsserts(gameUseCase.callPutStandPieceCount, 1),
+            ),
             state = initUiState.copy(
                 board = case4PutStandPieceLogicResult.board,
                 blackStand = case4PutStandPieceLogicResult.stand,
@@ -321,18 +311,22 @@ class GameViewModelTest {
             hintPositionList = listOf(Position(2, 3))
         )
 
-        // run
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useStandPieceLogic = { case5UseStandPieceLogicResult }
-        gameUseCase.useBoardPieceLogic = { case5UseBoardPieceLogicResult }
-        setUp()
-        gameViewModel.tapStand(case5TapStandPiece, Turn.Normal.Black)
-        gameViewModel.tapBoard(case5TapPosition)
-
-        // result
-        assertEquals(gameUseCase.callUseStandPieceCount, 1)
-        assertEquals(gameUseCase.callUseBoardPieceCount, 1)
-        uiResult(
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useStandPieceLogic = { case5UseStandPieceLogicResult }
+                gameUseCase.useBoardPieceLogic = { case5UseBoardPieceLogicResult }
+            },
+            action = {
+                tapStand(case5TapStandPiece, Turn.Normal.Black)
+                tapBoard(case5TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = listOf(
+                UseCaseAsserts(gameUseCase.callUseStandPieceCount, 1),
+                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 1),
+            ),
             state = initUiState.copy(
                 board = caseGameInitLogicResult.board,
                 blackStand = caseGameInitLogicResult.blackStand,
@@ -347,7 +341,6 @@ class GameViewModelTest {
             effects = listOf()
         )
 
-
         // case6
         val case6TapPosition = Position(5, 3)
         val case6UseBoardPieceLogicResult = NextResult.Move.Win.fake(
@@ -358,13 +351,17 @@ class GameViewModelTest {
             nextTurn = Turn.Normal.White,
         )
 
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useBoardPieceLogic = { case6UseBoardPieceLogicResult }
-        setUp()
-        gameViewModel.tapBoard(case6TapPosition)
-
-        // result
-        uiResult(
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useBoardPieceLogic = { case6UseBoardPieceLogicResult }
+            },
+            action = {
+                tapBoard(case6TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = emptyList(),
             state = initUiState.copy(
                 board = case6UseBoardPieceLogicResult.board,
                 blackStand = case6UseBoardPieceLogicResult.stand,
@@ -386,13 +383,17 @@ class GameViewModelTest {
             nextTurn = Turn.Normal.White,
         )
 
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useBoardPieceLogic = { case7UseBoardPieceLogicResult }
-        setUp()
-        gameViewModel.tapBoard(case7TapPosition)
-
-        // result
-        uiResult(
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useBoardPieceLogic = { case7UseBoardPieceLogicResult }
+            },
+            action = {
+                tapBoard(case7TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = emptyList(),
             state = initUiState.copy(
                 board = case7UseBoardPieceLogicResult.board,
                 blackStand = case7UseBoardPieceLogicResult.stand,
@@ -414,13 +415,17 @@ class GameViewModelTest {
             nextTurn = Turn.Normal.White,
         )
 
-        gameUseCase.gameInitLogic = { caseGameInitLogicResult }
-        gameUseCase.useBoardPieceLogic = { case8UseBoardPieceLogicResult }
-        setUp()
-        gameViewModel.tapBoard(case8TapPosition)
-
-        // result
-        uiResult(
+        viewModelAction(
+            useCaseSet = {
+                gameUseCase.gameInitLogic = { caseGameInitLogicResult }
+                gameUseCase.useBoardPieceLogic = { case8UseBoardPieceLogicResult }
+            },
+            action = {
+                tapBoard(case8TapPosition)
+            },
+        )
+        result(
+            useCaseAsserts = emptyList(),
             state = initUiState.copy(
                 board = case8UseBoardPieceLogicResult.board,
                 blackStand = case8UseBoardPieceLogicResult.stand,
@@ -431,7 +436,7 @@ class GameViewModelTest {
                 GameViewModel.Effect.Evolution(
                     position = case8TapPosition,
                 ),
-            )
+            ),
         )
     }
 }
