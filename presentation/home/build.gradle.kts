@@ -68,10 +68,17 @@ dependencies {
     implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
 
+    // coroutine-test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.0")
+    testImplementation("app.cash.turbine:turbine:1.1.0")
+
     implementation(project(":presentation:core"))
     implementation(project(":application:usecase"))
     implementation(project(":domain:domain-object"))
     implementation(project(":presentation:game"))
+
+    testImplementation(project(":application:test-usecase"))
+    testImplementation(project(":domain:test-domain-object"))
 }
 
 kapt {

@@ -86,4 +86,6 @@ sealed interface GameRuleSettingUiModel {
             )
         }
     }
+
+    companion object
 }
