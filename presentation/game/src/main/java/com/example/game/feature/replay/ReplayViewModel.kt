@@ -6,7 +6,7 @@ import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.rule.Turn
-import com.example.usecase.usecaseinterface.ReplayUseCase
+import com.example.usecaseinterface.usecase.ReplayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReplayViewModel @Inject constructor(
-    private val useCase: ReplayUseCase,
+    private val useCase: com.example.usecaseinterface.usecase.ReplayUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(

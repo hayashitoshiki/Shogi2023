@@ -1,7 +1,7 @@
 package com.example.test_usecase.usecase
 
 import com.example.domainObject.game.rule.GameRule
-import com.example.usecase.usecaseinterface.HomeUseCase
+import com.example.usecaseinterface.usecase.HomeUseCase
 
 class FakeHomeUseCase(): HomeUseCase {
 

@@ -58,12 +58,12 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    val coroutines_version = "1.3.9"
+    val coroutines_version = "1.8.0"
+    // coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
-
     // coroutine-test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
     testImplementation("app.cash.turbine:turbine:1.1.0")
     // Hilt
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
@@ -72,7 +72,8 @@ dependencies {
 
     implementation(project(":presentation:core"))
     implementation(project(":domain:domain-object"))
-    implementation(project(":application:usecase"))
+    implementation(project(":application:usecaseinterface"))
+    implementation(project(":application:di"))
     implementation(project(":domain:test-domain-object"))
     testImplementation(project(":application:test-usecase"))
     testImplementation(project(":presentation:test-core"))

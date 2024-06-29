@@ -6,7 +6,7 @@ import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.rule.Turn
 import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.game.fake
-import com.example.usecase.usecaseinterface.model.result.GameInitResult
+import com.example.usecaseinterface.model.result.GameInitResult
 
 /**
  * ゲーム初期化時の返却物
@@ -34,11 +34,11 @@ fun GameInitResult.Companion.fake(
     turn: Turn = Turn.Normal.Black,
 ): GameInitResult {
     return GameInitResult(
-        board = board,
-        blackStand = blackStand,
-        whiteStand = whiteStand,
-        blackTimeLimit = blackTimeLimit,
-        whiteTimeLimit = whiteTimeLimit,
-        turn = turn,
+      board = board,
+      blackStand = blackStand,
+      whiteStand = whiteStand,
+      blackTimeLimit = blackTimeLimit,
+      whiteTimeLimit = whiteTimeLimit,
+      turn = turn,
     )
 }

@@ -1,7 +1,6 @@
-package com.example.usecase.di
+package com.example.di
 
-import com.example.usecase.usecase.GameUseCaseImpl
-import com.example.usecase.usecaseinterface.GameUseCase
+import com.example.usecase.GameUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,5 +13,5 @@ abstract class GameUseCaseModule {
     @Binds
     abstract fun bindAGameUseCaseModule(
         gameUseCase: GameUseCaseImpl
-    ): GameUseCase
+    ): com.example.usecaseinterface.usecase.GameUseCase
 }

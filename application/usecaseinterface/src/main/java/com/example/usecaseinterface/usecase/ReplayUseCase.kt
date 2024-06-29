@@ -1,11 +1,11 @@
-package com.example.usecase.usecaseinterface
+package com.example.usecaseinterface.usecase
 
 import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
-import com.example.usecase.usecaseinterface.model.result.ReplayGoBackResult
-import com.example.usecase.usecaseinterface.model.result.ReplayGoNextResult
-import com.example.usecase.usecaseinterface.model.result.ReplayInitResult
+import com.example.usecaseinterface.model.result.ReplayGoBackResult
+import com.example.usecaseinterface.model.result.ReplayGoNextResult
+import com.example.usecaseinterface.model.result.ReplayInitResult
 
 /**
  * 将棋のビジネスロジック

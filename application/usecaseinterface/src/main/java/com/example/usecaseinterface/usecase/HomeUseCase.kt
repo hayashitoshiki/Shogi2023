@@ -1,4 +1,4 @@
-package com.example.usecase.usecaseinterface
+package com.example.usecaseinterface.usecase
 
 import com.example.domainObject.game.rule.GameRule
 

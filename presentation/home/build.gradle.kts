@@ -77,7 +77,8 @@ dependencies {
     implementation(project(":domain:domain-object"))
     implementation(project(":presentation:game"))
 
-    testImplementation(project(":application:test-usecase"))
+    implementation(project(":application:usecaseinterface"))
+    implementation(project(":application:di"))
     testImplementation(project(":domain:test-domain-object"))
     testImplementation(project(":presentation:test-core"))
 }

@@ -19,21 +19,17 @@ import com.example.testDomainObject.board.`fake●5一玉○5二香○5三金`
 import com.example.testDomainObject.board.`fake●5二玉○5四金`
 import com.example.testDomainObject.board.`fake●5二王○5八王`
 import com.example.testDomainObject.board.fake成ったら王手_詰まない
-import com.example.testDomainObject.board.fake王手_詰まない
 import com.example.testDomainObject.board.fake詰まない
-import com.example.testDomainObject.board.fake詰み
 import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.rule.fake
 import com.example.test_repository.FakeGameRepository
 import com.example.test_repository.FakeGameRuleRepository
 import com.example.test_repository.FakeLogRepository
-import com.example.usecase.usecase.GameUseCaseImpl
-import com.example.usecase.usecaseinterface.GameUseCase
-import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecase.usecaseinterface.model.result.GameInitResult
-import com.example.usecase.usecaseinterface.model.result.NextResult
-import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.example.usecaseinterface.usecase.GameUseCase
+import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
+import com.example.usecaseinterface.model.result.GameInitResult
+import com.example.usecaseinterface.model.result.NextResult
+import com.example.usecaseinterface.model.result.SetEvolutionResult
 import kotlinx.coroutines.test.TestScope
 import org.junit.Assert
 import org.junit.Before
@@ -45,7 +41,7 @@ import org.junit.Test
  */
 class GameUseCaseTest {
 
-    private lateinit var gameUseCase: GameUseCase
+    private lateinit var gameUseCase: com.example.usecaseinterface.usecase.GameUseCase
     private lateinit var logRepository: FakeLogRepository
     private lateinit var gameRuleRepository: FakeGameRuleRepository
     private lateinit var gameRepository: FakeGameRepository
@@ -86,7 +82,7 @@ class GameUseCaseTest {
         val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
         val whiteTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
         val turn = Turn.Normal.Black
-        val expected = GameInitResult(
+        val expected = com.example.usecaseinterface.model.result.GameInitResult(
             board = board,
             blackStand = blackStand,
             whiteStand = whiteStand,
@@ -131,7 +127,7 @@ class GameUseCaseTest {
             val isDraw: Boolean,
             val position: Position,
             val isEvolution: Boolean,
-            val result: SetEvolutionResult,
+            val result: com.example.usecaseinterface.model.result.SetEvolutionResult,
         )
 
         val case1Board = Board.`fake●5一玉○5二香○5三金`()
@@ -153,7 +149,7 @@ class GameUseCaseTest {
                 isEvolution = true,
                 board = case1Board,
                 position = case1Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case1Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikyo,
@@ -173,7 +169,7 @@ class GameUseCaseTest {
                 isEvolution = true,
                 board = case2_3Board,
                 position = case2_3Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case2_3Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikei,
@@ -193,7 +189,7 @@ class GameUseCaseTest {
                 isEvolution = true,
                 board = case2_3Board,
                 position = case2_3Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case2_3Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikei,
@@ -213,7 +209,7 @@ class GameUseCaseTest {
                 isEvolution = true,
                 board = case4_5_9_10Board,
                 position = case4_5_9_10Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case4_5_9_10Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikei,
@@ -233,7 +229,7 @@ class GameUseCaseTest {
                 isEvolution = true,
                 board = case4_5_9_10Board,
                 position = case4_5_9_10Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case4_5_9_10Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikei,
@@ -253,7 +249,7 @@ class GameUseCaseTest {
                 isEvolution = true,
                 board = case6Board,
                 position = case6Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case6Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikyo,
@@ -273,7 +269,7 @@ class GameUseCaseTest {
                 isEvolution = false,
                 board = case7_8Board,
                 position = case7_8Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case7_8Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Surface.Kyosya,
@@ -293,7 +289,7 @@ class GameUseCaseTest {
                 isEvolution = false,
                 board = case7_8Board,
                 position = case7_8Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case7_8Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Surface.Kyosya,
@@ -313,7 +309,7 @@ class GameUseCaseTest {
                 isEvolution = false,
                 board = case4_5_9_10Board,
                 position = case4_5_9_10Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case4_5_9_10Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikei,
@@ -333,7 +329,7 @@ class GameUseCaseTest {
                 isEvolution = false,
                 board = case4_5_9_10Board,
                 position = case4_5_9_10Position,
-                result = SetEvolutionResult(
+                result = com.example.usecaseinterface.model.result.SetEvolutionResult(
                     board = case4_5_9_10Board.copy().also {
                         val cell = CellStatus.Fill.FromPiece(
                             Piece.Reverse.Narikei,
@@ -421,7 +417,7 @@ class GameUseCaseTest {
             )
 
             val hintPositionList = gameService.searchPutBy(param.piece, board, turn)
-            val result = NextResult.Hint(
+            val result = com.example.usecaseinterface.model.result.NextResult.Hint(
                 hintPositionList = hintPositionList,
             )
 
@@ -467,7 +463,7 @@ class GameUseCaseTest {
                 )
             }
             val hintPositionList = board.searchMoveBy(param.position, turn)
-            val result = NextResult.Hint(
+            val result = com.example.usecaseinterface.model.result.NextResult.Hint(
                 hintPositionList = hintPositionList,
             )
 
@@ -507,7 +503,7 @@ class GameUseCaseTest {
             val board: Board,
             val rule: GameRule,
             val isDraw: Boolean,
-            val result: NextResult.Move,
+            val result: com.example.usecaseinterface.model.result.NextResult.Move,
         )
 
         val myTurn = Turn.Normal.Black
@@ -560,7 +556,7 @@ class GameUseCaseTest {
                 board = case1Board,
                 rule = case1Rule,
                 isDraw = false,
-                result = NextResult.Move.Only(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Only(
                     board = case1ResultBoard,
                     stand = resultStand,
                     nextTurn = nextTurn,
@@ -572,7 +568,7 @@ class GameUseCaseTest {
                 board = case2Board,
                 rule = case2Rule,
                 isDraw = true,
-                result = NextResult.Move.Drown(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Drown(
                     board = case2ResultBoard,
                     stand = resultStand,
                     nextTurn = nextTurn,
@@ -584,7 +580,7 @@ class GameUseCaseTest {
                 board = case3Board,
                 rule = case3Rule,
                 isDraw = false,
-                result = NextResult.Move.Win(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Win(
                     board = case3ResultBoard,
                     stand = resultStand,
                     nextTurn = nextTurn,
@@ -596,7 +592,7 @@ class GameUseCaseTest {
                 board = case4Board,
                 rule = case4Rule,
                 isDraw = false,
-                result = NextResult.Move.Only(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Only(
                     board = case4ResultBoard,
                     stand = resultStand,
                     nextTurn = nextTurn,
@@ -608,7 +604,7 @@ class GameUseCaseTest {
                 board = case5Board,
                 rule = case5Rule,
                 isDraw = false,
-                result = NextResult.Move.Win(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Win(
                     board = case5ResultBoard,
                     stand = resultStand,
                     nextTurn = nextTurn,
@@ -619,7 +615,7 @@ class GameUseCaseTest {
         params.forEach { param ->
             // data
             val hintPositionList = listOf(param.position)
-            val hold = ReadyMoveInfoUseCaseModel.Stand(
+            val hold = com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Stand(
                 hold = MoveTarget.Stand(Piece.Surface.Kin),
                 hintList = hintPositionList,
             )
@@ -680,7 +676,7 @@ class GameUseCaseTest {
             val board: Board,
             val rule: GameRule,
             val isDraw: Boolean,
-            val result: NextResult.Move,
+            val result: com.example.usecaseinterface.model.result.NextResult.Move,
         )
 
         val myTurn = Turn.Normal.Black
@@ -780,7 +776,7 @@ class GameUseCaseTest {
                 board = case1Board,
                 rule = case1Rule,
                 isDraw = false,
-                result = NextResult.Move.Only(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Only(
                     board = case1ResultBoard,
                     stand = case1ResultStand,
                     nextTurn = nextTurn,
@@ -793,7 +789,7 @@ class GameUseCaseTest {
                 board = case2Board,
                 rule = case2Rule,
                 isDraw = true,
-                result = NextResult.Move.Drown(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Drown(
                     board = case2ResultBoard,
                     stand = case2ResultStand,
                     nextTurn = nextTurn,
@@ -806,7 +802,7 @@ class GameUseCaseTest {
                 board = case3Board,
                 rule = case3Rule,
                 isDraw = false,
-                result = NextResult.Move.Win(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Win(
                     board = case3ResultBoard,
                     stand = case3ResultStand,
                     nextTurn = nextTurn,
@@ -819,7 +815,7 @@ class GameUseCaseTest {
                 board = case4Board,
                 rule = case4Rule,
                 isDraw = false,
-                result = NextResult.Move.Only(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Only(
                     board = case4ResultBoard,
                     stand = case4ResultStand,
                     nextTurn = nextTurn,
@@ -832,7 +828,7 @@ class GameUseCaseTest {
                 board = case5Board,
                 rule = case5Rule,
                 isDraw = false,
-                result = NextResult.Move.Win(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Win(
                     board = case5ResultBoard,
                     stand = case5ResultStand,
                     nextTurn = nextTurn,
@@ -845,7 +841,7 @@ class GameUseCaseTest {
                 board = case6Board,
                 rule = case6Rule,
                 isDraw = false,
-                result = NextResult.Move.Only(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Only(
                     board = case6ResultBoard,
                     stand = case6ResultStand,
                     nextTurn = nextTurn,
@@ -858,7 +854,7 @@ class GameUseCaseTest {
                 board = case7Board,
                 rule = case7Rule,
                 isDraw = false,
-                result = NextResult.Move.Only(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Only(
                     board = case7ResultBoard,
                     stand = case7ResultStand,
                     nextTurn = nextTurn,
@@ -871,7 +867,7 @@ class GameUseCaseTest {
                 board = case8Board,
                 rule = case8Rule,
                 isDraw = false,
-                result = NextResult.Move.ChooseEvolution(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.ChooseEvolution(
                     board = case8ResultBoard,
                     stand = case8ResultStand,
                     nextTurn = case8NextTurn,
@@ -884,7 +880,7 @@ class GameUseCaseTest {
                 board = case9Board,
                 rule = case9Rule,
                 isDraw = false,
-                result = NextResult.Move.Win(
+                result = com.example.usecaseinterface.model.result.NextResult.Move.Win(
                     board = case9ResultBoard,
                     stand = case9ResultStand,
                     nextTurn = nextTurn,
@@ -895,7 +891,7 @@ class GameUseCaseTest {
         params.forEach { param ->
             // data
             val hintPositionList = listOf(param.movePosition)
-            val hold = ReadyMoveInfoUseCaseModel.Board(
+            val hold = com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Board(
                 hold = MoveTarget.Board(param.holdPosition),
                 hintList = hintPositionList,
             )

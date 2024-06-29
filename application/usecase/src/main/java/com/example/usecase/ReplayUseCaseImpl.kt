@@ -1,4 +1,4 @@
-package com.example.usecase.usecase
+package com.example.usecase
 
 import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
@@ -8,10 +8,10 @@ import com.example.domainObject.game.game.TimeLimit
 import com.example.repository.GameRuleRepository
 import com.example.repository.LogRepository
 import com.example.serviceinterface.ReplayService
-import com.example.usecase.usecaseinterface.ReplayUseCase
-import com.example.usecase.usecaseinterface.model.result.ReplayGoBackResult
-import com.example.usecase.usecaseinterface.model.result.ReplayGoNextResult
-import com.example.usecase.usecaseinterface.model.result.ReplayInitResult
+import com.example.usecaseinterface.usecase.ReplayUseCase
+import com.example.usecaseinterface.model.result.ReplayGoBackResult
+import com.example.usecaseinterface.model.result.ReplayGoNextResult
+import com.example.usecaseinterface.model.result.ReplayInitResult
 import javax.inject.Inject
 
 class ReplayUseCaseImpl @Inject constructor(

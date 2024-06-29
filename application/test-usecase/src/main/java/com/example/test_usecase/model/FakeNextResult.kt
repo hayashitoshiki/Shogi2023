@@ -6,7 +6,7 @@ import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.rule.Turn
 import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.board.fake詰まない
-import com.example.usecase.usecaseinterface.model.result.NextResult
+import com.example.usecaseinterface.model.result.NextResult
 
 fun NextResult.Hint.Companion.fake(
     hintPositionList: List<Position> = emptyList(),

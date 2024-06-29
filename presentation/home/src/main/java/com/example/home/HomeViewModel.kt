@@ -11,13 +11,13 @@ import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
-import com.example.usecase.usecaseinterface.HomeUseCase
+import com.example.usecaseinterface.usecase.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCase: HomeUseCase,
+    private val useCase: com.example.usecaseinterface.usecase.HomeUseCase,
 ) : BaseViewModel<HomeViewModel.UiState, HomeViewModel.Effect>() {
 
     override fun initState(): UiState {

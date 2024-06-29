@@ -1,4 +1,4 @@
-package com.example.usecase.usecase
+package com.example.usecase
 
 import com.example.domainObject.game.Log
 import com.example.domainObject.game.MoveTarget
@@ -21,12 +21,12 @@ import com.example.repository.GameRepository
 import com.example.repository.GameRuleRepository
 import com.example.repository.LogRepository
 import com.example.serviceinterface.GameService
-import com.example.usecase.usecaseinterface.GameUseCase
-import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecase.usecaseinterface.model.TimeLimitsUseCaseModel
-import com.example.usecase.usecaseinterface.model.result.GameInitResult
-import com.example.usecase.usecaseinterface.model.result.NextResult
-import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
+import com.example.usecaseinterface.usecase.GameUseCase
+import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
+import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
+import com.example.usecaseinterface.model.result.GameInitResult
+import com.example.usecaseinterface.model.result.NextResult
+import com.example.usecaseinterface.model.result.SetEvolutionResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,7 +49,7 @@ class GameUseCaseImpl @Inject constructor(
 ) : GameUseCase {
 
     private val mutableTurnStateFlow = MutableStateFlow<Turn?>(null)
-    private val mutableTimeLimitsUseCaseModelStateFlow = MutableStateFlow<TimeLimitsUseCaseModel?>(null)
+    private val mutableTimeLimitsUseCaseModelStateFlow = MutableStateFlow<com.example.usecaseinterface.model.TimeLimitsUseCaseModel?>(null)
     private var timerJob: Job? = null
 
     init {
@@ -179,10 +179,11 @@ class GameUseCaseImpl @Inject constructor(
         val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
         val whiteTimeLimit = TimeLimit(rule.playersRule.whiteRule.timeLimitRule)
         val now = LocalDateTime.now()
-        mutableTimeLimitsUseCaseModelStateFlow.value = TimeLimitsUseCaseModel(
-            blackTimeLimit = blackTimeLimit,
-            whiteTimeLimit = whiteTimeLimit,
-        )
+        mutableTimeLimitsUseCaseModelStateFlow.value =
+            TimeLimitsUseCaseModel(
+                blackTimeLimit = blackTimeLimit,
+                whiteTimeLimit = whiteTimeLimit,
+            )
         logRepository.createGameLog(now)
 
         return GameInitResult(

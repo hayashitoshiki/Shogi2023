@@ -1,4 +1,4 @@
-package com.example.usecase.usecaseinterface.model.result
+package com.example.usecaseinterface.model.result
 
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
@@ -18,7 +18,7 @@ sealed interface NextResult {
      */
     data class Hint(
         val hintPositionList: List<Position>
-    ) : NextResult{
+    ) : NextResult {
         companion object
     }
 
@@ -41,7 +41,7 @@ sealed interface NextResult {
             override val board: Board,
             override val stand: Stand,
             override val nextTurn: Turn,
-        ) : Move{
+        ) : Move {
             companion object
         }
 
@@ -63,7 +63,7 @@ sealed interface NextResult {
             override val board: Board,
             override val stand: Stand,
             override val nextTurn: Turn,
-        ) : Move{
+        ) : Move {
             companion object
         }
 

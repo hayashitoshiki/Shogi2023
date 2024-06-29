@@ -1,4 +1,4 @@
-package com.example.usecase.di
+package com.example.di
 
 import dagger.Module
 import dagger.Provides

@@ -1,4 +1,4 @@
-package com.example.usecase.usecaseinterface
+package com.example.usecaseinterface.usecase
 
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
@@ -6,11 +6,11 @@ import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
-import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecase.usecaseinterface.model.TimeLimitsUseCaseModel
-import com.example.usecase.usecaseinterface.model.result.GameInitResult
-import com.example.usecase.usecaseinterface.model.result.NextResult
-import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
+import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
+import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
+import com.example.usecaseinterface.model.result.GameInitResult
+import com.example.usecaseinterface.model.result.NextResult
+import com.example.usecaseinterface.model.result.SetEvolutionResult
 import kotlinx.coroutines.flow.StateFlow
 
 /**

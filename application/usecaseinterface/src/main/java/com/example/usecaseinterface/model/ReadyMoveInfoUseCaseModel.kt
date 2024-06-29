@@ -1,4 +1,4 @@
-package com.example.usecase.usecaseinterface.model
+package com.example.usecaseinterface.model
 
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Position

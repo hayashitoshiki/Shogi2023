@@ -1,4 +1,4 @@
-package com.example.usecase.usecaseinterface.model.result
+package com.example.usecaseinterface.model.result
 
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand

@@ -8,12 +8,10 @@ import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.test_usecase.model.fake
 import kotlinx.coroutines.flow.StateFlow
-import com.example.usecase.usecaseinterface.GameUseCase
-import com.example.usecase.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecase.usecaseinterface.model.TimeLimitsUseCaseModel
-import com.example.usecase.usecaseinterface.model.result.GameInitResult
-import com.example.usecase.usecaseinterface.model.result.NextResult
-import com.example.usecase.usecaseinterface.model.result.SetEvolutionResult
+import com.example.usecaseinterface.model.result.GameInitResult
+import com.example.usecaseinterface.model.result.NextResult
+import com.example.usecaseinterface.model.result.SetEvolutionResult
+import com.example.usecaseinterface.usecase.GameUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeGameUseCase: GameUseCase {
@@ -37,8 +35,8 @@ class FakeGameUseCase: GameUseCase {
     var callSetEvolutionCount = 0
         private set
 
-    var observeUpdateTimeLimitLogic: () -> StateFlow<TimeLimitsUseCaseModel> = {
-        MutableStateFlow(TimeLimitsUseCaseModel.fake())
+    var observeUpdateTimeLimitLogic: () -> StateFlow<com.example.usecaseinterface.model.TimeLimitsUseCaseModel> = {
+        MutableStateFlow(com.example.usecaseinterface.model.TimeLimitsUseCaseModel.fake())
     }
 
     var gameStartLogic: () -> GameInitResult = { GameInitResult.fake() }
@@ -49,7 +47,7 @@ class FakeGameUseCase: GameUseCase {
     var useBoardPieceLogic: () -> NextResult = { NextResult.Move.Only.fake() }
     var useStandPieceLogic: () -> NextResult.Hint = { NextResult.Hint.fake() }
     var setEvolutionLogic: () -> SetEvolutionResult = { SetEvolutionResult.fake() }
-    override fun observeUpdateTimeLimit(): StateFlow<TimeLimitsUseCaseModel?> {
+    override fun observeUpdateTimeLimit(): StateFlow<com.example.usecaseinterface.model.TimeLimitsUseCaseModel?> {
         callObserveUpdateTimeLimitCount += 1
         return observeUpdateTimeLimitLogic()
     }
@@ -74,7 +72,7 @@ class FakeGameUseCase: GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: ReadyMoveInfoUseCaseModel.Board,
+        holdMove: com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Board,
     ): NextResult {
         callMovePieceCount += 1
         return movePieceLogic()
@@ -85,7 +83,7 @@ class FakeGameUseCase: GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: ReadyMoveInfoUseCaseModel.Stand,
+        holdMove: com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Stand,
     ): NextResult {
         callPutStandPieceCount += 1
         return putStandPieceLogic()

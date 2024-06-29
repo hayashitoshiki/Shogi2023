@@ -51,6 +51,7 @@ dependencies {
     implementation(project(":domain:domain-logic"))
     implementation(project(":domain:service"))
     implementation(project(":domain:repository"))
+    implementation(project(":application:usecaseinterface"))
     implementation(project(":data:di"))
     testImplementation(project(":domain:test-repository"))
     testImplementation(project(":domain:test-domain-object"))
