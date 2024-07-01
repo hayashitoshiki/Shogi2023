@@ -25,7 +25,6 @@ fun Stand.Companion.fake(
             it.add(Piece.Surface.Hisya)
         }
     }
-
 }
 
 fun Stand.Companion.fake(

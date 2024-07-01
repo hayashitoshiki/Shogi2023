@@ -23,7 +23,7 @@ fun GameRule.Companion.fake(
             whiteHande = whiteHande,
             whiteIsFirstCheckEnd = whiteIsFirstCheckEnd,
             whiteIsTryRule = whiteIsTryRule,
-        )
+        ),
     )
 }
 

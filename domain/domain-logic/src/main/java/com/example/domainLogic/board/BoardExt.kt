@@ -1,9 +1,9 @@
 package com.example.domainLogic.board
 
 import com.example.domainLogic.piece.evolution
-import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainLogic.piece.isAvailablePut
 import com.example.domainLogic.piece.shouldEvolution
+import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.EvolutionCheckState
@@ -329,11 +329,11 @@ object SetUpPiece {
         val blackKin = setOf(
             Pair(
                 Position(4, 9),
-                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
             ),
             Pair(
                 Position(6, 9),
-                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
             ),
         )
         val whiteHisya = Pair(
@@ -377,11 +377,11 @@ object SetUpPiece {
         val whiteKin = setOf(
             Pair(
                 Position(4, 1),
-                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
             ),
             Pair(
                 Position(6, 1),
-                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
             ),
         )
         val normalInitPiece: Map<Position, CellStatus> = mutableMapOf(

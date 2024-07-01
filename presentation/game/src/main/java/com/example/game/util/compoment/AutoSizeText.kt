@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
 
-
 /**
  * 文字サイズ自動調整テキストコンポーネント
  *
@@ -113,7 +112,7 @@ fun AutoSizeText(
         contentAlignment = Alignment.Center,
     ) {
         var combinedTextStyle = (LocalTextStyle.current + style).copy(
-            fontSize = min(maxWidth, maxHeight).value.sp
+            fontSize = min(maxWidth, maxHeight).value.sp,
         )
 
         val fontSizes = suggestedFontSizes.ifEmpty {
@@ -146,7 +145,7 @@ fun AutoSizeText(
             maxLines = maxLines,
             inlineContent = inlineContent,
             onTextLayout = onTextLayout,
-            style =  combinedTextStyle,
+            style = combinedTextStyle,
         )
     }
 }
@@ -156,7 +155,7 @@ fun AutoSizeText(
 private fun BoxWithConstraintsScope.shouldShrink(
     text: AnnotatedString,
     textStyle: TextStyle,
-    maxLines: Int
+    maxLines: Int,
 ): Boolean {
     val textDelegate = TextDelegate(
         text = text,

@@ -27,7 +27,7 @@ class ReplayViewModel @Inject constructor(
             blackTimeLimit = TimeLimit.INIT,
             whiteTimeLimit = TimeLimit.INIT,
             logNextIndex = 0,
-        )
+        ),
     )
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 

@@ -6,7 +6,6 @@ import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 
-
 /**
  * 下記の局面を返す
  *
@@ -144,7 +143,6 @@ fun Board.Companion.`fake王手_詰まない`(): Board {
         it.update(Position(9, 9), CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, black))
     }
 }
-
 
 /**
  * 下記の局面を返す

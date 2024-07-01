@@ -1,6 +1,5 @@
 package com.example.domainObject.game.board
 
-
 /**
  * 成ることができるか判別するステータス
  *
@@ -22,5 +21,5 @@ enum class EvolutionCheckState {
      * 選択できる
      *
      */
-    Choose;
+    Choose,
 }

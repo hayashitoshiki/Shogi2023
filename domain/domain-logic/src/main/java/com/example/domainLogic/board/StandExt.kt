@@ -18,6 +18,7 @@ fun Stand.Companion.setUp(playerRule: PlayerRule): Stand {
         Hande.TWO,
         Hande.FOR,
         Hande.SIX,
-        Hande.EIGHT -> Stand()
+        Hande.EIGHT,
+        -> Stand()
     }
 }

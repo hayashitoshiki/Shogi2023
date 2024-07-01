@@ -1,6 +1,5 @@
 package com.example.domainObject.game.rule
 
-
 /**
  * ハンデ一覧
  *
@@ -40,6 +39,5 @@ enum class Hande {
     /**
      * ８枚落ち
      */
-    EIGHT
-    ;
+    EIGHT,
 }

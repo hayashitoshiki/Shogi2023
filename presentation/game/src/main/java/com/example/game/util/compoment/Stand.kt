@@ -17,13 +17,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.core.theme.Shogi2023Theme
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.R
-
+import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun StandBox(
@@ -33,7 +32,6 @@ fun StandBox(
     turn: Turn,
     onClick: (Piece, Turn) -> Unit,
 ) {
-
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val widthPadding = 4
     val boardSizeWidth = 9
@@ -44,7 +42,7 @@ fun StandBox(
         Piece.Surface.Gin,
         Piece.Surface.Kin,
         Piece.Surface.Kaku,
-        Piece.Surface.Hisya
+        Piece.Surface.Hisya,
     ).let {
         when (turn) {
             Turn.Normal.Black -> it
@@ -186,7 +184,6 @@ fun PieceCountImage(modifier: Modifier = Modifier, pieceCount: Int, turn: Turn) 
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

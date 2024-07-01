@@ -1,7 +1,5 @@
 package com.example.home
 
-import com.example.core.uilogic.BaseContract
-import com.example.core.uilogic.BaseViewModel
 import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
@@ -11,7 +9,8 @@ import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
-import com.example.usecaseinterface.usecase.HomeUseCase
+import com.example.test.uilogic.BaseContract
+import com.example.test.uilogic.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -39,7 +38,8 @@ class HomeViewModel @Inject constructor(
                     when (it) {
                         is GameRuleSettingUiModel.NonCustom.Normal -> it.copy(selectedHande = selectedHande)
                         is GameRuleSettingUiModel.NonCustom.FirstCheck,
-                        is GameRuleSettingUiModel.Custom -> it
+                        is GameRuleSettingUiModel.Custom,
+                        -> it
                     }
                 },
             )
@@ -53,7 +53,8 @@ class HomeViewModel @Inject constructor(
                     when (it) {
                         is GameRuleSettingUiModel.NonCustom.FirstCheck -> it.copy(selectedHande = selectedHande)
                         is GameRuleSettingUiModel.NonCustom.Normal,
-                        is GameRuleSettingUiModel.Custom -> it
+                        is GameRuleSettingUiModel.Custom,
+                        -> it
                     }
                 },
             )
@@ -85,7 +86,8 @@ class HomeViewModel @Inject constructor(
                         }
 
                         is GameRuleSettingUiModel.NonCustom.FirstCheck,
-                        is GameRuleSettingUiModel.NonCustom.Normal -> it
+                        is GameRuleSettingUiModel.NonCustom.Normal,
+                        -> it
                     }
                 },
             )
@@ -117,7 +119,8 @@ class HomeViewModel @Inject constructor(
                         }
 
                         is GameRuleSettingUiModel.NonCustom.FirstCheck,
-                        is GameRuleSettingUiModel.NonCustom.Normal -> it
+                        is GameRuleSettingUiModel.NonCustom.Normal,
+                        -> it
                     }
                 },
             )
@@ -125,7 +128,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onChangeTimeLimitTotalTime(turn: Turn, second: Second) {
-        val byoyomi = when(turn) {
+        val byoyomi = when (turn) {
             Turn.Normal.Black -> {
                 state.value.timeLimitCard.blackTimeLimitRule.byoyomi
             }
@@ -137,7 +140,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onChangeTimeLimitSecond(turn: Turn, second: Second) {
-        val totalTime = when(turn) {
+        val totalTime = when (turn) {
             Turn.Normal.Black -> {
                 state.value.timeLimitCard.blackTimeLimitRule.totalTime
             }
@@ -150,7 +153,7 @@ class HomeViewModel @Inject constructor(
 
     private fun updateTimeLimitRule(turn: Turn, totalTime: Second, second: Second) {
         setState {
-            when(turn) {
+            when (turn) {
                 Turn.Normal.Black -> {
                     copy(
                         timeLimitCard = timeLimitCard.copy(
@@ -158,7 +161,7 @@ class HomeViewModel @Inject constructor(
                                 totalTime = totalTime,
                                 byoyomi = second,
                             ),
-                        )
+                        ),
                     )
                 }
                 Turn.Normal.White -> {
@@ -168,7 +171,7 @@ class HomeViewModel @Inject constructor(
                                 totalTime = totalTime,
                                 byoyomi = second,
                             ),
-                        )
+                        ),
                     )
                 }
             }
@@ -190,7 +193,7 @@ class HomeViewModel @Inject constructor(
                 }
                 is GameRuleSettingUiModel.NonCustom -> {
                     val isFirstCheckEnd = setting is GameRuleSettingUiModel.NonCustom.FirstCheck
-                    val (blackHande,whiteHande) = when(setting.selectedHande.turn) {
+                    val (blackHande, whiteHande) = when (setting.selectedHande.turn) {
                         Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
                         Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
                     }
@@ -235,7 +238,7 @@ class HomeViewModel @Inject constructor(
         val timeLimitCard: TimeLimitCardUiModel,
         val ruleItems: List<GameRuleSettingUiModel>,
         val showRuleItemIndex: Int,
-    ): BaseContract.State
+    ) : BaseContract.State
 
     sealed interface Effect : BaseContract.Effect {
 

@@ -15,6 +15,6 @@ abstract class GameServiceModule {
     @Binds
     @Singleton
     abstract fun bindGameServiceModule(
-        gameService: GameServiceImpl
+        gameService: GameServiceImpl,
     ): GameService
 }

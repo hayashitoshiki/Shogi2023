@@ -1,6 +1,5 @@
 package com.example.domainObject.game.game
 
-
 /**
  * 秒数
  */

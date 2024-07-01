@@ -1,14 +1,14 @@
 package com.example.service
 
+import com.example.domainLogic.piece.degeneracy
+import com.example.domainLogic.piece.evolution
+import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.Log
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.piece.Piece
-import com.example.domainLogic.piece.degeneracy
-import com.example.domainLogic.piece.evolution
-import com.example.domainLogic.rule.getOpponentTurn
 import com.example.serviceinterface.ReplayService
 import javax.inject.Inject
 
@@ -34,7 +34,7 @@ class ReplayServiceImpl @Inject constructor() : ReplayService {
                 stand.remove(moveTarget.piece)
                 board.update(
                     log.afterPosition,
-                    CellStatus.Fill.FromPiece(moveTarget.piece, log.turn)
+                    CellStatus.Fill.FromPiece(moveTarget.piece, log.turn),
                 )
             }
         }

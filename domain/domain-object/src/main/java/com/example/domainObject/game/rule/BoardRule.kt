@@ -18,7 +18,7 @@ data class BoardRule(
      *
      */
     enum class SetUpRule {
-        NORMAL;
+        NORMAL,
     }
 
     companion object

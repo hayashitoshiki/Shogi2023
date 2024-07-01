@@ -26,7 +26,8 @@ fun Piece.isAvailablePut(board: Board, position: Position, turn: Turn): Boolean 
         Piece.Surface.Hisya,
         Piece.Surface.Kaku,
         Piece.Surface.Kin,
-        Piece.Surface.Ou -> true
+        Piece.Surface.Ou,
+        -> true
 
         is Piece.Surface.Keima -> !this.shouldEvolution(board, position, turn)
 
@@ -62,7 +63,8 @@ fun Piece.Surface.shouldEvolution(
 
     return when (this) {
         Piece.Surface.Fu,
-        Piece.Surface.Kyosya -> {
+        Piece.Surface.Kyosya,
+        -> {
             when (turn) {
                 Turn.Normal.Black -> column <= 1
                 Turn.Normal.White -> boardMaxColumn <= column
@@ -81,7 +83,8 @@ fun Piece.Surface.shouldEvolution(
         Piece.Surface.Hisya,
         Piece.Surface.Kaku,
         Piece.Surface.Kin,
-        Piece.Surface.Ou -> false
+        Piece.Surface.Ou,
+        -> false
     }
 }
 
@@ -100,7 +103,8 @@ fun Piece.Surface.evolution(): Piece.Reverse? {
         Piece.Surface.Kyosya -> Piece.Reverse.Narikyo
         Piece.Surface.Kin,
         Piece.Surface.Gyoku,
-        Piece.Surface.Ou -> null
+        Piece.Surface.Ou,
+        -> null
     }
 }
 

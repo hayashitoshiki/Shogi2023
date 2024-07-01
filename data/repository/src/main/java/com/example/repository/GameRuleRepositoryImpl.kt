@@ -4,7 +4,6 @@ import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.PlayerRule
 import com.example.domainObject.game.rule.PlayersRule
-import com.example.repository.GameRuleRepository
 import javax.inject.Inject
 
 class GameRuleRepositoryImpl @Inject constructor() : GameRuleRepository {
@@ -14,7 +13,7 @@ class GameRuleRepositoryImpl @Inject constructor() : GameRuleRepository {
         playersRule = PlayersRule(
             blackRule = PlayerRule(),
             whiteRule = PlayerRule(),
-        )
+        ),
     )
 
     override fun setGameRule(rule: GameRule) {

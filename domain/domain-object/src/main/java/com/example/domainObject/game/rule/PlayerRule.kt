@@ -1,6 +1,5 @@
 package com.example.domainObject.game.rule
 
-
 /**
  * 各手番のルールまとめ
  *

@@ -12,7 +12,7 @@ import com.example.game.feature.game.GameViewModel
 @Composable
 fun EvolutionDialog(
     openDialog: MutableState<GameViewModel.Effect.Evolution?>,
-    onClick: (Boolean) -> Unit
+    onClick: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     AlertDialog(
@@ -23,7 +23,7 @@ fun EvolutionDialog(
                 onClick = {
                     openDialog.value = null
                     onClick(true)
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_yes))
             }
@@ -33,7 +33,7 @@ fun EvolutionDialog(
                 onClick = {
                     openDialog.value = null
                     onClick(false)
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_no))
             }

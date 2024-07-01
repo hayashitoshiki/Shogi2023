@@ -7,37 +7,37 @@ import com.example.home.model.GameRuleSettingUiModel
 import com.example.testDomainObject.rule.fake
 
 fun GameRuleSettingUiModel.Companion.fakeList(
-  list: List<GameRuleSettingUiModel> = listOf(
-    GameRuleSettingUiModel.NonCustom.Normal.fake(),
-    GameRuleSettingUiModel.NonCustom.FirstCheck.fake(),
-    GameRuleSettingUiModel.Custom.fake(),
-  )
+    list: List<GameRuleSettingUiModel> = listOf(
+        GameRuleSettingUiModel.NonCustom.Normal.fake(),
+        GameRuleSettingUiModel.NonCustom.FirstCheck.fake(),
+        GameRuleSettingUiModel.Custom.fake(),
+    ),
 ) = list
 
 fun GameRuleSettingUiModel.NonCustom.Normal.Companion.fake(
-  selectedHande: GameRuleSettingUiModel.SelectedHande = GameRuleSettingUiModel.SelectedHande.fake(),
+    selectedHande: GameRuleSettingUiModel.SelectedHande = GameRuleSettingUiModel.SelectedHande.fake(),
 ) = GameRuleSettingUiModel.NonCustom.Normal(
-  selectedHande = selectedHande,
+    selectedHande = selectedHande,
 )
 
 fun GameRuleSettingUiModel.NonCustom.FirstCheck.Companion.fake(
-  selectedHande: GameRuleSettingUiModel.SelectedHande = GameRuleSettingUiModel.SelectedHande.fake(),
+    selectedHande: GameRuleSettingUiModel.SelectedHande = GameRuleSettingUiModel.SelectedHande.fake(),
 ) = GameRuleSettingUiModel.NonCustom.FirstCheck(
-  selectedHande = selectedHande,
+    selectedHande = selectedHande,
 )
 
 fun GameRuleSettingUiModel.Custom.Companion.fake(
-  playersRule: PlayersRule = PlayersRule.fake(),
+    playersRule: PlayersRule = PlayersRule.fake(),
 ) = GameRuleSettingUiModel.Custom(
-  playersRule = playersRule,
+    playersRule = playersRule,
 )
 
 fun GameRuleSettingUiModel.SelectedHande.Companion.fake(
-  hande: Hande = Hande.NON,
-  turn: Turn = Turn.Normal.Black,
+    hande: Hande = Hande.NON,
+    turn: Turn = Turn.Normal.Black,
 ): GameRuleSettingUiModel.SelectedHande {
-  return GameRuleSettingUiModel.SelectedHande(
-    hande = hande,
-    turn = turn,
-  )
+    return GameRuleSettingUiModel.SelectedHande(
+        hande = hande,
+        turn = turn,
+    )
 }

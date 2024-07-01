@@ -1,17 +1,17 @@
 package com.example.usecase
 
+import com.example.domainLogic.board.setUp
 import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
-import com.example.domainLogic.board.setUp
 import com.example.domainObject.game.game.TimeLimit
 import com.example.repository.GameRuleRepository
 import com.example.repository.LogRepository
 import com.example.serviceinterface.ReplayService
-import com.example.usecaseinterface.usecase.ReplayUseCase
 import com.example.usecaseinterface.model.result.ReplayGoBackResult
 import com.example.usecaseinterface.model.result.ReplayGoNextResult
 import com.example.usecaseinterface.model.result.ReplayInitResult
+import com.example.usecaseinterface.usecase.ReplayUseCase
 import javax.inject.Inject
 
 class ReplayUseCaseImpl @Inject constructor(

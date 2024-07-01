@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.example.domainObject.game.rule.Turn
 import com.example.game.R
 
-
 @Composable
 fun LoseButton(modifier: Modifier = Modifier, enable: Boolean, turn: Turn, onClick: (Turn) -> Unit) {
     val context = LocalContext.current
@@ -27,7 +26,8 @@ fun LoseButton(modifier: Modifier = Modifier, enable: Boolean, turn: Turn, onCli
     Button(
         modifier = modifier.rotate(rotate),
         enabled = enable,
-        onClick = { showDialog.value = true }) {
+        onClick = { showDialog.value = true },
+    ) {
         Text(text = context.getString(R.string.button_lose_text))
     }
     if (showDialog.value) {
@@ -35,11 +35,10 @@ fun LoseButton(modifier: Modifier = Modifier, enable: Boolean, turn: Turn, onCli
     }
 }
 
-
 @Composable
 fun ConfirmLoseDialog(
     openDialog: MutableState<Boolean>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val context = LocalContext.current
     AlertDialog(
@@ -50,7 +49,7 @@ fun ConfirmLoseDialog(
                 onClick = {
                     openDialog.value = false
                     onClick()
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_yes))
             }
@@ -59,7 +58,7 @@ fun ConfirmLoseDialog(
             TextButton(
                 onClick = {
                     openDialog.value = false
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_no))
             }

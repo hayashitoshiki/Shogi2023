@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.test_entity"
+    namespace = "com.example.test_usecase"
     compileSdk = 34
 
     defaultConfig {

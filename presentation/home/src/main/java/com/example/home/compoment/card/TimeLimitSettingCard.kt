@@ -58,7 +58,7 @@ fun TimeLimitSettingCard(
                 Pair(
                     Turn.Normal.White,
                     uiModel.whiteTimeLimitRule,
-                )
+                ),
             )
             turnList.forEach {
                 TimeLimitSettingItem(
@@ -106,7 +106,7 @@ private fun TotalTimeItem(
             val minits = (selectTotalTime.value / 1000 / 60).toInt()
             val second = (selectTotalTime.value / 1000 % 60).toInt()
             TimeSettingItem(
-                label =  stringResource(id = R.string.label_time_minutes),
+                label = stringResource(id = R.string.label_time_minutes),
                 selectTime = minits,
                 onChangeHande = { onChangeHande(Second(((it * 60 + second) * 1000L))) },
             )
@@ -120,7 +120,6 @@ private fun TotalTimeItem(
     }
 }
 
-
 @Composable
 private fun ByoyomiItem(
     selectSecond: Second,
@@ -128,7 +127,7 @@ private fun ByoyomiItem(
 ) {
     RuleItem(title = stringResource(id = R.string.time_limit_byoyomi)) {
         TimeSettingItem(
-            label =  stringResource(id = R.string.label_time_second),
+            label = stringResource(id = R.string.label_time_second),
             selectTime = (selectSecond.value / 1000 % 60).toInt(),
             onChangeHande = { onChangeHande(Second(it * 1000L)) },
         )
@@ -157,7 +156,7 @@ private fun TimeSettingItem(
 @Composable
 private fun RuleItem(
     title: String,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -196,15 +195,16 @@ private fun TimeDropdown(
     ) {
         Text(
             text = selectSecond.toString(),
-            modifier = Modifier.padding(start = 10.dp)
+            modifier = Modifier.padding(start = 10.dp),
         )
         Icon(
-            Icons.Filled.ArrowDropDown, "contentDescription",
-            Modifier.align(Alignment.CenterEnd)
+            Icons.Filled.ArrowDropDown,
+            "contentDescription",
+            Modifier.align(Alignment.CenterEnd),
         )
         DropdownMenu(
             expanded = expanded.value,
-            onDismissRequest = { expanded.value = false }
+            onDismissRequest = { expanded.value = false },
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -214,7 +214,7 @@ private fun TimeDropdown(
                     onClick = {
                         onChangeHande(selectionOption)
                         expanded.value = false
-                    }
+                    },
                 )
             }
         }

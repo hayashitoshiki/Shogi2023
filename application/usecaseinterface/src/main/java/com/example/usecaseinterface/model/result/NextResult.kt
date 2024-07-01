@@ -17,7 +17,7 @@ sealed interface NextResult {
      * @property hintPositionList 駒の置ける場所リスト
      */
     data class Hint(
-        val hintPositionList: List<Position>
+        val hintPositionList: List<Position>,
     ) : NextResult {
         companion object
     }

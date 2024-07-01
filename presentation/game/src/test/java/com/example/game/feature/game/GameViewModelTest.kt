@@ -8,16 +8,14 @@ import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.model.ReadyMoveInfoUiModel
+import com.example.test.core.ViewModelTest
 import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.board.`fake●5一玉○5二香○5三金`
 import com.example.testDomainObject.board.fake詰まない
 import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.game.fake
-import com.example.test_core.ViewModelTest
-import com.example.test_usecase.model.fake
-import com.example.test_usecase.usecase.FakeGameUseCase
-import com.example.usecaseinterface.model.result.GameInitResult
-import com.example.usecaseinterface.model.result.NextResult
+import com.example.testusecase.model.fake
+import com.example.testusecase.usecase.FakeGameUseCase
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -68,7 +66,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 UseCaseAsserts(gameUseCase.callGameInitCount, 1),
             ),
             state = initUiState,
-            effects = listOf()
+            effects = listOf(),
         )
     }
 
@@ -94,7 +92,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             turn = Turn.Normal.Black,
         )
         val caseUseStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
-            hintPositionList = listOf(Position(3, 3))
+            hintPositionList = listOf(Position(3, 3)),
         )
         val uiStateResult = initUiState.copy(
             blackStand = caseGameInitLogicResult.blackStand,
@@ -104,7 +102,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                     piece = caseTapPiece,
                 ),
                 hintList = caseUseStandPieceLogicResult.hintPositionList,
-            )
+            ),
         )
 
         viewModelAction(
@@ -121,7 +119,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 UseCaseAsserts(gameUseCase.callUseStandPieceCount, 1),
             ),
             state = uiStateResult,
-            effects = listOf()
+            effects = listOf(),
         )
     }
 
@@ -160,7 +158,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             turn = Turn.Normal.Black,
         )
         val caseUseBoardPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
-            hintPositionList = listOf(Position(3, 3))
+            hintPositionList = listOf(Position(3, 3)),
         )
         val uiStateResult1 = initUiState.copy(
             board = caseGameInitLogicResult.board,
@@ -169,7 +167,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                     position = case1TapPosition,
                 ),
                 hintList = caseUseBoardPieceLogicResult.hintPositionList,
-            )
+            ),
         )
 
         viewModelAction(
@@ -223,7 +221,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 UseCaseAsserts(gameUseCase.callMovePieceCount, 1),
             ),
             state = uiStateResult2,
-            effects = listOf()
+            effects = listOf(),
         )
 
         // case3
@@ -255,7 +253,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 ),
                 turn = caseGameInitLogicResult.turn,
             ),
-            effects = listOf()
+            effects = listOf(),
         )
 
         // case4
@@ -263,7 +261,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         // data
         val case4TapStandPiece = Piece.Surface.Gin
         val case4UseStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
-            hintPositionList = listOf(Position(6, 7))
+            hintPositionList = listOf(Position(6, 7)),
         )
         val case4TapPosition = case4UseStandPieceLogicResult.hintPositionList.first()
         val case4PutStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Move.Only.fake(
@@ -296,7 +294,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 readyMoveInfo = null,
                 turn = case4PutStandPieceLogicResult.nextTurn,
             ),
-            effects = listOf()
+            effects = listOf(),
         )
 
         // case5
@@ -304,11 +302,11 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         // data
         val case5TapStandPiece = Piece.Surface.Gin
         val case5UseStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
-            hintPositionList = listOf(Position(6, 7))
+            hintPositionList = listOf(Position(6, 7)),
         )
         val case5TapPosition = Position(1, 1)
         val case5UseBoardPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
-            hintPositionList = listOf(Position(2, 3))
+            hintPositionList = listOf(Position(2, 3)),
         )
 
         viewModelAction(
@@ -338,7 +336,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 ),
                 turn = caseGameInitLogicResult.turn,
             ),
-            effects = listOf()
+            effects = listOf(),
         )
 
         // case6
@@ -370,7 +368,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             ),
             effects = listOf(
                 GameViewModel.Effect.GameEnd.Win(Turn.Normal.Black),
-            )
+            ),
         )
 
         // case7
@@ -402,7 +400,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             ),
             effects = listOf(
                 GameViewModel.Effect.GameEnd.Draw,
-            )
+            ),
         )
 
         // case7

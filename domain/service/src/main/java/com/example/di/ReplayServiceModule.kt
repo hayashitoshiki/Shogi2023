@@ -15,6 +15,6 @@ abstract class ReplayServiceModule {
     @Binds
     @Singleton
     abstract fun bindGameServiceModule(
-        replayServiceImpl: ReplayServiceImpl
+        replayServiceImpl: ReplayServiceImpl,
     ): ReplayService
 }

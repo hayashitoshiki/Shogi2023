@@ -13,6 +13,6 @@ abstract class GameRepositoryModule {
 
     @Binds
     abstract fun bindLogRepositoryModule(
-        gameRepository: GameRepositoryImpl
+        gameRepository: GameRepositoryImpl,
     ): GameRepository
 }

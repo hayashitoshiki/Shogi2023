@@ -16,7 +16,6 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,13 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.core.navigation.NavigationScreens
-import com.example.core.theme.Shogi2023Theme
 import com.example.home.compoment.card.CustomShogiSettingCard
 import com.example.home.compoment.card.FirstCheckShogiSettingCard
 import com.example.home.compoment.card.NormalShogiSettingCard
 import com.example.home.compoment.card.TimeLimitSettingCard
 import com.example.home.model.GameRuleSettingUiModel
+import com.example.test.navigation.NavigationScreens
+import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun HomeScreen(
@@ -45,7 +44,7 @@ fun HomeScreen(
     val navigateGameScreen = remember { mutableStateOf<HomeViewModel.Effect.GameStart?>(null) }
     LaunchedEffect(true) {
         viewModel.effect.collect {
-            when(it) {
+            when (it) {
                 is HomeViewModel.Effect.GameStart -> navigateGameScreen.value = it
             }
         }
@@ -110,7 +109,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.size(16.dp))
             ElevatedButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = viewModel::onGameStartClick
+                onClick = viewModel::onGameStartClick,
             ) {
                 Text(text = stringResource(R.string.home_game_start_button))
             }

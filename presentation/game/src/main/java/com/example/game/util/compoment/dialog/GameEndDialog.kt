@@ -15,7 +15,7 @@ fun GameEndDialog(
     openDialog: MutableState<GameViewModel.Effect.GameEnd?>,
     onClickNavigationHome: () -> Unit,
     onClickNavigationReplay: () -> Unit,
-    ) {
+) {
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = {
@@ -25,7 +25,7 @@ fun GameEndDialog(
                 onClick = {
                     openDialog.value = null
                     onClickNavigationHome()
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_game_end_confirm))
             }
@@ -35,7 +35,7 @@ fun GameEndDialog(
                 onClick = {
                     openDialog.value = null
                     onClickNavigationReplay()
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_game_end_dismiss))
             }
@@ -44,7 +44,7 @@ fun GameEndDialog(
             Text(context.getString(R.string.dialog_game_end_title))
         },
         text = {
-            val text = when(val gameEnd = openDialog.value) {
+            val text = when (val gameEnd = openDialog.value) {
                 GameViewModel.Effect.GameEnd.Draw -> {
                     context.getString(R.string.dialog_game_end_body_draw)
                 }
@@ -55,7 +55,6 @@ fun GameEndDialog(
                 null -> ""
             }
             Text(text)
-
         },
     )
 }

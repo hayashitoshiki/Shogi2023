@@ -17,21 +17,20 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.core.theme.Shogi2023Theme
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Cell
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Position
 import com.example.game.R
+import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun BoardBox(
     modifier: Modifier = Modifier,
     board: Board,
     onClick: (Position) -> Unit,
-    hintList: List<Position>
+    hintList: List<Position>,
 ) {
-
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
     val widthPadding = 4
     val boardSizeWidth = board.size.row

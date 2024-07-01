@@ -124,7 +124,6 @@ sealed interface Piece {
 
             override val moves: Set<Move> = Ou.moves
         }
-
     }
 
     /**

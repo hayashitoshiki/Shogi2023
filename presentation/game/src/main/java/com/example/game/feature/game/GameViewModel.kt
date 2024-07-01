@@ -1,8 +1,6 @@
 package com.example.game.feature.game
 
 import androidx.lifecycle.viewModelScope
-import com.example.core.uilogic.BaseContract
-import com.example.core.uilogic.BaseViewModel
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
@@ -13,9 +11,8 @@ import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
-import com.example.usecaseinterface.usecase.GameUseCase
-import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecaseinterface.model.result.NextResult
+import com.example.test.uilogic.BaseContract
+import com.example.test.uilogic.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -26,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val useCase: com.example.usecaseinterface.usecase.GameUseCase,
-) : BaseViewModel <GameViewModel.UiState, GameViewModel.Effect>() {
+) : BaseViewModel<GameViewModel.UiState, GameViewModel.Effect>() {
 
     init {
         initBard()
@@ -39,7 +36,7 @@ class GameViewModel @Inject constructor(
                 )
             }
 
-            when(state.value.turn) {
+            when (state.value.turn) {
                 Turn.Normal.Black -> {
                     if (it.blackTimeLimit.remainingTime() == Second(0)) {
                         setWin(Turn.Normal.White)
@@ -55,7 +52,7 @@ class GameViewModel @Inject constructor(
     }
 
     override fun initState(): UiState {
-        return  UiState(
+        return UiState(
             board = Board(),
             blackStand = Stand(),
             whiteStand = Stand(),
@@ -160,7 +157,7 @@ class GameViewModel @Inject constructor(
                         readyMoveInfo = ReadyMoveInfoUiModel(
                             hold = touchAction,
                             hintList = result.hintPositionList,
-                        )
+                        ),
                     )
                 }
             }
@@ -265,9 +262,9 @@ class GameViewModel @Inject constructor(
         val whiteTimeLimit: TimeLimit,
         val turn: Turn,
         val readyMoveInfo: ReadyMoveInfoUiModel?,
-    ): BaseContract.State
+    ) : BaseContract.State
 
-    sealed interface Effect: BaseContract.Effect {
+    sealed interface Effect : BaseContract.Effect {
 
         /**
          * ゲーム終了

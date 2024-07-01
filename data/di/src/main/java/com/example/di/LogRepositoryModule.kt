@@ -15,6 +15,6 @@ abstract class LogRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindLogRepositoryModule(
-        logRepository: LogRepositoryImpl
+        logRepository: LogRepositoryImpl,
     ): LogRepository
 }

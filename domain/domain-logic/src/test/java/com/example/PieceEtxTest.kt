@@ -137,7 +137,7 @@ class PieceEtxTest {
                 casePosition = Position(5, 2),
                 caseTurn = Turn.Normal.White,
                 result = false,
-            )
+            ),
         )
 
         params.forEach {
@@ -147,7 +147,6 @@ class PieceEtxTest {
             Assert.assertEquals(expected, it.result)
         }
     }
-
 
     @Test
     fun `駒を打つことができるか`() {
@@ -305,7 +304,7 @@ class PieceEtxTest {
             val board = Board().apply {
                 this.update(
                     Position(6, 6),
-                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, it.caseTurn)
+                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, it.caseTurn),
                 )
             }
             it.casePiece

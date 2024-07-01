@@ -64,7 +64,7 @@ sealed interface GameRuleSettingUiModel {
                 playersRule = PlayersRule(
                     blackRule = PlayerRule(),
                     whiteRule = PlayerRule(),
-                )
+                ),
             )
         }
     }

@@ -80,7 +80,7 @@ interface GameService {
         board: Board,
         stand: Stand,
         turn: Turn,
-        rule: GameRule
+        rule: GameRule,
     ): Boolean
 
     /**

@@ -1,16 +1,16 @@
 package com.example.usecase
 
+import com.example.domainLogic.board.searchMoveBy
+import com.example.domainLogic.board.setUp
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
-import com.example.domainLogic.board.searchMoveBy
-import com.example.domainLogic.board.setUp
-import com.example.domainObject.game.game.TimeLimit
 import com.example.service.GameServiceImpl
 import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.board.`fake●1一王○3三角`
@@ -22,14 +22,9 @@ import com.example.testDomainObject.board.fake成ったら王手_詰まない
 import com.example.testDomainObject.board.fake詰まない
 import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.rule.fake
-import com.example.test_repository.FakeGameRepository
-import com.example.test_repository.FakeGameRuleRepository
-import com.example.test_repository.FakeLogRepository
-import com.example.usecaseinterface.usecase.GameUseCase
-import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
-import com.example.usecaseinterface.model.result.GameInitResult
-import com.example.usecaseinterface.model.result.NextResult
-import com.example.usecaseinterface.model.result.SetEvolutionResult
+import com.example.testrepository.FakeGameRepository
+import com.example.testrepository.FakeGameRuleRepository
+import com.example.testrepository.FakeLogRepository
 import kotlinx.coroutines.test.TestScope
 import org.junit.Assert
 import org.junit.Before
@@ -160,7 +155,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = true,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成り_王手_王手将棋
             Param(
@@ -180,7 +175,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = true,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成り_王手_本将棋
             Param(
@@ -200,7 +195,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = false,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成り_千日手
             Param(
@@ -220,7 +215,7 @@ class GameUseCaseTest {
                     isDraw = true,
                     isWin = false,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成り_のみ
             Param(
@@ -240,7 +235,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = false,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成り_詰み
             Param(
@@ -260,7 +255,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = true,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成らない_王手_王手将棋
             Param(
@@ -280,7 +275,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = true,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成らない_王手_本将棋
             Param(
@@ -300,7 +295,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = false,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成らない_千日手
             Param(
@@ -320,7 +315,7 @@ class GameUseCaseTest {
                     isDraw = true,
                     isWin = false,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
             // 成らない_のみ
             Param(
@@ -340,7 +335,7 @@ class GameUseCaseTest {
                     isDraw = false,
                     isWin = false,
                     nextTurn = Turn.Normal.White,
-                )
+                ),
             ),
         )
 
@@ -399,21 +394,21 @@ class GameUseCaseTest {
             val board = Board().also {
                 it.update(
                     Position(5, 5),
-                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                 )
                 it.update(
                     Position(5, 1),
-                    CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                 )
                 it.update(
                     Position(5, 9),
-                    CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                 )
             }
             val expected = gameUseCase.useStandPiece(
                 board = board,
                 turn = turn,
-                piece = param.piece
+                piece = param.piece,
             )
 
             val hintPositionList = gameService.searchPutBy(param.piece, board, turn)
@@ -451,15 +446,15 @@ class GameUseCaseTest {
             val board = Board().also {
                 it.update(
                     Position(5, 5),
-                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                    CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                 )
                 it.update(
                     Position(5, 1),
-                    CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                    CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                 )
                 it.update(
                     Position(5, 9),
-                    CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                    CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                 )
             }
             val hintPositionList = board.searchMoveBy(param.position, turn)

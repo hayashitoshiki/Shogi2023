@@ -20,8 +20,8 @@ data class TimeLimitCardUiModel(
                 byoyomi = Second(0),
             ),
             whiteTimeLimitRule = TimeLimitRule(
-                totalTime =  Second(600000),
-                byoyomi =  Second(0),
+                totalTime = Second(600000),
+                byoyomi = Second(0),
             ),
         )
     }

@@ -12,6 +12,6 @@ abstract class HomeUseCaseModule {
 
     @Binds
     abstract fun bindAGameUseCaseModule(
-        homeUseCase: HomeUseCaseImpl
+        homeUseCase: HomeUseCaseImpl,
     ): com.example.usecaseinterface.usecase.HomeUseCase
 }

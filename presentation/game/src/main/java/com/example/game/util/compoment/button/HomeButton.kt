@@ -22,12 +22,12 @@ fun HomeButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 
     IconButton(
         modifier = modifier.size(48.dp),
-        onClick = { showDialog.value = true }
+        onClick = { showDialog.value = true },
     ) {
         Icon(
             modifier = modifier.size(32.dp),
             painter = painterResource(R.drawable.ic_home),
-            contentDescription = ""
+            contentDescription = "",
         )
     }
     if (showDialog.value) {
@@ -38,7 +38,7 @@ fun HomeButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 @Composable
 fun ConfirmReplayEndDialog(
     openDialog: MutableState<Boolean>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val context = LocalContext.current
     AlertDialog(
@@ -49,7 +49,7 @@ fun ConfirmReplayEndDialog(
                 onClick = {
                     openDialog.value = false
                     onClick()
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_yes))
             }
@@ -58,7 +58,7 @@ fun ConfirmReplayEndDialog(
             TextButton(
                 onClick = {
                     openDialog.value = false
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_no))
             }

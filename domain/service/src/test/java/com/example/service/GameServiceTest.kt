@@ -49,7 +49,7 @@ class GameServiceTest {
                 case = CellStatus.Fill.FromPiece(Piece.Reverse.To, Turn.Normal.White),
                 resultBoard = resultBoard,
                 resultStand = standAddFu,
-            )
+            ),
         )
 
         // result
@@ -63,7 +63,7 @@ class GameServiceTest {
             val expected = gameService.movePieceByPosition(board, stand, position2, position1)
             assertEquals(
                 expected.first.getAllCells().toList().toSet(),
-                it.resultBoard.getAllCells().toList().toSet()
+                it.resultBoard.getAllCells().toList().toSet(),
             )
             assertEquals(expected.second.pieces, it.resultStand.pieces)
         }
@@ -85,15 +85,15 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(5, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(5, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
                     ),
                     Pair(
                         Position(5, 7),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -105,47 +105,47 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(9, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(9, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(9, 7),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White),
                     ),
                     Pair(
                         Position(9, 6),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
                     ),
                     Pair(
                         Position(8, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(8, 7),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(8, 6),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
                     ),
                     Pair(
                         Position(7, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White),
                     ),
                     Pair(
                         Position(7, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White),
                     ),
                     Pair(
                         Position(7, 7),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.White),
                     ),
                     Pair(
                         Position(7, 6),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -157,15 +157,15 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(5, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(5, 7),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
                     ),
                     Pair(
                         Position(5, 6),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -177,19 +177,19 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(5, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(5, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
                     ),
                     Pair(
                         Position(5, 7),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.White),
                     ),
                     Pair(
                         Position(4, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.Black),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -201,19 +201,19 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(1, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(1, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White),
                     ),
                 ),
                 caseUseStandPiece = false,
@@ -225,19 +225,19 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(1, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(1, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -249,27 +249,27 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(1, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(1, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 8),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 7),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
                     ),
                     Pair(
                         Position(9, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.White),
                     ),
                 ),
                 caseUseStandPiece = false,
@@ -282,15 +282,15 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(5, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(5, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(5, 3),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -302,47 +302,47 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(1, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(1, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
                     ),
                     Pair(
                         Position(1, 3),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(1, 4),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 3),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Gyoku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(2, 4),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(3, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(3, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(3, 3),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(3, 4),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.Black),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -354,15 +354,15 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(5, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(5, 3),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(5, 4),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -374,19 +374,19 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(5, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(5, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(5, 3),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kin, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(4, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Hisya, Turn.Normal.White),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -398,19 +398,19 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(1, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
                     ),
                     Pair(
                         Position(1, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black),
                     ),
                 ),
                 caseUseStandPiece = false,
@@ -422,19 +422,19 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(1, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.White),
                     ),
                     Pair(
                         Position(1, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kyosya, Turn.Normal.Black),
                     ),
                 ),
                 caseUseStandPiece = true,
@@ -446,27 +446,27 @@ class GameServiceTest {
                 caseCellPattern = listOf(
                     Pair(
                         Position(1, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Ou, Turn.Normal.White),
                     ),
                     Pair(
                         Position(1, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 1),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 2),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Fu, Turn.Normal.White),
                     ),
                     Pair(
                         Position(2, 3),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Keima, Turn.Normal.Black),
                     ),
                     Pair(
                         Position(9, 9),
-                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.Black)
+                        CellStatus.Fill.FromPiece(Piece.Surface.Kaku, Turn.Normal.Black),
                     ),
                 ),
                 caseUseStandPiece = false,

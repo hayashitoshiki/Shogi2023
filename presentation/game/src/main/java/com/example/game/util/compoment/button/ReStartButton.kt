@@ -22,12 +22,12 @@ fun ReStartButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 
     IconButton(
         modifier = modifier.size(48.dp),
-        onClick = { showDialog.value = true }
+        onClick = { showDialog.value = true },
     ) {
         Icon(
             modifier = modifier.size(32.dp),
             painter = painterResource(R.drawable.ic_restart),
-            contentDescription = ""
+            contentDescription = "",
         )
     }
     if (showDialog.value) {
@@ -38,7 +38,7 @@ fun ReStartButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 @Composable
 fun ConfirmReStartDialog(
     openDialog: MutableState<Boolean>,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val context = LocalContext.current
     AlertDialog(
@@ -49,7 +49,7 @@ fun ConfirmReStartDialog(
                 onClick = {
                     openDialog.value = false
                     onClick()
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_yes))
             }
@@ -58,7 +58,7 @@ fun ConfirmReStartDialog(
             TextButton(
                 onClick = {
                     openDialog.value = false
-                }
+                },
             ) {
                 Text(context.getString(R.string.dialog_text_no))
             }

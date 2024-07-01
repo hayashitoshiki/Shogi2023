@@ -12,6 +12,6 @@ abstract class GameUseCaseModule {
 
     @Binds
     abstract fun bindAGameUseCaseModule(
-        gameUseCase: GameUseCaseImpl
+        gameUseCase: GameUseCaseImpl,
     ): com.example.usecaseinterface.usecase.GameUseCase
 }

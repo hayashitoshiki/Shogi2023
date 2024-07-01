@@ -12,6 +12,6 @@ abstract class ReplayUseCaseModule {
 
     @Binds
     abstract fun bindAGameUseCaseModule(
-        replayUseCase: ReplayUseCaseImpl
+        replayUseCase: ReplayUseCaseImpl,
     ): com.example.usecaseinterface.usecase.ReplayUseCase
 }

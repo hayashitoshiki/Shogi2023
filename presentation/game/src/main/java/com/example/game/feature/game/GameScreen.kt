@@ -12,12 +12,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import com.example.core.navigation.NavigationScreens
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.compoment.GameBox
 import com.example.game.util.compoment.button.LoseButton
 import com.example.game.util.compoment.dialog.EvolutionDialog
 import com.example.game.util.compoment.dialog.GameEndDialog
+import com.example.test.navigation.NavigationScreens
 
 @Composable
 fun GameScreen(
@@ -30,11 +30,11 @@ fun GameScreen(
     val showGameEndDialog = remember { mutableStateOf<GameViewModel.Effect.GameEnd?>(null) }
     LaunchedEffect(true) {
         viewModel.effect.collect { effect ->
-            when(effect) {
+            when (effect) {
                 is GameViewModel.Effect.Evolution -> {
                     showEvolutionDialog.value = effect
                 }
-                is GameViewModel.Effect.GameEnd-> {
+                is GameViewModel.Effect.GameEnd -> {
                     showGameEndDialog.value = effect
                 }
             }
@@ -58,7 +58,6 @@ fun GameScreen(
                     launchSingleTop = true
                     restoreState = true
                 }
-
             },
         )
     }

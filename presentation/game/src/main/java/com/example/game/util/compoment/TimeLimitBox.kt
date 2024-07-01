@@ -16,10 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.core.theme.Shogi2023Theme
 import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.rule.TimeLimitRule
+import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun TimeLimitBox(modifier: Modifier = Modifier, timeLimit: TimeLimit) {
@@ -30,16 +30,17 @@ fun TimeLimitBox(modifier: Modifier = Modifier, timeLimit: TimeLimit) {
 
 @Composable
 private fun SecondBox(modifier: Modifier = Modifier, second: Second) {
-    Box(modifier = modifier
-        .border(
-            width = 2.dp,
-            color = Color.DarkGray,
-            shape = RoundedCornerShape(8.dp)
-        ),
+    Box(
+        modifier = modifier
+            .border(
+                width = 2.dp,
+                color = Color.DarkGray,
+                shape = RoundedCornerShape(8.dp),
+            ),
     ) {
         AutoSizeText(
             modifier = Modifier.fillMaxSize().align(Alignment.Center),
-            text = second.toText()
+            text = second.toText(),
         )
     }
 }
@@ -47,9 +48,8 @@ private fun SecondBox(modifier: Modifier = Modifier, second: Second) {
 private fun Second.toText(): String {
     val minute = (value / 1000 / 60).toString().padStart(2, '0')
     val second = (value / 1000 % 60).toString().padStart(2, '0')
-    return "${minute}:${second}"
+    return "$minute:$second"
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -57,7 +57,7 @@ fun TimeLimitBoxPreview() {
     Shogi2023Theme {
         Surface(
             modifier = Modifier.wrapContentSize(),
-            color = MaterialTheme.colorScheme.background
+            color = MaterialTheme.colorScheme.background,
         ) {
             TimeLimitBox(
                 modifier = Modifier.padding(4.dp).height(40.dp).width(160.dp),
@@ -65,7 +65,7 @@ fun TimeLimitBoxPreview() {
                     TimeLimitRule(
                         Second(605),
                         Second(60),
-                    )
+                    ),
                 ),
             )
         }

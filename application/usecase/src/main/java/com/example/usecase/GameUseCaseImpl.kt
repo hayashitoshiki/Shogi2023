@@ -1,32 +1,32 @@
 package com.example.usecase
 
+import com.example.domainLogic.board.checkPieceEvolution
+import com.example.domainLogic.board.searchMoveBy
+import com.example.domainLogic.board.setUp
+import com.example.domainLogic.board.updatePieceEvolution
+import com.example.domainLogic.rule.changeNextTurn
+import com.example.domainLogic.rule.getBeforeTurn
+import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.Log
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.EvolutionCheckState
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
-import com.example.domainObject.game.piece.Piece
-import com.example.domainObject.game.rule.Turn
-import com.example.domainLogic.rule.changeNextTurn
-import com.example.domainLogic.board.checkPieceEvolution
-import com.example.domainLogic.rule.getOpponentTurn
-import com.example.domainLogic.board.searchMoveBy
-import com.example.domainLogic.board.setUp
-import com.example.domainLogic.board.updatePieceEvolution
-import com.example.domainLogic.rule.getBeforeTurn
 import com.example.domainObject.game.game.Second
 import com.example.domainObject.game.game.TimeLimit
+import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.Turn
 import com.example.repository.GameRepository
 import com.example.repository.GameRuleRepository
 import com.example.repository.LogRepository
 import com.example.serviceinterface.GameService
-import com.example.usecaseinterface.usecase.GameUseCase
 import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
 import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
+import com.example.usecaseinterface.usecase.GameUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -78,22 +78,22 @@ class GameUseCaseImpl @Inject constructor(
             countDownTimeLimit(
                 timeLimit = localTimeLimitsUseCaseModel,
                 getLimitTime = {
-                    when(turn) {
+                    when (turn) {
                         Turn.Normal.Black -> it.blackTimeLimit.totalTime.value
                         Turn.Normal.White -> it.whiteTimeLimit.totalTime.value
                     }
                 },
-                updateTime = { timeLimits, countDownTime -> updateTotalTime(timeLimits, turn, countDownTime) }
+                updateTime = { timeLimits, countDownTime -> updateTotalTime(timeLimits, turn, countDownTime) },
             )
             countDownTimeLimit(
                 timeLimit = localTimeLimitsUseCaseModel,
                 getLimitTime = {
-                    when(turn) {
+                    when (turn) {
                         Turn.Normal.Black -> it.blackTimeLimit.byoyomi.value
                         Turn.Normal.White -> it.whiteTimeLimit.byoyomi.value
                     }
                 },
-                updateTime = { it, countDownTime -> updateByoyomi(it, turn, countDownTime) }
+                updateTime = { it, countDownTime -> updateByoyomi(it, turn, countDownTime) },
             )
         }
     }
@@ -101,7 +101,7 @@ class GameUseCaseImpl @Inject constructor(
     private suspend fun countDownTimeLimit(
         timeLimit: TimeLimitsUseCaseModel,
         getLimitTime: (TimeLimitsUseCaseModel) -> Long,
-        updateTime: (TimeLimitsUseCaseModel, Long) -> Unit
+        updateTime: (TimeLimitsUseCaseModel, Long) -> Unit,
     ) {
         val delayTime = 50L
         var countDownTime = getLimitTime(timeLimit)
@@ -119,7 +119,7 @@ class GameUseCaseImpl @Inject constructor(
 
     private fun updateIfNeedByoyomi(turn: Turn) {
         mutableTimeLimitsUseCaseModelStateFlow.value?.let {
-            when(turn) {
+            when (turn) {
                 Turn.Normal.Black -> {
                     if (it.blackTimeLimit.isByoyomi()) {
                         updateByoyomi(it, turn, it.blackTimeLimit.setting.byoyomi.value)
@@ -135,30 +135,30 @@ class GameUseCaseImpl @Inject constructor(
     }
 
     private fun updateTotalTime(timeLimits: TimeLimitsUseCaseModel, turn: Turn, countDownTime: Long) {
-        mutableTimeLimitsUseCaseModelStateFlow.value = when(turn) {
+        mutableTimeLimitsUseCaseModelStateFlow.value = when (turn) {
             Turn.Normal.Black -> timeLimits.copy(
                 blackTimeLimit = timeLimits.blackTimeLimit.copy(
-                    totalTime = Second(countDownTime)
-                )
+                    totalTime = Second(countDownTime),
+                ),
             )
             Turn.Normal.White -> timeLimits.copy(
                 whiteTimeLimit = timeLimits.whiteTimeLimit.copy(
-                    totalTime = Second(countDownTime)
-                )
+                    totalTime = Second(countDownTime),
+                ),
             )
         }
     }
     private fun updateByoyomi(timeLimits: TimeLimitsUseCaseModel, turn: Turn, countDownTotalTime: Long) {
-        mutableTimeLimitsUseCaseModelStateFlow.value = when(turn) {
+        mutableTimeLimitsUseCaseModelStateFlow.value = when (turn) {
             Turn.Normal.Black -> timeLimits.copy(
                 blackTimeLimit = timeLimits.blackTimeLimit.copy(
-                    byoyomi = Second(countDownTotalTime)
-                )
+                    byoyomi = Second(countDownTotalTime),
+                ),
             )
             Turn.Normal.White -> timeLimits.copy(
                 whiteTimeLimit = timeLimits.whiteTimeLimit.copy(
-                    byoyomi = Second(countDownTotalTime)
-                )
+                    byoyomi = Second(countDownTotalTime),
+                ),
             )
         }
     }
@@ -270,7 +270,7 @@ class GameUseCaseImpl @Inject constructor(
     private fun setHintPosition(
         board: Board,
         touchAction: MoveTarget,
-        turn: Turn
+        turn: Turn,
     ): NextResult.Hint {
         val hintPositionList = when (touchAction) {
             is MoveTarget.Board -> board.searchMoveBy(touchAction.position, turn)

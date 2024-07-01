@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.core.theme.Shogi2023Theme
 import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.PlayerRule
 import com.example.domainObject.game.rule.PlayersRule
@@ -36,6 +35,7 @@ import com.example.game.util.extension.stringRes
 import com.example.home.R
 import com.example.home.ext.stringRes
 import com.example.home.model.GameRuleSettingUiModel
+import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun CustomShogiSettingCard(
@@ -47,11 +47,11 @@ fun CustomShogiSettingCard(
     val turnList = listOf(
         Pair(
             Turn.Normal.Black,
-            custom.playersRule.blackRule
+            custom.playersRule.blackRule,
         ),
         Pair(
             Turn.Normal.White,
-            custom.playersRule.whiteRule
+            custom.playersRule.whiteRule,
         ),
     )
 
@@ -94,7 +94,7 @@ private fun PlayerSettingItem(
                     GameRuleSettingUiModel.SelectedHande(
                         hande = hande,
                         turn = turn,
-                    )
+                    ),
                 )
             },
         )
@@ -131,7 +131,7 @@ private fun HandeRuleItem(
 @Composable
 private fun RuleItem(
     title: String,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -165,15 +165,16 @@ private fun HandeDropdown(
     ) {
         Text(
             text = stringResource(id = selectedHande.stringRes),
-            modifier = Modifier.padding(start = 10.dp)
+            modifier = Modifier.padding(start = 10.dp),
         )
         Icon(
-            Icons.Filled.ArrowDropDown, "contentDescription",
-            Modifier.align(Alignment.CenterEnd)
+            Icons.Filled.ArrowDropDown,
+            "contentDescription",
+            Modifier.align(Alignment.CenterEnd),
         )
         DropdownMenu(
             expanded = expanded.value,
-            onDismissRequest = { expanded.value = false }
+            onDismissRequest = { expanded.value = false },
         ) {
             options.forEach { selectionOption ->
                 DropdownMenuItem(
@@ -183,7 +184,7 @@ private fun HandeDropdown(
                     onClick = {
                         onChangeHande(selectionOption)
                         expanded.value = false
-                    }
+                    },
                 )
             }
         }
@@ -199,7 +200,7 @@ fun CustomShogiSettingCardPreview() {
                 playersRule = PlayersRule(
                     blackRule = PlayerRule(),
                     whiteRule = PlayerRule(),
-                )
+                ),
             ),
             onChangeFirstCheck = { _, _ -> },
             onChangeHande = { },

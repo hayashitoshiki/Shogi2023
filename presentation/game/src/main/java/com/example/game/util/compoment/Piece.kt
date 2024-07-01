@@ -11,10 +11,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import com.example.core.theme.Shogi2023Theme
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.extension.getIcon
+import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun PieceImage(modifier: Modifier = Modifier, piece: Piece, turn: Turn) {
@@ -32,17 +32,16 @@ fun PieceImage(modifier: Modifier = Modifier, piece: Piece, turn: Turn) {
 @Preview(showBackground = true)
 @Composable
 fun PieceImagePreview(
-    @PreviewParameter(PieceProvider::class) param: Pair<Piece, Turn>
+    @PreviewParameter(PieceProvider::class) param: Pair<Piece, Turn>,
 ) {
     Shogi2023Theme {
         PieceImage(
             modifier = Modifier.size(50.dp),
             piece = param.first,
-            turn = param.second
+            turn = param.second,
         )
     }
 }
-
 
 class PieceProvider : PreviewParameterProvider<Pair<Piece, Turn>> {
     override val values = sequenceOf(
@@ -76,4 +75,3 @@ class PieceProvider : PreviewParameterProvider<Pair<Piece, Turn>> {
         Piece.Reverse.Ryu to Turn.Normal.White,
     )
 }
-

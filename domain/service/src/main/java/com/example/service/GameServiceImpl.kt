@@ -1,5 +1,12 @@
 package com.example.service
 
+import com.example.domainLogic.board.isAvailableKingBy
+import com.example.domainLogic.board.isCheckByTurn
+import com.example.domainLogic.board.movePieceByPosition
+import com.example.domainLogic.board.searchMoveBy
+import com.example.domainLogic.board.searchPutBy
+import com.example.domainLogic.piece.degeneracy
+import com.example.domainLogic.rule.changeNextTurn
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Cell
 import com.example.domainObject.game.board.CellStatus
@@ -8,13 +15,6 @@ import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
-import com.example.domainLogic.rule.changeNextTurn
-import com.example.domainLogic.piece.degeneracy
-import com.example.domainLogic.board.isAvailableKingBy
-import com.example.domainLogic.board.isCheckByTurn
-import com.example.domainLogic.board.movePieceByPosition
-import com.example.domainLogic.board.searchMoveBy
-import com.example.domainLogic.board.searchPutBy
 import com.example.serviceinterface.GameService
 import javax.inject.Inject
 
@@ -100,10 +100,10 @@ class GameServiceImpl @Inject constructor() : GameService {
         rule: GameRule,
     ): Boolean {
         val nextTurn = turn.changeNextTurn()
-        return !board.isAvailableKingBy(nextTurn)
-                || isCheckmate(board, stand, nextTurn)
-                || checkGameSetForFirstCheck(board, turn, rule)
-                || checkTryGameSet(board, turn, rule)
+        return !board.isAvailableKingBy(nextTurn) ||
+            isCheckmate(board, stand, nextTurn) ||
+            checkGameSetForFirstCheck(board, turn, rule) ||
+            checkTryGameSet(board, turn, rule)
     }
 
     override fun checkDraw(boardLog: Map<Map<Position, Cell>, Int>, board: Board): Boolean {

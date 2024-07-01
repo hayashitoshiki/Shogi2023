@@ -15,6 +15,6 @@ abstract class GameRuleRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindLogRepositoryModule(
-        gameRuleRepository: GameRuleRepositoryImpl
+        gameRuleRepository: GameRuleRepositoryImpl,
     ): GameRuleRepository
 }
