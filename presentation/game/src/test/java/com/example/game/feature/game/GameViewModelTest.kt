@@ -16,6 +16,8 @@ import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.game.fake
 import com.example.testusecase.model.fake
 import com.example.testusecase.usecase.FakeGameUseCase
+import com.example.usecaseinterface.model.result.GameInitResult
+import com.example.usecaseinterface.model.result.NextResult
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -83,7 +85,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
     fun `持ち駒をタップ`() = runTest {
         // data
         val caseTapPiece = Piece.Surface.Gin
-        val caseGameInitLogicResult = com.example.usecaseinterface.model.result.GameInitResult(
+        val caseGameInitLogicResult = GameInitResult(
             board = Board(),
             blackStand = Stand.fake(isFillPiece = true),
             whiteStand = Stand.fake(isFillPiece = true),
@@ -91,7 +93,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             whiteTimeLimit = TimeLimit.fake(),
             turn = Turn.Normal.Black,
         )
-        val caseUseStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
+        val caseUseStandPieceLogicResult = NextResult.Hint.fake(
             hintPositionList = listOf(Position(3, 3)),
         )
         val uiStateResult = initUiState.copy(
@@ -149,7 +151,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
     @Test
     fun `盤面の駒をタップ`() = runTest {
         val case1TapPosition = Position(5, 3)
-        val caseGameInitLogicResult = com.example.usecaseinterface.model.result.GameInitResult(
+        val caseGameInitLogicResult = GameInitResult(
             board = Board.fake詰まない(),
             blackStand = Stand.fake(),
             whiteStand = Stand.fake(),
@@ -157,7 +159,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             whiteTimeLimit = TimeLimit.fake(),
             turn = Turn.Normal.Black,
         )
-        val caseUseBoardPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
+        val caseUseBoardPieceLogicResult = NextResult.Hint.fake(
             hintPositionList = listOf(Position(3, 3)),
         )
         val uiStateResult1 = initUiState.copy(
@@ -190,7 +192,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         // case2
         gameUseCase = FakeGameUseCase()
         val case2TapPosition = caseUseBoardPieceLogicResult.hintPositionList.first()
-        val caseMovePieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Move.Only.fake(
+        val caseMovePieceLogicResult = NextResult.Move.Only.fake(
             board = Board.fake駒を取れる状態(),
             stand = Stand.fake(
                 fuCount = 3,
@@ -260,11 +262,11 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         gameUseCase = FakeGameUseCase()
         // data
         val case4TapStandPiece = Piece.Surface.Gin
-        val case4UseStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
+        val case4UseStandPieceLogicResult = NextResult.Hint.fake(
             hintPositionList = listOf(Position(6, 7)),
         )
         val case4TapPosition = case4UseStandPieceLogicResult.hintPositionList.first()
-        val case4PutStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Move.Only.fake(
+        val case4PutStandPieceLogicResult = NextResult.Move.Only.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
             stand = Stand.fake(
                 fuCount = 5,
@@ -301,11 +303,11 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         gameUseCase = FakeGameUseCase()
         // data
         val case5TapStandPiece = Piece.Surface.Gin
-        val case5UseStandPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
+        val case5UseStandPieceLogicResult = NextResult.Hint.fake(
             hintPositionList = listOf(Position(6, 7)),
         )
         val case5TapPosition = Position(1, 1)
-        val case5UseBoardPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Hint.fake(
+        val case5UseBoardPieceLogicResult = NextResult.Hint.fake(
             hintPositionList = listOf(Position(2, 3)),
         )
 
@@ -341,7 +343,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
 
         // case6
         val case6TapPosition = Position(5, 3)
-        val case6UseBoardPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Move.Win.fake(
+        val case6UseBoardPieceLogicResult = NextResult.Move.Win.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
             stand = Stand.fake(
                 fuCount = 5,
@@ -373,7 +375,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
 
         // case7
         val case7TapPosition = Position(5, 3)
-        val case7UseBoardPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Move.Drown.fake(
+        val case7UseBoardPieceLogicResult = NextResult.Move.Drown.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
             stand = Stand.fake(
                 fuCount = 5,
@@ -405,7 +407,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
 
         // case7
         val case8TapPosition = Position(5, 3)
-        val case8UseBoardPieceLogicResult = com.example.usecaseinterface.model.result.NextResult.Move.ChooseEvolution.fake(
+        val case8UseBoardPieceLogicResult = NextResult.Move.ChooseEvolution.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
             stand = Stand.fake(
                 fuCount = 5,

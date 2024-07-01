@@ -1,6 +1,6 @@
 package com.example.home
 
-import com.example.domainObject.game.game.Second
+import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Hande
@@ -158,51 +158,51 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
 
     @Test
     fun 持ち時間切れ負け設定変更_先手秒読み() {
-        val second = Second.fake(600)
+        val seconds = Seconds.fake(600)
         val turn = Turn.Normal.Black
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                blackTimeLimitRule = initUiState.timeLimitCard.blackTimeLimitRule.copy(
-                    byoyomi = second,
+                blackPlayerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule.copy(
+                    byoyomi = seconds,
                 ),
             ),
         )
 
         onChangeTimeLimitSecondTest(
             turn = turn,
-            second = second,
+            seconds = seconds,
             resultUiState = resultUiState,
         )
     }
 
     @Test
     fun 持ち時間切れ負け設定変更_後手秒読み() {
-        val second = Second.fake(500)
+        val seconds = Seconds.fake(500)
         val turn = Turn.Normal.White
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                whiteTimeLimitRule = initUiState.timeLimitCard.whiteTimeLimitRule.copy(
-                    byoyomi = second,
+                whitePlayerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule.copy(
+                    byoyomi = seconds,
                 ),
             ),
         )
 
         onChangeTimeLimitSecondTest(
             turn = turn,
-            second = second,
+            seconds = seconds,
             resultUiState = resultUiState,
         )
     }
 
     private fun onChangeTimeLimitSecondTest(
         turn: Turn,
-        second: Second,
+        seconds: Seconds,
         resultUiState: HomeViewModel.UiState,
     ) {
         viewModelAction(
             useCaseSet = {},
             action = {
-                onChangeTimeLimitSecond(turn, second)
+                onChangeTimeLimitSecond(turn, seconds)
             },
         )
         result(
@@ -214,51 +214,51 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
 
     @Test
     fun 持ち時間切れ負け設定変更_先手切れ負け() {
-        val second = Second.fake(23500)
+        val seconds = Seconds.fake(23500)
         val turn = Turn.Normal.Black
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                blackTimeLimitRule = initUiState.timeLimitCard.blackTimeLimitRule.copy(
-                    totalTime = second,
+                blackPlayerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule.copy(
+                    totalTime = seconds,
                 ),
             ),
         )
 
         onChangeTimeLimitTotalTimeTest(
             turn = turn,
-            second = second,
+            seconds = seconds,
             resultUiState = resultUiState,
         )
     }
 
     @Test
     fun 持ち時間切れ負け設定変更_後手切れ負け() {
-        val second = Second.fake(23400)
+        val seconds = Seconds.fake(23400)
         val turn = Turn.Normal.White
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                whiteTimeLimitRule = initUiState.timeLimitCard.whiteTimeLimitRule.copy(
-                    totalTime = second,
+                whitePlayerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule.copy(
+                    totalTime = seconds,
                 ),
             ),
         )
 
         onChangeTimeLimitTotalTimeTest(
             turn = turn,
-            second = second,
+            seconds = seconds,
             resultUiState = resultUiState,
         )
     }
 
     private fun onChangeTimeLimitTotalTimeTest(
         turn: Turn,
-        second: Second,
+        seconds: Seconds,
         resultUiState: HomeViewModel.UiState,
     ) {
         viewModelAction(
             useCaseSet = {},
             action = {
-                onChangeTimeLimitTotalTime(turn, second)
+                onChangeTimeLimitTotalTime(turn, seconds)
             },
         )
         result(
@@ -426,12 +426,12 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
             playersRule = PlayersRule(
                 blackRule = PlayerRule(
                     hande = blackHande,
-                    timeLimitRule = initUiState.timeLimitCard.blackTimeLimitRule,
+                    playerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule,
                     isFirstCheckEnd = false,
                 ),
                 whiteRule = PlayerRule(
                     hande = whiteHande,
-                    timeLimitRule = initUiState.timeLimitCard.whiteTimeLimitRule,
+                    playerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule,
                     isFirstCheckEnd = false,
                 ),
             ),
@@ -470,12 +470,12 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
             playersRule = PlayersRule(
                 blackRule = PlayerRule(
                     hande = blackHande,
-                    timeLimitRule = initUiState.timeLimitCard.blackTimeLimitRule,
+                    playerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule,
                     isFirstCheckEnd = true,
                 ),
                 whiteRule = PlayerRule(
                     hande = whiteHande,
-                    timeLimitRule = initUiState.timeLimitCard.whiteTimeLimitRule,
+                    playerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule,
                     isFirstCheckEnd = true,
                 ),
             ),
@@ -502,12 +502,12 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
             playersRule = PlayersRule(
                 blackRule = PlayerRule(
                     hande = timeLimitCard.playersRule.blackRule.hande,
-                    timeLimitRule = initUiState.timeLimitCard.blackTimeLimitRule,
+                    playerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule,
                     isFirstCheckEnd = timeLimitCard.playersRule.blackRule.isFirstCheckEnd,
                 ),
                 whiteRule = PlayerRule(
                     hande = timeLimitCard.playersRule.whiteRule.hande,
-                    timeLimitRule = initUiState.timeLimitCard.whiteTimeLimitRule,
+                    playerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule,
                     isFirstCheckEnd = timeLimitCard.playersRule.whiteRule.isFirstCheckEnd,
                 ),
             ),

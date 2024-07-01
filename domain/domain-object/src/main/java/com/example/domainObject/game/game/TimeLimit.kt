@@ -1,6 +1,6 @@
 package com.example.domainObject.game.game
 
-import com.example.domainObject.game.rule.TimeLimitRule
+import com.example.domainObject.game.rule.PlayerTimeLimitRule
 
 /**
  * 対局中の持ち時間
@@ -10,14 +10,14 @@ import com.example.domainObject.game.rule.TimeLimitRule
  * @property byoyomi 秒読み
  */
 data class TimeLimit(
-    val setting: TimeLimitRule,
-    val totalTime: Second,
-    val byoyomi: Second,
+    val setting: PlayerTimeLimitRule,
+    val totalTime: Seconds,
+    val byoyomi: Seconds,
 ) {
-    constructor(timeLimitRule: TimeLimitRule) : this(
-        setting = timeLimitRule,
-        totalTime = timeLimitRule.totalTime,
-        byoyomi = timeLimitRule.byoyomi,
+    constructor(playerTimeLimitRule: PlayerTimeLimitRule) : this(
+        setting = playerTimeLimitRule,
+        totalTime = playerTimeLimitRule.totalTime,
+        byoyomi = playerTimeLimitRule.byoyomi,
     )
 
     /**
@@ -25,8 +25,8 @@ data class TimeLimit(
      *
      * @return 残り時間
      */
-    fun remainingTime(): Second {
-        return if (totalTime != Second(0)) {
+    fun remainingTime(): Seconds {
+        return if (totalTime != Seconds.ZERO) {
             totalTime
         } else {
             byoyomi
@@ -38,13 +38,13 @@ data class TimeLimit(
      *
      * @return 秒読みの場合true
      */
-    fun isByoyomi(): Boolean = totalTime.value == 0L && byoyomi.value != 0L
+    fun isByoyomi(): Boolean = totalTime == Seconds.ZERO && byoyomi != Seconds.ZERO
 
     companion object {
         val INIT = TimeLimit(
-            setting = TimeLimitRule.INIT,
-            totalTime = Second(600000),
-            byoyomi = Second(0),
+            setting = PlayerTimeLimitRule.INIT,
+            totalTime = Seconds.setMinutes(10),
+            byoyomi = Seconds.ZERO,
         )
     }
 }

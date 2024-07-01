@@ -16,20 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.domainObject.game.game.Second
+import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.game.TimeLimit
-import com.example.domainObject.game.rule.TimeLimitRule
+import com.example.domainObject.game.rule.PlayerTimeLimitRule
 import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun TimeLimitBox(modifier: Modifier = Modifier, timeLimit: TimeLimit) {
     Box(modifier = modifier) {
-        SecondBox(second = timeLimit.remainingTime())
+        SecondBox(seconds = timeLimit.remainingTime())
     }
 }
 
 @Composable
-private fun SecondBox(modifier: Modifier = Modifier, second: Second) {
+private fun SecondBox(modifier: Modifier = Modifier, seconds: Seconds) {
     Box(
         modifier = modifier
             .border(
@@ -40,14 +40,14 @@ private fun SecondBox(modifier: Modifier = Modifier, second: Second) {
     ) {
         AutoSizeText(
             modifier = Modifier.fillMaxSize().align(Alignment.Center),
-            text = second.toText(),
+            text = seconds.toText(),
         )
     }
 }
 
-private fun Second.toText(): String {
-    val minute = (value / 1000 / 60).toString().padStart(2, '0')
-    val second = (value / 1000 % 60).toString().padStart(2, '0')
+private fun Seconds.toText(): String {
+    val minute = minutes.toString().padStart(2, '0')
+    val second = seconds.toString().padStart(2, '0')
     return "$minute:$second"
 }
 
@@ -62,9 +62,9 @@ fun TimeLimitBoxPreview() {
             TimeLimitBox(
                 modifier = Modifier.padding(4.dp).height(40.dp).width(160.dp),
                 timeLimit = TimeLimit(
-                    TimeLimitRule(
-                        Second(605),
-                        Second(60),
+                    PlayerTimeLimitRule(
+                        Seconds.setSeconds(605),
+                        Seconds.setSeconds(50),
                     ),
                 ),
             )

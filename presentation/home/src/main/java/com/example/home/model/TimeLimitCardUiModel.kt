@@ -1,28 +1,21 @@
 package com.example.home.model
 
-import com.example.domainObject.game.game.Second
-import com.example.domainObject.game.rule.TimeLimitRule
+import com.example.domainObject.game.rule.PlayerTimeLimitRule
 
 /**
  * 持ち時間設定CardのUiModel
  *
- * @property blackTimeLimitRule 先手の持ち時間設定
- * @property whiteTimeLimitRule 後手の持ち時間設定
+ * @property blackPlayerTimeLimitRule 先手の持ち時間設定
+ * @property whitePlayerTimeLimitRule 後手の持ち時間設定
  */
 data class TimeLimitCardUiModel(
-    val blackTimeLimitRule: TimeLimitRule,
-    val whiteTimeLimitRule: TimeLimitRule,
+    val blackPlayerTimeLimitRule: PlayerTimeLimitRule,
+    val whitePlayerTimeLimitRule: PlayerTimeLimitRule,
 ) {
     companion object {
         val INIT = TimeLimitCardUiModel(
-            blackTimeLimitRule = TimeLimitRule(
-                totalTime = Second(600000),
-                byoyomi = Second(0),
-            ),
-            whiteTimeLimitRule = TimeLimitRule(
-                totalTime = Second(600000),
-                byoyomi = Second(0),
-            ),
+            blackPlayerTimeLimitRule = PlayerTimeLimitRule.INIT,
+            whitePlayerTimeLimitRule = PlayerTimeLimitRule.INIT,
         )
     }
 }

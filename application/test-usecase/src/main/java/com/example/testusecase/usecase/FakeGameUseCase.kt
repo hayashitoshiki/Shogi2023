@@ -7,6 +7,8 @@ import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.testusecase.model.fake
+import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
+import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
 import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
@@ -35,8 +37,8 @@ class FakeGameUseCase : GameUseCase {
     var callSetEvolutionCount = 0
         private set
 
-    var observeUpdateTimeLimitLogic: () -> StateFlow<com.example.usecaseinterface.model.TimeLimitsUseCaseModel> = {
-        MutableStateFlow(com.example.usecaseinterface.model.TimeLimitsUseCaseModel.fake())
+    var observeUpdateTimeLimitLogic: () -> StateFlow<TimeLimitsUseCaseModel> = {
+        MutableStateFlow(TimeLimitsUseCaseModel.fake())
     }
 
     var gameStartLogic: () -> GameInitResult = { GameInitResult.fake() }
@@ -47,7 +49,7 @@ class FakeGameUseCase : GameUseCase {
     var useBoardPieceLogic: () -> NextResult = { NextResult.Move.Only.fake() }
     var useStandPieceLogic: () -> NextResult.Hint = { NextResult.Hint.fake() }
     var setEvolutionLogic: () -> SetEvolutionResult = { SetEvolutionResult.fake() }
-    override fun observeUpdateTimeLimit(): StateFlow<com.example.usecaseinterface.model.TimeLimitsUseCaseModel?> {
+    override fun observeUpdateTimeLimit(): StateFlow<TimeLimitsUseCaseModel?> {
         callObserveUpdateTimeLimitCount += 1
         return observeUpdateTimeLimitLogic()
     }
@@ -72,7 +74,7 @@ class FakeGameUseCase : GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Board,
+        holdMove: ReadyMoveInfoUseCaseModel.Board,
     ): NextResult {
         callMovePieceCount += 1
         return movePieceLogic()
@@ -83,7 +85,7 @@ class FakeGameUseCase : GameUseCase {
         stand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
-        holdMove: com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Stand,
+        holdMove: ReadyMoveInfoUseCaseModel.Stand,
     ): NextResult {
         callPutStandPieceCount += 1
         return putStandPieceLogic()

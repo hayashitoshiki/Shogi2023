@@ -5,7 +5,7 @@ import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
-import com.example.domainObject.game.game.Second
+import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
@@ -13,6 +13,7 @@ import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
 import com.example.test.uilogic.BaseContract
 import com.example.test.uilogic.BaseViewModel
+import com.example.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -38,12 +39,12 @@ class GameViewModel @Inject constructor(
 
             when (state.value.turn) {
                 Turn.Normal.Black -> {
-                    if (it.blackTimeLimit.remainingTime() == Second(0)) {
+                    if (it.blackTimeLimit.remainingTime() == Seconds.ZERO) {
                         setWin(Turn.Normal.White)
                     }
                 }
                 Turn.Normal.White -> {
-                    if (it.whiteTimeLimit.remainingTime() == Second(0)) {
+                    if (it.whiteTimeLimit.remainingTime() == Seconds.ZERO) {
                         setWin(Turn.Normal.Black)
                     }
                 }
@@ -148,10 +149,10 @@ class GameViewModel @Inject constructor(
         updateUiStateFromNextResult(result, touchAction)
     }
 
-    private fun updateUiStateFromNextResult(result: com.example.usecaseinterface.model.result.NextResult, touchAction: MoveTarget) {
+    private fun updateUiStateFromNextResult(result: NextResult, touchAction: MoveTarget) {
         val turn = state.value.turn
         when (result) {
-            is com.example.usecaseinterface.model.result.NextResult.Hint -> {
+            is NextResult.Hint -> {
                 setState {
                     copy(
                         readyMoveInfo = ReadyMoveInfoUiModel(
@@ -162,11 +163,11 @@ class GameViewModel @Inject constructor(
                 }
             }
 
-            is com.example.usecaseinterface.model.result.NextResult.Move.Only -> {
+            is NextResult.Move.Only -> {
                 setMoved(result)
             }
 
-            is com.example.usecaseinterface.model.result.NextResult.Move.ChooseEvolution -> {
+            is NextResult.Move.ChooseEvolution -> {
                 setMoved(result)
                 viewModelScope.launch {
                     if (touchAction !is MoveTarget.Board) return@launch
@@ -174,12 +175,12 @@ class GameViewModel @Inject constructor(
                 }
             }
 
-            is com.example.usecaseinterface.model.result.NextResult.Move.Win -> {
+            is NextResult.Move.Win -> {
                 setMoved(result)
                 setWin(turn)
             }
 
-            is com.example.usecaseinterface.model.result.NextResult.Move.Drown -> {
+            is NextResult.Move.Drown -> {
                 setMoved(result)
                 viewModelScope.launch {
                     setEffect { Effect.GameEnd.Draw }
@@ -212,7 +213,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun setMoved(result: com.example.usecaseinterface.model.result.NextResult.Move) {
+    private fun setMoved(result: NextResult.Move) {
         setState {
             when (state.value.turn) {
                 Turn.Normal.Black -> {

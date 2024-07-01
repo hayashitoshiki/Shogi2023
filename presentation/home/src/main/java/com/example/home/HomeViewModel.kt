@@ -1,6 +1,6 @@
 package com.example.home
 
-import com.example.domainObject.game.game.Second
+import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Hande
@@ -127,39 +127,39 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onChangeTimeLimitTotalTime(turn: Turn, second: Second) {
+    fun onChangeTimeLimitTotalTime(turn: Turn, seconds: Seconds) {
         val byoyomi = when (turn) {
             Turn.Normal.Black -> {
-                state.value.timeLimitCard.blackTimeLimitRule.byoyomi
+                state.value.timeLimitCard.blackPlayerTimeLimitRule.byoyomi
             }
             Turn.Normal.White -> {
-                state.value.timeLimitCard.whiteTimeLimitRule.byoyomi
+                state.value.timeLimitCard.whitePlayerTimeLimitRule.byoyomi
             }
         }
-        updateTimeLimitRule(turn, second, byoyomi)
+        updateTimeLimitRule(turn, seconds, byoyomi)
     }
 
-    fun onChangeTimeLimitSecond(turn: Turn, second: Second) {
+    fun onChangeTimeLimitSecond(turn: Turn, seconds: Seconds) {
         val totalTime = when (turn) {
             Turn.Normal.Black -> {
-                state.value.timeLimitCard.blackTimeLimitRule.totalTime
+                state.value.timeLimitCard.blackPlayerTimeLimitRule.totalTime
             }
             Turn.Normal.White -> {
-                state.value.timeLimitCard.whiteTimeLimitRule.totalTime
+                state.value.timeLimitCard.whitePlayerTimeLimitRule.totalTime
             }
         }
-        updateTimeLimitRule(turn, totalTime, second)
+        updateTimeLimitRule(turn, totalTime, seconds)
     }
 
-    private fun updateTimeLimitRule(turn: Turn, totalTime: Second, second: Second) {
+    private fun updateTimeLimitRule(turn: Turn, totalTime: Seconds, seconds: Seconds) {
         setState {
             when (turn) {
                 Turn.Normal.Black -> {
                     copy(
                         timeLimitCard = timeLimitCard.copy(
-                            blackTimeLimitRule = timeLimitCard.blackTimeLimitRule.copy(
+                            blackPlayerTimeLimitRule = timeLimitCard.blackPlayerTimeLimitRule.copy(
                                 totalTime = totalTime,
-                                byoyomi = second,
+                                byoyomi = seconds,
                             ),
                         ),
                     )
@@ -167,9 +167,9 @@ class HomeViewModel @Inject constructor(
                 Turn.Normal.White -> {
                     copy(
                         timeLimitCard = timeLimitCard.copy(
-                            whiteTimeLimitRule = timeLimitCard.whiteTimeLimitRule.copy(
+                            whitePlayerTimeLimitRule = timeLimitCard.whitePlayerTimeLimitRule.copy(
                                 totalTime = totalTime,
-                                byoyomi = second,
+                                byoyomi = seconds,
                             ),
                         ),
                     )
@@ -184,10 +184,10 @@ class HomeViewModel @Inject constructor(
                 is GameRuleSettingUiModel.Custom -> {
                     setting.playersRule.copy(
                         blackRule = setting.playersRule.blackRule.copy(
-                            timeLimitRule = state.value.timeLimitCard.blackTimeLimitRule,
+                            playerTimeLimitRule = state.value.timeLimitCard.blackPlayerTimeLimitRule,
                         ),
                         whiteRule = setting.playersRule.whiteRule.copy(
-                            timeLimitRule = state.value.timeLimitCard.whiteTimeLimitRule,
+                            playerTimeLimitRule = state.value.timeLimitCard.whitePlayerTimeLimitRule,
                         ),
                     )
                 }
@@ -200,12 +200,12 @@ class HomeViewModel @Inject constructor(
                     PlayersRule(
                         blackRule = PlayerRule(
                             hande = blackHande,
-                            timeLimitRule = state.value.timeLimitCard.blackTimeLimitRule,
+                            playerTimeLimitRule = state.value.timeLimitCard.blackPlayerTimeLimitRule,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                         whiteRule = PlayerRule(
                             hande = whiteHande,
-                            timeLimitRule = state.value.timeLimitCard.whiteTimeLimitRule,
+                            playerTimeLimitRule = state.value.timeLimitCard.whitePlayerTimeLimitRule,
                             isFirstCheckEnd = isFirstCheckEnd,
                         ),
                     )

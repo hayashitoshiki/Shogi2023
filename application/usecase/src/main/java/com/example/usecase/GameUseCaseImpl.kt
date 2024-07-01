@@ -13,7 +13,7 @@ import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.EvolutionCheckState
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
-import com.example.domainObject.game.game.Second
+import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
@@ -49,7 +49,7 @@ class GameUseCaseImpl @Inject constructor(
 ) : GameUseCase {
 
     private val mutableTurnStateFlow = MutableStateFlow<Turn?>(null)
-    private val mutableTimeLimitsUseCaseModelStateFlow = MutableStateFlow<com.example.usecaseinterface.model.TimeLimitsUseCaseModel?>(null)
+    private val mutableTimeLimitsUseCaseModelStateFlow = MutableStateFlow<TimeLimitsUseCaseModel?>(null)
     private var timerJob: Job? = null
 
     init {
@@ -79,8 +79,8 @@ class GameUseCaseImpl @Inject constructor(
                 timeLimit = localTimeLimitsUseCaseModel,
                 getLimitTime = {
                     when (turn) {
-                        Turn.Normal.Black -> it.blackTimeLimit.totalTime.value
-                        Turn.Normal.White -> it.whiteTimeLimit.totalTime.value
+                        Turn.Normal.Black -> it.blackTimeLimit.totalTime.millisecond
+                        Turn.Normal.White -> it.whiteTimeLimit.totalTime.millisecond
                     }
                 },
                 updateTime = { timeLimits, countDownTime -> updateTotalTime(timeLimits, turn, countDownTime) },
@@ -89,8 +89,8 @@ class GameUseCaseImpl @Inject constructor(
                 timeLimit = localTimeLimitsUseCaseModel,
                 getLimitTime = {
                     when (turn) {
-                        Turn.Normal.Black -> it.blackTimeLimit.byoyomi.value
-                        Turn.Normal.White -> it.whiteTimeLimit.byoyomi.value
+                        Turn.Normal.Black -> it.blackTimeLimit.byoyomi.millisecond
+                        Turn.Normal.White -> it.whiteTimeLimit.byoyomi.millisecond
                     }
                 },
                 updateTime = { it, countDownTime -> updateByoyomi(it, turn, countDownTime) },
@@ -122,12 +122,12 @@ class GameUseCaseImpl @Inject constructor(
             when (turn) {
                 Turn.Normal.Black -> {
                     if (it.blackTimeLimit.isByoyomi()) {
-                        updateByoyomi(it, turn, it.blackTimeLimit.setting.byoyomi.value)
+                        updateByoyomi(it, turn, it.blackTimeLimit.setting.byoyomi.millisecond)
                     }
                 }
                 Turn.Normal.White -> {
                     if (it.whiteTimeLimit.isByoyomi()) {
-                        updateByoyomi(it, turn, it.whiteTimeLimit.setting.byoyomi.value)
+                        updateByoyomi(it, turn, it.whiteTimeLimit.setting.byoyomi.millisecond)
                     }
                 }
             }
@@ -138,12 +138,12 @@ class GameUseCaseImpl @Inject constructor(
         mutableTimeLimitsUseCaseModelStateFlow.value = when (turn) {
             Turn.Normal.Black -> timeLimits.copy(
                 blackTimeLimit = timeLimits.blackTimeLimit.copy(
-                    totalTime = Second(countDownTime),
+                    totalTime = Seconds.setMillisecond(countDownTime),
                 ),
             )
             Turn.Normal.White -> timeLimits.copy(
                 whiteTimeLimit = timeLimits.whiteTimeLimit.copy(
-                    totalTime = Second(countDownTime),
+                    totalTime = Seconds.setMillisecond(countDownTime),
                 ),
             )
         }
@@ -152,12 +152,12 @@ class GameUseCaseImpl @Inject constructor(
         mutableTimeLimitsUseCaseModelStateFlow.value = when (turn) {
             Turn.Normal.Black -> timeLimits.copy(
                 blackTimeLimit = timeLimits.blackTimeLimit.copy(
-                    byoyomi = Second(countDownTotalTime),
+                    byoyomi = Seconds.setMillisecond(countDownTotalTime),
                 ),
             )
             Turn.Normal.White -> timeLimits.copy(
                 whiteTimeLimit = timeLimits.whiteTimeLimit.copy(
-                    byoyomi = Second(countDownTotalTime),
+                    byoyomi = Seconds.setMillisecond(countDownTotalTime),
                 ),
             )
         }
@@ -176,8 +176,8 @@ class GameUseCaseImpl @Inject constructor(
         val board = Board.setUp(rule)
         val blackStand = Stand.setUp(rule.playersRule.blackRule)
         val whiteStand = Stand.setUp(rule.playersRule.whiteRule)
-        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
-        val whiteTimeLimit = TimeLimit(rule.playersRule.whiteRule.timeLimitRule)
+        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.playerTimeLimitRule)
+        val whiteTimeLimit = TimeLimit(rule.playersRule.whiteRule.playerTimeLimitRule)
         val now = LocalDateTime.now()
         mutableTimeLimitsUseCaseModelStateFlow.value =
             TimeLimitsUseCaseModel(

@@ -29,8 +29,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.domainObject.game.game.Second
-import com.example.domainObject.game.rule.TimeLimitRule
+import com.example.domainObject.game.game.Seconds
+import com.example.domainObject.game.rule.PlayerTimeLimitRule
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.extension.stringRes
 import com.example.home.R
@@ -40,8 +40,8 @@ import com.example.home.model.TimeLimitCardUiModel
 fun TimeLimitSettingCard(
     modifier: Modifier = Modifier,
     uiModel: TimeLimitCardUiModel,
-    onChangeTimeLimitTotalTime: (Turn, Second) -> Unit,
-    onChangeTimeLimitSecond: (Turn, Second) -> Unit,
+    onChangeTimeLimitTotalTime: (Turn, Seconds) -> Unit,
+    onChangeTimeLimitSecond: (Turn, Seconds) -> Unit,
 ) {
     Card(modifier = modifier.shadow(8.dp, RoundedCornerShape(8.dp))) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -53,11 +53,11 @@ fun TimeLimitSettingCard(
             val turnList = listOf(
                 Pair(
                     Turn.Normal.Black,
-                    uiModel.blackTimeLimitRule,
+                    uiModel.blackPlayerTimeLimitRule,
                 ),
                 Pair(
                     Turn.Normal.White,
-                    uiModel.whiteTimeLimitRule,
+                    uiModel.whitePlayerTimeLimitRule,
                 ),
             )
             turnList.forEach {
@@ -75,9 +75,9 @@ fun TimeLimitSettingCard(
 @Composable
 fun TimeLimitSettingItem(
     turn: Turn,
-    uiModel: TimeLimitRule,
-    onChangeTimeLimitTotalTime: (Turn, Second) -> Unit,
-    onChangeTimeLimitSecond: (Turn, Second) -> Unit,
+    uiModel: PlayerTimeLimitRule,
+    onChangeTimeLimitTotalTime: (Turn, Seconds) -> Unit,
+    onChangeTimeLimitSecond: (Turn, Seconds) -> Unit,
 ) {
     Column(modifier = Modifier.padding(8.dp)) {
         Text(
@@ -90,7 +90,7 @@ fun TimeLimitSettingItem(
             onChangeHande = { onChangeTimeLimitTotalTime(turn, it) },
         )
         ByoyomiItem(
-            selectSecond = uiModel.byoyomi,
+            selectSeconds = uiModel.byoyomi,
             onChangeHande = { onChangeTimeLimitSecond(turn, it) },
         )
     }
@@ -98,23 +98,23 @@ fun TimeLimitSettingItem(
 
 @Composable
 private fun TotalTimeItem(
-    selectTotalTime: Second,
-    onChangeHande: (Second) -> Unit,
+    selectTotalTime: Seconds,
+    onChangeHande: (Seconds) -> Unit,
 ) {
     RuleItem(title = stringResource(id = R.string.time_limit_totalTime)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val minits = (selectTotalTime.value / 1000 / 60).toInt()
-            val second = (selectTotalTime.value / 1000 % 60).toInt()
+            val minits = selectTotalTime.minutes.toInt()
+            val second = selectTotalTime.seconds.toInt()
             TimeSettingItem(
                 label = stringResource(id = R.string.label_time_minutes),
                 selectTime = minits,
-                onChangeHande = { onChangeHande(Second(((it * 60 + second) * 1000L))) },
+                onChangeHande = { onChangeHande(Seconds.setSeconds((it * 60 + second).toLong())) },
             )
             Spacer(modifier = Modifier.size(4.dp))
             TimeSettingItem(
                 label = stringResource(id = R.string.label_time_second),
                 selectTime = second,
-                onChangeHande = { onChangeHande(Second((minits * 60 + it) * 1000L)) },
+                onChangeHande = { onChangeHande(Seconds.setSeconds((minits * 60 + it).toLong())) },
             )
         }
     }
@@ -122,14 +122,14 @@ private fun TotalTimeItem(
 
 @Composable
 private fun ByoyomiItem(
-    selectSecond: Second,
-    onChangeHande: (Second) -> Unit,
+    selectSeconds: Seconds,
+    onChangeHande: (Seconds) -> Unit,
 ) {
     RuleItem(title = stringResource(id = R.string.time_limit_byoyomi)) {
         TimeSettingItem(
             label = stringResource(id = R.string.label_time_second),
-            selectTime = (selectSecond.value / 1000 % 60).toInt(),
-            onChangeHande = { onChangeHande(Second(it * 1000L)) },
+            selectTime = selectSeconds.seconds.toInt(),
+            onChangeHande = { onChangeHande(Seconds.setSeconds(it.toLong())) },
         )
     }
 }

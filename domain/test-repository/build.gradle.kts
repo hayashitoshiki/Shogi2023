@@ -38,4 +38,5 @@ android {
 dependencies {
     implementation(project(":domain:domain-object"))
     implementation(project(":domain:repository"))
+    implementation(project(":domain:test-domain-object"))
 }

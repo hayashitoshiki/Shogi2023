@@ -1,9 +1,9 @@
 package com.example.testDomainObject.game
 
-import com.example.domainObject.game.game.Second
+import com.example.domainObject.game.game.Seconds
 
-fun Second.Companion.fake(
+fun Seconds.Companion.fake(
     value: Long = 0,
-): Second {
-    return Second(value)
+): Seconds {
+    return setSeconds(value)
 }

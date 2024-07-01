@@ -25,8 +25,8 @@ class ReplayUseCaseImpl @Inject constructor(
         val board = Board.setUp(rule)
         val blackStand = Stand()
         val whiteStand = Stand()
-        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
-        val whiteTimeLimit = TimeLimit(rule.playersRule.blackRule.timeLimitRule)
+        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.playerTimeLimitRule)
+        val whiteTimeLimit = TimeLimit(rule.playersRule.blackRule.playerTimeLimitRule)
         val log = logRepository.getLatestLog()
         return ReplayInitResult(
             board = board,
