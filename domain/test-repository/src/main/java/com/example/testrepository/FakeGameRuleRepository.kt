@@ -1,10 +1,8 @@
 package com.example.testrepository
 
-import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.GameRule
-import com.example.domainObject.game.rule.PlayerRule
-import com.example.domainObject.game.rule.PlayersRule
 import com.example.repository.GameRuleRepository
+import com.example.testDomainObject.rule.fake
 
 class FakeGameRuleRepository : GameRuleRepository {
 
@@ -15,13 +13,7 @@ class FakeGameRuleRepository : GameRuleRepository {
 
     var setGameRuleLogic: (rule: GameRule) -> Unit = { }
     var getGameRuleLogic: () -> GameRule = {
-        GameRule(
-            boardRule = BoardRule(),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(),
-                whiteRule = PlayerRule(),
-            ),
-        )
+        GameRule.fake()
     }
 
     override fun setGameRule(rule: GameRule) {

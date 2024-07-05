@@ -1,11 +1,12 @@
 package com.example.home
 
 import com.example.domainObject.game.game.Seconds
+import com.example.domainObject.game.rule.BoardHandeRule
 import com.example.domainObject.game.rule.BoardRule
+import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.GameRule
+import com.example.domainObject.game.rule.GameTimeLimitRule
 import com.example.domainObject.game.rule.Hande
-import com.example.domainObject.game.rule.PlayerRule
-import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
@@ -100,7 +101,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
             hande = Hande.FOR,
             turn = Turn.Normal.Black,
         )
-        val playersRule = PlayersRule.fake(
+        val boardHandeRule = BoardHandeRule.fake(
             blackHande = selectedHande1.hande,
         )
         val resultUiState1 = initUiState.copy(
@@ -109,7 +110,9 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                     is GameRuleSettingUiModel.NonCustom.FirstCheck,
                     is GameRuleSettingUiModel.NonCustom.Normal,
                     -> it
-                    is GameRuleSettingUiModel.Custom -> it.copy(playersRule = playersRule)
+                    is GameRuleSettingUiModel.Custom -> it.copy(
+                        boardHandeRule = boardHandeRule,
+                    )
                 }
             },
         )
@@ -129,8 +132,8 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
             hande = Hande.HISYA,
             turn = Turn.Normal.White,
         )
-        val playersRule2 = playersRule.copy(
-            whiteRule = playersRule.whiteRule.copy(hande = selectedHande2.hande),
+        val boardHandeRule2 = boardHandeRule.copy(
+            whiteHande = selectedHande2.hande,
         )
         val resultUiState2 = resultUiState1.copy(
             ruleItems = resultUiState1.ruleItems.toMutableList().map {
@@ -138,7 +141,9 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                     is GameRuleSettingUiModel.NonCustom.FirstCheck,
                     is GameRuleSettingUiModel.NonCustom.Normal,
                     -> it
-                    is GameRuleSettingUiModel.Custom -> it.copy(playersRule = playersRule2)
+                    is GameRuleSettingUiModel.Custom -> it.copy(
+                        boardHandeRule = boardHandeRule2,
+                    )
                 }
             },
         )
@@ -162,8 +167,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         val turn = Turn.Normal.Black
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                blackPlayerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule.copy(
-                    byoyomi = seconds,
+                timeLimitRule = initUiState.timeLimitCard.timeLimitRule.copy(
+                   blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule.copy(
+                       byoyomi = seconds,
+                   ),
                 ),
             ),
         )
@@ -181,8 +188,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         val turn = Turn.Normal.White
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                whitePlayerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule.copy(
-                    byoyomi = seconds,
+                timeLimitRule = initUiState.timeLimitCard.timeLimitRule.copy(
+                    whiteTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.whiteTimeLimitRule.copy(
+                        byoyomi = seconds,
+                    ),
                 ),
             ),
         )
@@ -218,8 +227,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         val turn = Turn.Normal.Black
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                blackPlayerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule.copy(
-                    totalTime = seconds,
+                timeLimitRule = initUiState.timeLimitCard.timeLimitRule.copy(
+                    blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule.copy(
+                        totalTime = seconds,
+                    ),
                 ),
             ),
         )
@@ -237,8 +248,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         val turn = Turn.Normal.White
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
-                whitePlayerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule.copy(
-                    totalTime = seconds,
+                timeLimitRule = initUiState.timeLimitCard.timeLimitRule.copy(
+                    whiteTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.whiteTimeLimitRule.copy(
+                        totalTime = seconds,
+                    ),
                 ),
             ),
         )
@@ -279,8 +292,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                     is GameRuleSettingUiModel.NonCustom.Normal,
                     -> it
                     is GameRuleSettingUiModel.Custom -> it.copy(
-                        playersRule = it.playersRule.copy(
-                            blackRule = it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck1),
+                        logicRule = it.logicRule.copy(
+                            firstCheckEnd = it.logicRule.firstCheckEnd.copy(
+                                blackRule = isFirstCheck1,
+                            ),
                         ),
                     )
                 }
@@ -301,8 +316,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                     is GameRuleSettingUiModel.NonCustom.Normal,
                     -> it
                     is GameRuleSettingUiModel.Custom -> it.copy(
-                        playersRule = it.playersRule.copy(
-                            blackRule = it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck2),
+                        logicRule = it.logicRule.copy(
+                            firstCheckEnd = it.logicRule.firstCheckEnd.copy(
+                                blackRule = isFirstCheck2,
+                            ),
                         ),
                     )
                 }
@@ -326,8 +343,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                     is GameRuleSettingUiModel.NonCustom.Normal,
                     -> it
                     is GameRuleSettingUiModel.Custom -> it.copy(
-                        playersRule = it.playersRule.copy(
-                            whiteRule = it.playersRule.whiteRule.copy(isFirstCheckEnd = isFirstCheck1),
+                        logicRule = it.logicRule.copy(
+                            firstCheckEnd = it.logicRule.firstCheckEnd.copy(
+                                whiteRule = isFirstCheck1,
+                            ),
                         ),
                     )
                 }
@@ -348,8 +367,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                     is GameRuleSettingUiModel.NonCustom.Normal,
                     -> it
                     is GameRuleSettingUiModel.Custom -> it.copy(
-                        playersRule = it.playersRule.copy(
-                            whiteRule = it.playersRule.whiteRule.copy(isFirstCheckEnd = isFirstCheck2),
+                        logicRule = it.logicRule.copy(
+                            firstCheckEnd = it.logicRule.firstCheckEnd.copy(
+                                whiteRule = isFirstCheck2,
+                            ),
                         ),
                     )
                 }
@@ -420,21 +441,18 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
             }
         }
         val resultGameRule = GameRule(
-            boardRule = BoardRule(
+            boardRule = BoardRule.fake(
                 setUpRule = BoardRule.SetUpRule.NORMAL,
+                boardHandeRule = BoardHandeRule.fake(
+                    blackHande = blackHande,
+                    whiteHande = whiteHande,
+                )
             ),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(
-                    hande = blackHande,
-                    playerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule,
-                    isFirstCheckEnd = false,
-                ),
-                whiteRule = PlayerRule(
-                    hande = whiteHande,
-                    playerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule,
-                    isFirstCheckEnd = false,
-                ),
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule,
+                whiteTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.whiteTimeLimitRule,
             ),
+            logicRule = GameLogicRule.fake(),
         )
 
         onGameStartClickTest(
@@ -466,17 +484,19 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         val resultGameRule = GameRule(
             boardRule = BoardRule(
                 setUpRule = BoardRule.SetUpRule.NORMAL,
+                boardHandeRule = BoardHandeRule.fake(
+                    blackHande = blackHande,
+                    whiteHande = whiteHande,
+                )
             ),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(
-                    hande = blackHande,
-                    playerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule,
-                    isFirstCheckEnd = true,
-                ),
-                whiteRule = PlayerRule(
-                    hande = whiteHande,
-                    playerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule,
-                    isFirstCheckEnd = true,
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule,
+                whiteTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.whiteTimeLimitRule,
+            ),
+            logicRule = GameLogicRule.fake(
+                firstCheckEnd = GameLogicRule.Rule.FirstCheckEndRule.fake(
+                    blackRule = true,
+                    whiteRule = true,
                 ),
             ),
         )
@@ -499,16 +519,14 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
             boardRule = BoardRule(
                 setUpRule = BoardRule.SetUpRule.NORMAL,
             ),
-            playersRule = PlayersRule(
-                blackRule = PlayerRule(
-                    hande = timeLimitCard.playersRule.blackRule.hande,
-                    playerTimeLimitRule = initUiState.timeLimitCard.blackPlayerTimeLimitRule,
-                    isFirstCheckEnd = timeLimitCard.playersRule.blackRule.isFirstCheckEnd,
-                ),
-                whiteRule = PlayerRule(
-                    hande = timeLimitCard.playersRule.whiteRule.hande,
-                    playerTimeLimitRule = initUiState.timeLimitCard.whitePlayerTimeLimitRule,
-                    isFirstCheckEnd = timeLimitCard.playersRule.whiteRule.isFirstCheckEnd,
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule,
+                whiteTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.whiteTimeLimitRule,
+            ),
+            logicRule = GameLogicRule.fake(
+                firstCheckEnd = GameLogicRule.Rule.FirstCheckEndRule.fake(
+                    blackRule = timeLimitCard.logicRule.firstCheckEnd.blackRule,
+                    whiteRule = timeLimitCard.logicRule.firstCheckEnd.whiteRule,
                 ),
             ),
         )

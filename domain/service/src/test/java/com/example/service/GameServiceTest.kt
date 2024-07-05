@@ -9,6 +9,8 @@ import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
 import com.example.testDomainObject.rule.fake
+import com.example.testDomainObject.rule.fakeFromLogicRuleFirstCheckEnd
+import com.example.testDomainObject.rule.fakeFromLogicRuleTryRule
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -573,9 +575,9 @@ class GameServiceTest {
         )
 
         val ruleNormal = GameRule.fake()
-        val ruleIsFirstCheck = GameRule.fake(
-            blackIsFirstCheckEnd = true,
-            whiteIsFirstCheckEnd = true,
+        val ruleIsFirstCheck = GameRule.fakeFromLogicRuleFirstCheckEnd(
+            blackRule = true,
+            whiteRule = true,
         )
         val params = listOf(
             // 王手将棋設定ありで王手状態
@@ -657,13 +659,13 @@ class GameServiceTest {
             val result: Boolean,
         )
 
-        val ruleIsTryBlack = GameRule.fake(
-            blackIsTryRule = true,
-            whiteIsTryRule = false,
+        val ruleIsTryBlack = GameRule.fakeFromLogicRuleTryRule(
+            blackRule = true,
+            whiteRule = false,
         )
-        val ruleIsTryWhite = GameRule.fake(
-            blackIsTryRule = false,
-            whiteIsTryRule = true,
+        val ruleIsTryWhite = GameRule.fakeFromLogicRuleTryRule(
+            blackRule = false,
+            whiteRule = true,
         )
         val blackKingPosition = Position(5, 1)
         val whiteKingPosition = Position(5, 9)

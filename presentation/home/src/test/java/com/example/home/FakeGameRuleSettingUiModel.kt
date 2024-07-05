@@ -1,7 +1,8 @@
 package com.example.home
 
+import com.example.domainObject.game.rule.BoardHandeRule
+import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.Hande
-import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.testDomainObject.rule.fake
@@ -27,9 +28,11 @@ fun GameRuleSettingUiModel.NonCustom.FirstCheck.Companion.fake(
 )
 
 fun GameRuleSettingUiModel.Custom.Companion.fake(
-    playersRule: PlayersRule = PlayersRule.fake(),
+    boardHandeRule: BoardHandeRule = BoardHandeRule.fake(),
+    logicRule: GameLogicRule = GameLogicRule.fake(),
 ) = GameRuleSettingUiModel.Custom(
-    playersRule = playersRule,
+    boardHandeRule = boardHandeRule,
+    logicRule = logicRule
 )
 
 fun GameRuleSettingUiModel.SelectedHande.Companion.fake(

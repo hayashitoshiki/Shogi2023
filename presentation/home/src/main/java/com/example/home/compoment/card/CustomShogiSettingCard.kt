@@ -27,9 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.domainObject.game.rule.BoardHandeRule
+import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.Hande
-import com.example.domainObject.game.rule.PlayerRule
-import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.extension.stringRes
 import com.example.home.R
@@ -45,13 +45,15 @@ fun CustomShogiSettingCard(
     onChangeHande: (GameRuleSettingUiModel.SelectedHande) -> Unit,
 ) {
     val turnList = listOf(
-        Pair(
+        Triple(
             Turn.Normal.Black,
-            custom.playersRule.blackRule,
+            custom.boardHandeRule.blackHande,
+            custom.logicRule.firstCheckEnd.blackRule,
         ),
-        Pair(
+        Triple(
             Turn.Normal.White,
-            custom.playersRule.whiteRule,
+            custom.boardHandeRule.whiteHande,
+            custom.logicRule.firstCheckEnd.whiteRule,
         ),
     )
 
@@ -62,7 +64,8 @@ fun CustomShogiSettingCard(
         turnList.forEach {
             PlayerSettingItem(
                 turn = it.first,
-                rule = it.second,
+                hande = it.second,
+                isFirstCheckRule = it.third,
                 onChangeFirstCheck = onChangeFirstCheck,
                 onChangeHande = onChangeHande,
             )
@@ -73,7 +76,8 @@ fun CustomShogiSettingCard(
 @Composable
 private fun PlayerSettingItem(
     turn: Turn,
-    rule: PlayerRule,
+    hande: Hande,
+    isFirstCheckRule: Boolean,
     onChangeFirstCheck: (Turn, Boolean) -> Unit,
     onChangeHande: (GameRuleSettingUiModel.SelectedHande) -> Unit,
 ) {
@@ -84,11 +88,11 @@ private fun PlayerSettingItem(
         )
         SwitchRuleItem(
             title = stringResource(id = R.string.title_rule_first_check),
-            checked = rule.isFirstCheckEnd,
-            onCheckedChange = { onChangeFirstCheck(turn, !rule.isFirstCheckEnd) },
+            checked = isFirstCheckRule,
+            onCheckedChange = { onChangeFirstCheck(turn, !isFirstCheckRule) },
         )
         HandeRuleItem(
-            selectedHande = rule.hande,
+            selectedHande = hande,
             onChangeHande = { hande ->
                 onChangeHande(
                     GameRuleSettingUiModel.SelectedHande(
@@ -197,10 +201,8 @@ fun CustomShogiSettingCardPreview() {
     Shogi2023Theme {
         CustomShogiSettingCard(
             custom = GameRuleSettingUiModel.Custom(
-                playersRule = PlayersRule(
-                    blackRule = PlayerRule(),
-                    whiteRule = PlayerRule(),
-                ),
+                boardHandeRule = BoardHandeRule.DEFAULT,
+                logicRule = GameLogicRule.DEFAULT,
             ),
             onChangeFirstCheck = { _, _ -> },
             onChangeHande = { },

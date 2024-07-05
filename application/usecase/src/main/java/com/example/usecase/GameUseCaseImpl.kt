@@ -173,11 +173,12 @@ class GameUseCaseImpl @Inject constructor(
 
     override fun gameInit(): GameInitResult {
         val rule = gameRuleRepository.getGameRule()
-        val board = Board.setUp(rule)
-        val blackStand = Stand.setUp(rule.playersRule.blackRule)
-        val whiteStand = Stand.setUp(rule.playersRule.whiteRule)
-        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.playerTimeLimitRule)
-        val whiteTimeLimit = TimeLimit(rule.playersRule.whiteRule.playerTimeLimitRule)
+        val timeLimitRule = rule.timeLimitRule
+        val board = Board.setUp(rule.boardRule)
+        val blackStand = Stand.setUp()
+        val whiteStand = Stand.setUp()
+        val blackTimeLimit = TimeLimit(timeLimitRule.blackTimeLimitRule)
+        val whiteTimeLimit = TimeLimit(timeLimitRule.whiteTimeLimitRule)
         val now = LocalDateTime.now()
         mutableTimeLimitsUseCaseModelStateFlow.value =
             TimeLimitsUseCaseModel(

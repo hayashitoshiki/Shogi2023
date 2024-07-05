@@ -53,11 +53,11 @@ fun TimeLimitSettingCard(
             val turnList = listOf(
                 Pair(
                     Turn.Normal.Black,
-                    uiModel.blackPlayerTimeLimitRule,
+                    uiModel.timeLimitRule.blackTimeLimitRule,
                 ),
                 Pair(
                     Turn.Normal.White,
-                    uiModel.whitePlayerTimeLimitRule,
+                    uiModel.timeLimitRule.whiteTimeLimitRule,
                 ),
             )
             turnList.forEach {

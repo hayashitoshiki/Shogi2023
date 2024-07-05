@@ -13,6 +13,7 @@ import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
 import com.example.serviceinterface.GameService
@@ -102,8 +103,8 @@ class GameServiceImpl @Inject constructor() : GameService {
         val nextTurn = turn.changeNextTurn()
         return !board.isAvailableKingBy(nextTurn) ||
             isCheckmate(board, stand, nextTurn) ||
-            checkGameSetForFirstCheck(board, turn, rule) ||
-            checkTryGameSet(board, turn, rule)
+            checkGameSetForFirstCheck(board, turn, rule.logicRule.firstCheckEnd) ||
+            checkTryGameSet(board, turn, rule.logicRule.tryRule)
     }
 
     override fun checkDraw(boardLog: Map<Map<Position, Cell>, Int>, board: Board): Boolean {
@@ -119,14 +120,14 @@ class GameServiceImpl @Inject constructor() : GameService {
      * @param rule ルール
      * @return 王手将棋判定結果
      */
-    private fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameRule): Boolean {
+    private fun checkGameSetForFirstCheck(board: Board, turn: Turn, rule: GameLogicRule.Rule.FirstCheckEndRule): Boolean {
         val nextTurn = turn.changeNextTurn()
         return when {
-            turn is Turn.Normal.Black && rule.playersRule.blackRule.isFirstCheckEnd -> {
+            turn is Turn.Normal.Black && rule.blackRule -> {
                 board.isCheckByTurn(nextTurn)
             }
 
-            turn is Turn.Normal.White && rule.playersRule.whiteRule.isFirstCheckEnd -> {
+            turn is Turn.Normal.White && rule.whiteRule -> {
                 board.isCheckByTurn(nextTurn)
             }
 
@@ -142,16 +143,16 @@ class GameServiceImpl @Inject constructor() : GameService {
      * @param rule ルール
      * @return トライルール判定結果
      */
-    private fun checkTryGameSet(board: Board, turn: Turn, rule: GameRule): Boolean {
+    private fun checkTryGameSet(board: Board, turn: Turn, rule: GameLogicRule.Rule.TryRule): Boolean {
         return when (turn) {
             Turn.Normal.Black -> {
-                if (!rule.playersRule.blackRule.isTryRule) return false
+                if (!rule.blackRule) return false
                 (board.getCellByPosition(Position(5, 1)).getStatus() as? CellStatus.Fill.FromPiece)
                     ?.piece == Piece.Surface.Gyoku
             }
 
             Turn.Normal.White -> {
-                if (!rule.playersRule.whiteRule.isTryRule) return false
+                if (!rule.whiteRule) return false
                 (board.getCellByPosition(Position(5, 9)).getStatus() as? CellStatus.Fill.FromPiece)
                     ?.piece == Piece.Surface.Ou
             }

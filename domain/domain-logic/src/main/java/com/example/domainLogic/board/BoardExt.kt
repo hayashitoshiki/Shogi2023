@@ -11,7 +11,6 @@ import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.piece.Move
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.BoardRule
-import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.Turn
 
@@ -21,12 +20,11 @@ import com.example.domainObject.game.rule.Turn
  * @param gameRule 設定内容
  * @return 設定内容に従った将棋盤の初期値
  */
-fun Board.Companion.setUp(gameRule: GameRule): Board {
-    val boardRule = gameRule.boardRule
+fun Board.Companion.setUp(boardRule: BoardRule): Board {
     return Board(boardRule.boardSize).apply {
         val initPiece = boardRule.setUpRule.toSetUpPiece()
-            .setHandBlack(gameRule.playersRule.blackRule.hande)
-            .setHandeWhite(gameRule.playersRule.whiteRule.hande)
+            .setHandBlack(boardRule.boardHandeRule.blackHande)
+            .setHandeWhite(boardRule.boardHandeRule.whiteHande)
         initPiece.forEach { (position, cellStatus) -> update(position, cellStatus) }
     }
 }

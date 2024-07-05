@@ -13,9 +13,9 @@ import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.EvolutionCheckState
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.piece.Piece
-import com.example.domainObject.game.rule.GameRule
+import com.example.domainObject.game.rule.BoardHandeRule
+import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.Hande
-import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 import com.example.testDomainObject.rule.fake
 import org.junit.Assert
@@ -26,7 +26,7 @@ class BoardExtTest {
     @Test
     fun `盤面初期化`() {
         data class Param(
-            val case: GameRule,
+            val case: BoardRule,
             val resultPieceList: Map<Position, Cell>,
         )
 
@@ -79,32 +79,32 @@ class BoardExtTest {
         // data
         val params = listOf(
             Pair(
-                PlayersRule.fake(blackHande = Hande.NON),
+                BoardHandeRule.fake(blackHande = Hande.NON),
                 baseSet,
             ),
             Pair(
-                PlayersRule.fake(blackHande = Hande.HISYA),
+                BoardHandeRule.fake(blackHande = Hande.HISYA),
                 baseSet.minus(SetUpPiece.Normal.blackHisya.first),
             ),
             Pair(
-                PlayersRule.fake(blackHande = Hande.KAKU),
+                BoardHandeRule.fake(blackHande = Hande.KAKU),
                 baseSet.minus(SetUpPiece.Normal.blackKaku.first),
             ),
             Pair(
-                PlayersRule.fake(blackHande = Hande.TWO),
+                BoardHandeRule.fake(blackHande = Hande.TWO),
                 baseSet
                     .minus(SetUpPiece.Normal.blackHisya.first)
                     .minus(SetUpPiece.Normal.blackKaku.first),
             ),
             Pair(
-                PlayersRule.fake(blackHande = Hande.FOR),
+                BoardHandeRule.fake(blackHande = Hande.FOR),
                 baseSet
                     .minus(SetUpPiece.Normal.blackHisya.first)
                     .minus(SetUpPiece.Normal.blackKaku.first)
                     .minus(SetUpPiece.Normal.blackKyo.entries.map { it.key }.toSet()),
             ),
             Pair(
-                PlayersRule.fake(blackHande = Hande.SIX),
+                BoardHandeRule.fake(blackHande = Hande.SIX),
                 baseSet
                     .minus(SetUpPiece.Normal.blackHisya.first)
                     .minus(SetUpPiece.Normal.blackKaku.first)
@@ -112,7 +112,7 @@ class BoardExtTest {
                     .minus(SetUpPiece.Normal.blackKei.entries.map { it.key }.toSet()),
             ),
             Pair(
-                PlayersRule.fake(blackHande = Hande.EIGHT),
+                BoardHandeRule.fake(blackHande = Hande.EIGHT),
                 baseSet
                     .minus(SetUpPiece.Normal.blackHisya.first)
                     .minus(SetUpPiece.Normal.blackKaku.first)
@@ -121,28 +121,28 @@ class BoardExtTest {
                     .minus(SetUpPiece.Normal.blackGin.entries.map { it.key }.toSet()),
             ),
             Pair(
-                PlayersRule.fake(whiteHande = Hande.HISYA),
+                BoardHandeRule.fake(whiteHande = Hande.HISYA),
                 baseSet.minus(SetUpPiece.Normal.whiteHisya.first),
             ),
             Pair(
-                PlayersRule.fake(whiteHande = Hande.KAKU),
+                BoardHandeRule.fake(whiteHande = Hande.KAKU),
                 baseSet.minus(SetUpPiece.Normal.whiteKaku.first),
             ),
             Pair(
-                PlayersRule.fake(whiteHande = Hande.TWO),
+                BoardHandeRule.fake(whiteHande = Hande.TWO),
                 baseSet
                     .minus(SetUpPiece.Normal.whiteHisya.first)
                     .minus(SetUpPiece.Normal.whiteKaku.first),
             ),
             Pair(
-                PlayersRule.fake(whiteHande = Hande.FOR),
+                BoardHandeRule.fake(whiteHande = Hande.FOR),
                 baseSet
                     .minus(SetUpPiece.Normal.whiteHisya.first)
                     .minus(SetUpPiece.Normal.whiteKaku.first)
                     .minus(SetUpPiece.Normal.whiteKyo.entries.map { it.key }.toSet()),
             ),
             Pair(
-                PlayersRule.fake(whiteHande = Hande.SIX),
+                BoardHandeRule.fake(whiteHande = Hande.SIX),
                 baseSet
                     .minus(SetUpPiece.Normal.whiteHisya.first)
                     .minus(SetUpPiece.Normal.whiteKaku.first)
@@ -150,7 +150,7 @@ class BoardExtTest {
                     .minus(SetUpPiece.Normal.whiteKei.entries.map { it.key }.toSet()),
             ),
             Pair(
-                PlayersRule.fake(whiteHande = Hande.EIGHT),
+                BoardHandeRule.fake(whiteHande = Hande.EIGHT),
                 baseSet
                     .minus(SetUpPiece.Normal.whiteHisya.first)
                     .minus(SetUpPiece.Normal.whiteKaku.first)
@@ -159,8 +159,8 @@ class BoardExtTest {
                     .minus(SetUpPiece.Normal.whiteGin.entries.map { it.key }.toSet()),
             ),
         )
-            .map { (playerRule, baseSet) ->
-                val gameRule = GameRule.fake(playersRule = playerRule)
+            .map { (boardHandeRule, baseSet) ->
+                val boardRule = BoardRule.fake(boardHandeRule = boardHandeRule)
 
                 (0 until 9).flatMap { row ->
                     (0 until 9).map { column ->
@@ -172,7 +172,7 @@ class BoardExtTest {
                     }
                 }.toMap()
                 Param(
-                    case = gameRule,
+                    case = boardRule,
                     resultPieceList = baseSet.createBoard(),
                 )
             }

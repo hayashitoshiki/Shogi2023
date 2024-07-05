@@ -1,11 +1,12 @@
 package com.example.home
 
 import com.example.domainObject.game.game.Seconds
+import com.example.domainObject.game.rule.BoardHandeRule
 import com.example.domainObject.game.rule.BoardRule
+import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Hande
-import com.example.domainObject.game.rule.PlayerRule
-import com.example.domainObject.game.rule.PlayersRule
+import com.example.domainObject.game.rule.PlayerTimeLimitRule
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
@@ -67,22 +68,20 @@ class HomeViewModel @Inject constructor(
                 ruleItems = ruleItems.toMutableList().map {
                     when (it) {
                         is GameRuleSettingUiModel.Custom -> {
-                            val (black, whiteRule) = when (selectedHande.turn) {
+                            val boardHandeRule = when (selectedHande.turn) {
                                 Turn.Normal.Black -> {
-                                    it.playersRule.blackRule.copy(hande = selectedHande.hande) to
-                                        it.playersRule.whiteRule
+                                    it.boardHandeRule.copy(
+                                        blackHande = selectedHande.hande,
+                                    )
                                 }
 
                                 Turn.Normal.White -> {
-                                    it.playersRule.blackRule to
-                                        it.playersRule.whiteRule.copy(hande = selectedHande.hande)
+                                    it.boardHandeRule.copy(
+                                        whiteHande = selectedHande.hande,
+                                    )
                                 }
                             }
-                            val playersRule = PlayersRule(
-                                blackRule = black,
-                                whiteRule = whiteRule,
-                            )
-                            it.copy(playersRule = playersRule)
+                            it.copy(boardHandeRule = boardHandeRule)
                         }
 
                         is GameRuleSettingUiModel.NonCustom.FirstCheck,
@@ -100,22 +99,24 @@ class HomeViewModel @Inject constructor(
                 ruleItems = ruleItems.toMutableList().map {
                     when (it) {
                         is GameRuleSettingUiModel.Custom -> {
-                            val (black, whiteRule) = when (turn) {
+                            val firstCheckEnd = when (turn) {
                                 Turn.Normal.Black -> {
-                                    it.playersRule.blackRule.copy(isFirstCheckEnd = isFirstCheck) to
-                                        it.playersRule.whiteRule
+                                    it.logicRule.firstCheckEnd.copy(
+                                        blackRule = isFirstCheck,
+                                    )
                                 }
 
                                 Turn.Normal.White -> {
-                                    it.playersRule.blackRule to
-                                        it.playersRule.whiteRule.copy(isFirstCheckEnd = isFirstCheck)
+                                    it.logicRule.firstCheckEnd.copy(
+                                        whiteRule = isFirstCheck,
+                                    )
                                 }
                             }
-                            val playersRule = PlayersRule(
-                                blackRule = black,
-                                whiteRule = whiteRule,
+                            it.copy(
+                                logicRule = it.logicRule.copy(
+                                    firstCheckEnd = firstCheckEnd,
+                                )
                             )
-                            it.copy(playersRule = playersRule)
                         }
 
                         is GameRuleSettingUiModel.NonCustom.FirstCheck,
@@ -128,92 +129,94 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onChangeTimeLimitTotalTime(turn: Turn, seconds: Seconds) {
-        val byoyomi = when (turn) {
-            Turn.Normal.Black -> {
-                state.value.timeLimitCard.blackPlayerTimeLimitRule.byoyomi
-            }
-            Turn.Normal.White -> {
-                state.value.timeLimitCard.whitePlayerTimeLimitRule.byoyomi
-            }
-        }
+        val byoyomi = getTimeLimitRuleByTurn(turn).byoyomi
         updateTimeLimitRule(turn, seconds, byoyomi)
     }
 
     fun onChangeTimeLimitSecond(turn: Turn, seconds: Seconds) {
-        val totalTime = when (turn) {
-            Turn.Normal.Black -> {
-                state.value.timeLimitCard.blackPlayerTimeLimitRule.totalTime
-            }
-            Turn.Normal.White -> {
-                state.value.timeLimitCard.whitePlayerTimeLimitRule.totalTime
-            }
-        }
+        val totalTime = getTimeLimitRuleByTurn(turn).totalTime
         updateTimeLimitRule(turn, totalTime, seconds)
+    }
+
+    private fun getTimeLimitRuleByTurn(turn: Turn): PlayerTimeLimitRule {
+        val timeLimitRule = state.value.timeLimitCard.timeLimitRule
+        return when (turn) {
+            Turn.Normal.Black -> timeLimitRule.blackTimeLimitRule
+            Turn.Normal.White -> timeLimitRule.whiteTimeLimitRule
+        }
     }
 
     private fun updateTimeLimitRule(turn: Turn, totalTime: Seconds, seconds: Seconds) {
         setState {
-            when (turn) {
+            val timeLimitRule = when (turn) {
                 Turn.Normal.Black -> {
-                    copy(
-                        timeLimitCard = timeLimitCard.copy(
-                            blackPlayerTimeLimitRule = timeLimitCard.blackPlayerTimeLimitRule.copy(
-                                totalTime = totalTime,
-                                byoyomi = seconds,
-                            ),
+                    timeLimitCard.timeLimitRule.copy(
+                        blackTimeLimitRule = timeLimitCard.timeLimitRule.blackTimeLimitRule.copy(
+                            totalTime = totalTime,
+                            byoyomi = seconds,
                         ),
                     )
                 }
                 Turn.Normal.White -> {
-                    copy(
-                        timeLimitCard = timeLimitCard.copy(
-                            whitePlayerTimeLimitRule = timeLimitCard.whitePlayerTimeLimitRule.copy(
-                                totalTime = totalTime,
-                                byoyomi = seconds,
-                            ),
+                    timeLimitCard.timeLimitRule.copy(
+                        whiteTimeLimitRule = timeLimitCard.timeLimitRule.whiteTimeLimitRule.copy(
+                            totalTime = totalTime,
+                            byoyomi = seconds,
                         ),
                     )
                 }
             }
+            copy(
+                timeLimitCard = timeLimitCard.copy(
+                    timeLimitRule = timeLimitRule,
+                )
+            )
         }
     }
 
     fun onGameStartClick() {
-        val playerRules =
+        val logicRule: GameLogicRule
+        val boardRule: BoardRule
             when (val setting = state.value.ruleItems[state.value.showRuleItemIndex]) {
                 is GameRuleSettingUiModel.Custom -> {
-                    setting.playersRule.copy(
-                        blackRule = setting.playersRule.blackRule.copy(
-                            playerTimeLimitRule = state.value.timeLimitCard.blackPlayerTimeLimitRule,
-                        ),
-                        whiteRule = setting.playersRule.whiteRule.copy(
-                            playerTimeLimitRule = state.value.timeLimitCard.whitePlayerTimeLimitRule,
-                        ),
-                    )
+                    logicRule = setting.logicRule
+                    boardRule = BoardRule(boardHandeRule = setting.boardHandeRule)
                 }
-                is GameRuleSettingUiModel.NonCustom -> {
-                    val isFirstCheckEnd = setting is GameRuleSettingUiModel.NonCustom.FirstCheck
+                is GameRuleSettingUiModel.NonCustom.Normal -> {
                     val (blackHande, whiteHande) = when (setting.selectedHande.turn) {
                         Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
                         Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
                     }
-                    PlayersRule(
-                        blackRule = PlayerRule(
-                            hande = blackHande,
-                            playerTimeLimitRule = state.value.timeLimitCard.blackPlayerTimeLimitRule,
-                            isFirstCheckEnd = isFirstCheckEnd,
-                        ),
-                        whiteRule = PlayerRule(
-                            hande = whiteHande,
-                            playerTimeLimitRule = state.value.timeLimitCard.whitePlayerTimeLimitRule,
-                            isFirstCheckEnd = isFirstCheckEnd,
-                        ),
+                    logicRule = GameLogicRule.DEFAULT
+                    boardRule = BoardRule(
+                        boardHandeRule = BoardHandeRule(
+                            blackHande = blackHande,
+                            whiteHande = whiteHande,
+                        )
+                    )
+                }
+                is GameRuleSettingUiModel.NonCustom -> {
+                    val (blackHande, whiteHande) = when (setting.selectedHande.turn) {
+                        Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
+                        Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
+                    }
+                    logicRule = GameLogicRule(
+                        tryRule = GameLogicRule.Rule.TryRule.DEFAULT,
+                        firstCheckEnd = GameLogicRule.Rule.FirstCheckEndRule.set(true),
+                    )
+                    boardRule = BoardRule(
+                        boardHandeRule = BoardHandeRule(
+                            blackHande = blackHande,
+                            whiteHande = whiteHande,
+                        )
                     )
                 }
             }
+        val timeLimitRule = state.value.timeLimitCard.timeLimitRule
         val gameRule = GameRule(
-            boardRule = BoardRule(),
-            playersRule = playerRules,
+            boardRule = boardRule,
+            logicRule = logicRule,
+            timeLimitRule = timeLimitRule,
         )
 
         useCase.setGameRule(gameRule)

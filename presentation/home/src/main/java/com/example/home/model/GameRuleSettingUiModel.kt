@@ -1,8 +1,8 @@
 package com.example.home.model
 
+import com.example.domainObject.game.rule.BoardHandeRule
+import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.Hande
-import com.example.domainObject.game.rule.PlayerRule
-import com.example.domainObject.game.rule.PlayersRule
 import com.example.domainObject.game.rule.Turn
 
 /**
@@ -57,14 +57,13 @@ sealed interface GameRuleSettingUiModel {
      * @property playersRule 駒落ち
      */
     data class Custom(
-        val playersRule: PlayersRule = PlayersRule.INIT,
+        val boardHandeRule: BoardHandeRule,
+        val logicRule: GameLogicRule,
     ) : GameRuleSettingUiModel {
         companion object {
             val INIT = Custom(
-                playersRule = PlayersRule(
-                    blackRule = PlayerRule(),
-                    whiteRule = PlayerRule(),
-                ),
+                boardHandeRule = BoardHandeRule.DEFAULT,
+                logicRule = GameLogicRule.DEFAULT,
             )
         }
     }

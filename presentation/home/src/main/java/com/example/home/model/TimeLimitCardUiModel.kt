@@ -1,6 +1,6 @@
 package com.example.home.model
 
-import com.example.domainObject.game.rule.PlayerTimeLimitRule
+import com.example.domainObject.game.rule.GameTimeLimitRule
 
 /**
  * 持ち時間設定CardのUiModel
@@ -9,13 +9,11 @@ import com.example.domainObject.game.rule.PlayerTimeLimitRule
  * @property whitePlayerTimeLimitRule 後手の持ち時間設定
  */
 data class TimeLimitCardUiModel(
-    val blackPlayerTimeLimitRule: PlayerTimeLimitRule,
-    val whitePlayerTimeLimitRule: PlayerTimeLimitRule,
+    val timeLimitRule: GameTimeLimitRule,
 ) {
     companion object {
         val INIT = TimeLimitCardUiModel(
-            blackPlayerTimeLimitRule = PlayerTimeLimitRule.INIT,
-            whitePlayerTimeLimitRule = PlayerTimeLimitRule.INIT,
+            timeLimitRule = GameTimeLimitRule.INIT,
         )
     }
 }

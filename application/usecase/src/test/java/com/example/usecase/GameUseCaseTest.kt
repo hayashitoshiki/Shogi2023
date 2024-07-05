@@ -9,6 +9,7 @@ import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
 import com.example.service.GameServiceImpl
@@ -22,6 +23,7 @@ import com.example.testDomainObject.board.fake成ったら王手_詰まない
 import com.example.testDomainObject.board.fake詰まない
 import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.rule.fake
+import com.example.testDomainObject.rule.fakeFromLogicRuleFirstCheckEnd
 import com.example.testrepository.FakeGameRepository
 import com.example.testrepository.FakeGameRuleRepository
 import com.example.testrepository.FakeLogRepository
@@ -74,11 +76,11 @@ class GameUseCaseTest {
     fun 盤面初期化() {
         // expected
         val rule = GameRule.fake()
-        val board = Board.setUp(rule)
-        val blackStand = Stand.setUp(rule.playersRule.blackRule)
-        val whiteStand = Stand.setUp(rule.playersRule.whiteRule)
-        val blackTimeLimit = TimeLimit(rule.playersRule.blackRule.playerTimeLimitRule)
-        val whiteTimeLimit = TimeLimit(rule.playersRule.blackRule.playerTimeLimitRule)
+        val board = Board.setUp(rule.boardRule)
+        val blackStand = Stand.setUp()
+        val whiteStand = Stand.setUp()
+        val blackTimeLimit = TimeLimit(rule.timeLimitRule.blackTimeLimitRule)
+        val whiteTimeLimit = TimeLimit(rule.timeLimitRule.whiteTimeLimitRule)
         val turn = Turn.Normal.Black
         val expected = GameInitResult(
             board = board,
@@ -343,9 +345,9 @@ class GameUseCaseTest {
         )
 
         params.forEach { param ->
-            val rule = GameRule.fake(
-                blackIsFirstCheckEnd = param.ruleIsFirstCheckEnd,
-                whiteIsFirstCheckEnd = !param.ruleIsFirstCheckEnd,
+            val rule = GameRule.fakeFromLogicRuleFirstCheckEnd(
+                blackRule = param.ruleIsFirstCheckEnd,
+                whiteRule = param.ruleIsFirstCheckEnd,
             )
 
             // mock
@@ -511,8 +513,8 @@ class GameUseCaseTest {
             it.remove(Piece.Surface.Kin)
         }
 
-        val case1Rule = GameRule.fake(
-            blackIsFirstCheckEnd = true,
+        val case1Rule = GameRule.fakeFromLogicRuleFirstCheckEnd(
+            blackRule = true,
         )
         val case1Board = Board.`fake●5二玉○5四金`()
         val case1Position = Position(5, 7)
@@ -525,8 +527,8 @@ class GameUseCaseTest {
         val case2ResultBoard = case2Board.copy().also {
             it.update(case2Position, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
-        val case3Rule = GameRule.fake(
-            blackIsFirstCheckEnd = true,
+        val case3Rule = GameRule.fakeFromLogicRuleFirstCheckEnd(
+            blackRule = true,
         )
         val case3Board = Board.`fake●5二玉○5四金`()
         val case3Position = Position(5, 3)
@@ -539,8 +541,8 @@ class GameUseCaseTest {
         val case4ResultBoard = case4Board.copy().also {
             it.update(case4Position, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
-        val case5Rule = GameRule.fake(
-            blackIsFirstCheckEnd = true,
+        val case5Rule = GameRule.fakeFromLogicRuleFirstCheckEnd(
+            blackRule = true,
         )
         val case5Board = Board.`fake●5一玉○5三金○4三金`()
         val case5Position = Position(5, 2)
@@ -700,7 +702,9 @@ class GameUseCaseTest {
             it.update(case2MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val case3ResultStand = stand.copy()
-        val case3Rule = GameRule.fake(blackIsFirstCheckEnd = true)
+        val case3Rule = GameRule.fakeFromLogicRuleFirstCheckEnd(
+            blackRule = true,
+        )
         val case3Board = Board.`fake●5二玉○5四金`()
         val case3HoldPosition = Position(5, 4)
         val case3MovePosition = Position(5, 3)
@@ -709,7 +713,9 @@ class GameUseCaseTest {
             it.update(case3MovePosition, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val case4ResultStand = stand.copy()
-        val case4Rule = GameRule.fake(blackIsFirstCheckEnd = false)
+        val case4Rule = GameRule.fakeFromLogicRuleFirstCheckEnd(
+            blackRule = false,
+        )
         val case4Board = Board.`fake●5二玉○5四金`()
         val case4HoldPosition = Position(5, 4)
         val case4MovePosition = Position(5, 3)
