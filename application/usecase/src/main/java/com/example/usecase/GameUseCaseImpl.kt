@@ -17,7 +17,7 @@ import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
-import com.example.repository.GameRepository
+import com.example.repository.BoardRepository
 import com.example.repository.GameRuleRepository
 import com.example.repository.LogRepository
 import com.example.serviceinterface.GameService
@@ -43,7 +43,7 @@ import javax.inject.Inject
 class GameUseCaseImpl @Inject constructor(
     private val logRepository: LogRepository,
     private val gameRuleRepository: GameRuleRepository,
-    private val gameRepository: GameRepository,
+    private val boardRepository: BoardRepository,
     private val gameService: GameService,
     private val coroutineScope: CoroutineScope,
 ) : GameUseCase {
@@ -172,7 +172,7 @@ class GameUseCaseImpl @Inject constructor(
     }
 
     override fun gameInit(): GameInitResult {
-        val rule = gameRuleRepository.getGameRule()
+        val rule = gameRuleRepository.get()
         val timeLimitRule = rule.timeLimitRule
         val board = Board.setUp(rule.boardRule)
         val blackStand = Stand.setUp()
@@ -251,7 +251,7 @@ class GameUseCaseImpl @Inject constructor(
             val key = logRepository.getLatestKey()
             logRepository.fixLogByEvolution(key)
         }
-        val rule = gameRuleRepository.getGameRule()
+        val rule = gameRuleRepository.get()
         val isWin = gameService.checkGameSet(board, stand, turn, rule)
         val isDrown = checkDraw(board)
         val nextTurn = turn.getOpponentTurn()
@@ -332,7 +332,7 @@ class GameUseCaseImpl @Inject constructor(
         }
 
         val nextTurn = turn.changeNextTurn()
-        val rule = gameRuleRepository.getGameRule()
+        val rule = gameRuleRepository.get()
         return if (gameService.checkGameSet(newBoard, stand, turn, rule)) {
             NextResult.Move.Win(
                 board = newBoard,
@@ -364,11 +364,11 @@ class GameUseCaseImpl @Inject constructor(
      * @return 千日手か
      */
     private fun checkDraw(board: Board): Boolean {
-        val boardLog = gameRepository.getBoardLogs()
+        val boardLog = boardRepository.get()
         return if (gameService.checkDraw(boardLog, board)) {
             true
         } else {
-            gameRepository.setBoardLog(board)
+            boardRepository.set(board)
             false
         }
     }

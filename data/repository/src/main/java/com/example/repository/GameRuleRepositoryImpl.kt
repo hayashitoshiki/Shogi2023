@@ -7,9 +7,9 @@ class GameRuleRepositoryImpl @Inject constructor() : GameRuleRepository {
 
     private var rule: GameRule = GameRule.DEFAULT
 
-    override fun setGameRule(rule: GameRule) {
+    override fun set(rule: GameRule) {
         this.rule = rule
     }
 
-    override fun getGameRule(): GameRule = rule
+    override fun get(): GameRule = rule
 }

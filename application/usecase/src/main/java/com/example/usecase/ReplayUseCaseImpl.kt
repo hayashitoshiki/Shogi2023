@@ -21,7 +21,7 @@ class ReplayUseCaseImpl @Inject constructor(
 ) : ReplayUseCase {
 
     override fun replayInit(): ReplayInitResult {
-        val rule = gameRuleRepository.getGameRule()
+        val rule = gameRuleRepository.get()
         val timeLimitRule = rule.timeLimitRule
         val board = Board.setUp(rule.boardRule)
         val blackStand = Stand()

@@ -9,7 +9,6 @@ import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
-import com.example.domainObject.game.rule.GameLogicRule
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
 import com.example.service.GameServiceImpl
@@ -24,7 +23,7 @@ import com.example.testDomainObject.board.fake詰まない
 import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.rule.fake
 import com.example.testDomainObject.rule.fakeFromLogicRuleFirstCheckEnd
-import com.example.testrepository.FakeGameRepository
+import com.example.testrepository.FakeBoardRepository
 import com.example.testrepository.FakeGameRuleRepository
 import com.example.testrepository.FakeLogRepository
 import com.example.usecaseinterface.model.result.GameInitResult
@@ -44,7 +43,7 @@ class GameUseCaseTest {
     private lateinit var gameUseCase: com.example.usecaseinterface.usecase.GameUseCase
     private lateinit var logRepository: FakeLogRepository
     private lateinit var gameRuleRepository: FakeGameRuleRepository
-    private lateinit var gameRepository: FakeGameRepository
+    private lateinit var gameRepository: FakeBoardRepository
     private val gameService = GameServiceImpl()
 
     @Before
@@ -52,11 +51,11 @@ class GameUseCaseTest {
         val coroutineScope = TestScope()
         gameRuleRepository = FakeGameRuleRepository()
         logRepository = FakeLogRepository()
-        gameRepository = FakeGameRepository()
+        gameRepository = FakeBoardRepository()
         gameUseCase = GameUseCaseImpl(
             logRepository = logRepository,
             gameRuleRepository = gameRuleRepository,
-            gameRepository = gameRepository,
+            boardRepository = gameRepository,
             gameService = gameService,
             coroutineScope = coroutineScope,
         )
@@ -92,7 +91,7 @@ class GameUseCaseTest {
         )
 
         // mock
-        gameRuleRepository.getGameRuleLogic = { rule }
+        gameRuleRepository.getLogic = { rule }
 
         // run
         val result = gameUseCase.gameInit()
@@ -351,14 +350,14 @@ class GameUseCaseTest {
             )
 
             // mock
-            gameRepository.getBoardLogsLogic = {
+            gameRepository.getLogic = {
                 if (param.isDraw) {
                     mapOf(param.result.board.getAllCells() to 3)
                 } else {
                     emptyMap()
                 }
             }
-            gameRuleRepository.getGameRuleLogic = { rule }
+            gameRuleRepository.getLogic = { rule }
 
             // run
             val expected = gameUseCase.setEvolution(
@@ -620,14 +619,14 @@ class GameUseCaseTest {
                 hintList = hintPositionList,
             )
             // mock
-            gameRepository.getBoardLogsLogic = {
+            gameRepository.getLogic = {
                 if (param.isDraw) {
                     mapOf(param.result.board.getAllCells() to 3)
                 } else {
                     emptyMap()
                 }
             }
-            gameRuleRepository.getGameRuleLogic = { param.rule }
+            gameRuleRepository.getLogic = { param.rule }
 
             // run
             val expected = gameUseCase.putStandPiece(
@@ -900,14 +899,14 @@ class GameUseCaseTest {
                 hintList = hintPositionList,
             )
             // mock
-            gameRepository.getBoardLogsLogic = {
+            gameRepository.getLogic = {
                 if (param.isDraw) {
                     mapOf(param.result.board.getAllCells() to 3)
                 } else {
                     emptyMap()
                 }
             }
-            gameRuleRepository.getGameRuleLogic = { param.rule }
+            gameRuleRepository.getLogic = { param.rule }
 
             // run
             val expected = gameUseCase.movePiece(

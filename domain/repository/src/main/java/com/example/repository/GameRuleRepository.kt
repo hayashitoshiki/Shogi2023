@@ -9,12 +9,12 @@ interface GameRuleRepository {
      *
      * @param rule 保持するルール
      */
-    fun setGameRule(rule: GameRule)
+    fun set(rule: GameRule)
 
     /**
      * ルールの一時保存
      *
      * @return 一時保持したルール
      */
-    fun getGameRule(): GameRule
+    fun get(): GameRule
 }

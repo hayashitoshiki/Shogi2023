@@ -6,23 +6,23 @@ import com.example.testDomainObject.rule.fake
 
 class FakeGameRuleRepository : GameRuleRepository {
 
-    var callSetGameRuleCount = 0
+    var callSetCount = 0
         private set
-    var callGetGameRuleCount = 0
+    var callGetCount = 0
         private set
 
-    var setGameRuleLogic: (rule: GameRule) -> Unit = { }
-    var getGameRuleLogic: () -> GameRule = {
+    var setLogic: (rule: GameRule) -> Unit = { }
+    var getLogic: () -> GameRule = {
         GameRule.fake()
     }
 
-    override fun setGameRule(rule: GameRule) {
-        callSetGameRuleCount += 1
-        setGameRuleLogic(rule)
+    override fun set(rule: GameRule) {
+        callSetCount += 1
+        setLogic(rule)
     }
 
-    override fun getGameRule(): GameRule {
-        callGetGameRuleCount += 1
-        return getGameRuleLogic()
+    override fun get(): GameRule {
+        callGetCount += 1
+        return getLogic()
     }
 }

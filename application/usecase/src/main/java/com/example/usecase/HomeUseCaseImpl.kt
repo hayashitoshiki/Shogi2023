@@ -10,6 +10,6 @@ class HomeUseCaseImpl @Inject constructor(
 ) : HomeUseCase {
 
     override fun setGameRule(rule: GameRule) {
-        gameRuleRepository.setGameRule(rule)
+        gameRuleRepository.set(rule)
     }
 }
