@@ -38,93 +38,36 @@ fun HandeSettingBox(
             pieceSetUpRule = Hande.NON,
             turn = Turn.Normal.Black,
         )
-        Row {
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.HISYA,
-                turn = Turn.Normal.Black,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.KAKU,
-                turn = Turn.Normal.Black,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.TWO,
-                turn = Turn.Normal.Black,
-            )
-        }
-        Row {
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.FOR,
-                turn = Turn.Normal.Black,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.SIX,
-                turn = Turn.Normal.Black,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.EIGHT,
-                turn = Turn.Normal.Black,
-            )
-        }
-        Row {
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.HISYA,
-                turn = Turn.Normal.White,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.KAKU,
-                turn = Turn.Normal.White,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.TWO,
-                turn = Turn.Normal.White,
-            )
-        }
-        Row {
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.FOR,
-                turn = Turn.Normal.White,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.SIX,
-                turn = Turn.Normal.White,
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            HandeFilterChip(
-                selected = selected,
-                onChange = onChange,
-                pieceSetUpRule = Hande.EIGHT,
-                turn = Turn.Normal.White,
-            )
+        val turnList = listOf(Turn.Normal.Black, Turn.Normal.White)
+        val handeList = listOf(
+            Triple(Hande.HISYA, Hande.KAKU, Hande.TWO),
+            Triple(Hande.FOR, Hande.SIX, Hande.EIGHT),
+        )
+        turnList.forEach { turn ->
+            handeList.forEach {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    HandeFilterChip(
+                        selected = selected,
+                        onChange = onChange,
+                        pieceSetUpRule = it.first,
+                        turn = turn,
+                    )
+                    HandeFilterChip(
+                        selected = selected,
+                        onChange = onChange,
+                        pieceSetUpRule = it.second,
+                        turn = turn,
+                    )
+                    HandeFilterChip(
+                        selected = selected,
+                        onChange = onChange,
+                        pieceSetUpRule = it.third,
+                        turn = turn,
+                    )
+                }
+            }
         }
     }
 }

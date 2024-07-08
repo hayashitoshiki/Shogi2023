@@ -1,8 +1,10 @@
 package com.example.home.compoment.card
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -27,14 +30,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.domainObject.game.game.Seconds
+import com.example.domainObject.game.rule.GameTimeLimitRule
 import com.example.domainObject.game.rule.PlayerTimeLimitRule
 import com.example.domainObject.game.rule.Turn
-import com.example.game.util.extension.stringRes
 import com.example.home.R
+import com.example.home.ext.turnImageRes
 import com.example.home.model.TimeLimitCardUiModel
+import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun TimeLimitSettingCard(
@@ -43,8 +50,15 @@ fun TimeLimitSettingCard(
     onChangeTimeLimitTotalTime: (Turn, Seconds) -> Unit,
     onChangeTimeLimitSecond: (Turn, Seconds) -> Unit,
 ) {
-    Card(modifier = modifier.shadow(8.dp, RoundedCornerShape(8.dp))) {
-        Column(modifier = Modifier.padding(8.dp)) {
+    Card(
+        modifier = modifier
+            .width(256.dp)
+            .shadow(8.dp, RoundedCornerShape(8.dp))
+    ) {
+        Column(
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.headlineMedium,
@@ -79,20 +93,23 @@ fun TimeLimitSettingItem(
     onChangeTimeLimitTotalTime: (Turn, Seconds) -> Unit,
     onChangeTimeLimitSecond: (Turn, Seconds) -> Unit,
 ) {
-    Column(modifier = Modifier.padding(8.dp)) {
-        Text(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            style = MaterialTheme.typography.titleMedium,
-            text = stringResource(id = turn.stringRes),
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Image(
+            modifier = Modifier.size(24.dp),
+            painter = painterResource(turn.turnImageRes),
+            contentDescription = "",
         )
-        TotalTimeItem(
-            selectTotalTime = uiModel.totalTime,
-            onChangeHande = { onChangeTimeLimitTotalTime(turn, it) },
-        )
-        ByoyomiItem(
-            selectSeconds = uiModel.byoyomi,
-            onChangeHande = { onChangeTimeLimitSecond(turn, it) },
-        )
+        Spacer(modifier = Modifier.size(8.dp))
+        Column {
+            TotalTimeItem(
+                selectTotalTime = uiModel.totalTime,
+                onChangeHande = { onChangeTimeLimitTotalTime(turn, it) },
+            )
+            ByoyomiItem(
+                selectSeconds = uiModel.byoyomi,
+                onChangeHande = { onChangeTimeLimitSecond(turn, it) },
+            )
+        }
     }
 }
 
@@ -171,7 +188,7 @@ private fun RuleItem(
     }
 }
 
-val options = buildList {
+private val options = buildList {
     (0..59).forEach {
         add(it)
     }
@@ -199,7 +216,7 @@ private fun TimeDropdown(
         )
         Icon(
             Icons.Filled.ArrowDropDown,
-            "contentDescription",
+            "",
             Modifier.align(Alignment.CenterEnd),
         )
         DropdownMenu(
@@ -218,5 +235,19 @@ private fun TimeDropdown(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TimeLimitSettingCardPreview() {
+    Shogi2023Theme {
+        TimeLimitSettingCard(
+            uiModel = TimeLimitCardUiModel(
+              timeLimitRule = GameTimeLimitRule.INIT
+            ),
+            onChangeTimeLimitSecond = { _, _ -> },
+            onChangeTimeLimitTotalTime = { _, _ -> },
+        )
     }
 }

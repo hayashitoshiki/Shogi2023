@@ -15,7 +15,7 @@ import androidx.navigation.NavHostController
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.compoment.GameBox
 import com.example.game.util.compoment.button.LoseButton
-import com.example.game.util.compoment.dialog.EvolutionDialog
+import com.example.game.util.compoment.dialog.EvolutionConfirmDialog
 import com.example.game.util.compoment.dialog.GameEndDialog
 import com.example.test.navigation.NavigationScreens
 
@@ -41,7 +41,7 @@ fun GameScreen(
         }
     }
     showEvolutionDialog.value?.apply {
-        EvolutionDialog(
+        EvolutionConfirmDialog(
             openDialog = showEvolutionDialog,
             onClick = { viewModel.setEvolution(position, it) },
         )

@@ -96,12 +96,18 @@ fun HomeScreen(
         contentAlignment = Alignment.Center,
     ) {
         Column {
-            TimeLimitSettingCard(
-                uiModel = gameRule.value.timeLimitCard,
-                onChangeTimeLimitTotalTime = viewModel::onChangeTimeLimitTotalTime,
-                onChangeTimeLimitSecond = viewModel::onChangeTimeLimitSecond,
-            )
-            Spacer(modifier = Modifier.size(16.dp))
+            Box(
+                modifier = modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ) {
+                TimeLimitSettingCard(
+                    uiModel = gameRule.value.timeLimitCard,
+                    onChangeTimeLimitTotalTime = viewModel::onChangeTimeLimitTotalTime,
+                    onChangeTimeLimitSecond = viewModel::onChangeTimeLimitSecond,
+                )
+            }
+
+            Spacer(modifier = Modifier.size(64.dp))
             RuleSettingPager(
                 tabs = tabs,
                 changePage = viewModel::changePage,
@@ -119,7 +125,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RuleSettingPager(
+private fun RuleSettingPager(
     tabs: List<@Composable () -> Unit>,
     changePage: (Int) -> Unit,
 ) {

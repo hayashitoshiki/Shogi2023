@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReplayViewModel @Inject constructor(
-    private val useCase: com.example.usecaseinterface.usecase.ReplayUseCase,
+    private val useCase: ReplayUseCase,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(
