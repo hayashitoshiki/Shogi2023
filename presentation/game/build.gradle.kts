@@ -42,33 +42,30 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    val coroutines_version = "1.8.0"
-    // coroutine
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
-    // coroutine-test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
-    testImplementation("app.cash.turbine:turbine:1.1.0")
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.lifecycle.runtime)
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+    // Test
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.test.espresso)
+    androidTestImplementation(libs.androidx.test.junit.compose)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
+    // Coroutine
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
     // Hilt
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
     implementation(project(":presentation:core"))
     implementation(project(":domain:domain-object"))

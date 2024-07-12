@@ -37,17 +37,14 @@ android {
     }
 }
 dependencies {
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-
+    // Test
+    testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
-    implementation(project(":domain:domain-object"))
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
 
+    implementation(project(":domain:domain-object"))
     implementation(project(":domain:domain-logic"))
     implementation(project(":domain:service"))
     implementation(project(":domain:repository"))

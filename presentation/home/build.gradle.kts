@@ -42,34 +42,32 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.lifecycle.runtime)
+    // Compose
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.foundation)
+    // Test
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.junit)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
+    androidTestImplementation(libs.androidx.test.espresso)
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
     // Tab
-    val accompanistVersion = "0.24.6-alpha"
-    implementation("androidx.compose.foundation:foundation:1.6.0-beta03")
-    implementation("com.google.accompanist:accompanist-insets:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-pager:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-pager-indicators:$accompanistVersion")
-
+    implementation(libs.accompanist.insets)
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
     // coroutine-test
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.0")
-    testImplementation("app.cash.turbine:turbine:1.1.0")
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
 
     implementation(project(":presentation:core"))
     implementation(project(":application:usecase"))

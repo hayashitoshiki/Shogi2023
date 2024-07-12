@@ -36,8 +36,8 @@ android {
 }
 
 dependencies {
-    val coroutines_version = "1.8.0"
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+    // Coroutine
+    implementation(libs.coroutines.core)
 
     implementation(project(":domain:domain-object"))
     implementation(project(":domain:test-domain-object"))

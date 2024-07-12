@@ -36,12 +36,12 @@ android {
 
 dependencies {
     // Hilt
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-android-compiler:2.50")
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
+    // Test
+    testImplementation(libs.junit)
 
-    testImplementation("junit:junit:4.13.2")
     implementation(project(":domain:domain-object"))
-
     implementation(project(":domain:domain-logic"))
     testImplementation(project(":domain:test-domain-object"))
 }
