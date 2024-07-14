@@ -11,33 +11,33 @@ import com.example.test.theme.Shogi2023Theme
 
 @Composable
 fun RestartButtonConfirmDialog(
-  showDialog: MutableState<Boolean>,
-  onClickConfirmButton: () -> Unit,
+    showDialog: MutableState<Boolean>,
+    onClickConfirmButton: () -> Unit,
 ) {
-  val context = LocalContext.current
-  BaseDialog(
-    onClickConfirmButton = {
-      showDialog.value = false
-      onClickConfirmButton()
-    },
-    onClickDismissButton = {
-      showDialog.value = false
-    },
-    confirmButtonLabel = context.getString(R.string.dialog_text_yes),
-    dismissButtonLabel = context.getString(R.string.dialog_text_no),
-    title = context.getString(R.string.dialog_confirm_restart_title),
-    description = context.getString(R.string.dialog_confirm_restart_body),
-  )
+    val context = LocalContext.current
+    BaseDialog(
+        onClickConfirmButton = {
+            showDialog.value = false
+            onClickConfirmButton()
+        },
+        onClickDismissButton = {
+            showDialog.value = false
+        },
+        confirmButtonLabel = context.getString(R.string.dialog_text_yes),
+        dismissButtonLabel = context.getString(R.string.dialog_text_no),
+        title = context.getString(R.string.dialog_confirm_restart_title),
+        description = context.getString(R.string.dialog_confirm_restart_body),
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 internal fun RestartButtonConfirmDialogPreview() {
-  val showDialog = remember { mutableStateOf(false) }
-  Shogi2023Theme {
-    RestartButtonConfirmDialog(
-      showDialog = showDialog,
-      onClickConfirmButton = {},
-    )
-  }
+    val showDialog = remember { mutableStateOf(false) }
+    Shogi2023Theme {
+        RestartButtonConfirmDialog(
+            showDialog = showDialog,
+            onClickConfirmButton = {},
+        )
+    }
 }

@@ -71,7 +71,7 @@ internal class LoseButtonPreviewParameterProvider : PreviewParameterProvider<Los
         LoseButtonUiModel(
             enable = true,
             turn = Turn.Normal.White,
-        )
+        ),
     )
 }
 

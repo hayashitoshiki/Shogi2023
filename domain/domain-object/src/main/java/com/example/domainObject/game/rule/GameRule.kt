@@ -16,7 +16,7 @@ data class GameRule(
         val DEFAULT = GameRule(
             boardRule = BoardRule.DEFAULT,
             logicRule = GameLogicRule.DEFAULT,
-            timeLimitRule = GameTimeLimitRule.INIT
+            timeLimitRule = GameTimeLimitRule.INIT,
         )
     }
 }

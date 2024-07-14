@@ -168,9 +168,9 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
                 timeLimitRule = initUiState.timeLimitCard.timeLimitRule.copy(
-                   blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule.copy(
-                       byoyomi = seconds,
-                   ),
+                    blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule.copy(
+                        byoyomi = seconds,
+                    ),
                 ),
             ),
         )
@@ -446,7 +446,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                 boardHandeRule = BoardHandeRule.fake(
                     blackHande = blackHande,
                     whiteHande = whiteHande,
-                )
+                ),
             ),
             timeLimitRule = GameTimeLimitRule.fake(
                 blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule,
@@ -487,7 +487,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                 boardHandeRule = BoardHandeRule.fake(
                     blackHande = blackHande,
                     whiteHande = whiteHande,
-                )
+                ),
             ),
             timeLimitRule = GameTimeLimitRule.fake(
                 blackTimeLimitRule = initUiState.timeLimitCard.timeLimitRule.blackTimeLimitRule,

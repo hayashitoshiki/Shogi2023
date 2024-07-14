@@ -5,14 +5,14 @@ import com.example.domainObject.game.rule.GameRule
 interface GameRuleRepository {
 
     /**
-     * ルール読み込み
+     * ルールの一時保存
      *
      * @param rule 保持するルール
      */
     fun set(rule: GameRule)
 
     /**
-     * ルールの一時保存
+     * ルール読み込み
      *
      * @return 一時保持したルール
      */

@@ -26,7 +26,7 @@ data class BoardRule(
     companion object {
         val DEFAULT = BoardRule(
             setUpRule = SetUpRule.NORMAL,
-            boardHandeRule = BoardHandeRule.DEFAULT
+            boardHandeRule = BoardHandeRule.DEFAULT,
         )
     }
 }

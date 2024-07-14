@@ -7,13 +7,13 @@ package com.example.domainObject.game.rule
  * @property whiteHande 後手のハンデ
  */
 data class BoardHandeRule(
-  val blackHande: Hande,
-  val whiteHande: Hande,
+    val blackHande: Hande,
+    val whiteHande: Hande,
 ) {
-  companion object {
-    val DEFAULT = BoardHandeRule(
-      blackHande = Hande.NON,
-      whiteHande = Hande.NON,
-    )
-  }
+    companion object {
+        val DEFAULT = BoardHandeRule(
+            blackHande = Hande.NON,
+            whiteHande = Hande.NON,
+        )
+    }
 }

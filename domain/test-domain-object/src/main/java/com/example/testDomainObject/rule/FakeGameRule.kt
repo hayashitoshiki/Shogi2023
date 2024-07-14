@@ -17,10 +17,9 @@ fun GameRule.Companion.fake(
     )
 }
 
-
 fun GameRule.Companion.fakeFromLogicRuleFirstCheckEnd(
     blackRule: Boolean = false,
-    whiteRule:Boolean = false,
+    whiteRule: Boolean = false,
 ): GameRule = GameRule.fake(
     logicRule = GameLogicRule.fake(
         firstCheckEnd = GameLogicRule.Rule.FirstCheckEndRule.fake(
@@ -32,7 +31,7 @@ fun GameRule.Companion.fakeFromLogicRuleFirstCheckEnd(
 
 fun GameRule.Companion.fakeFromLogicRuleTryRule(
     blackRule: Boolean = true,
-    whiteRule:Boolean = true,
+    whiteRule: Boolean = true,
 ): GameRule = GameRule.fake(
     logicRule = GameLogicRule.fake(
         tryRule = GameLogicRule.Rule.TryRule.fake(

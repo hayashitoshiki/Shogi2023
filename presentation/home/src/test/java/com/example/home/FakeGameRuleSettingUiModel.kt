@@ -32,7 +32,7 @@ fun GameRuleSettingUiModel.Custom.Companion.fake(
     logicRule: GameLogicRule = GameLogicRule.fake(),
 ) = GameRuleSettingUiModel.Custom(
     boardHandeRule = boardHandeRule,
-    logicRule = logicRule
+    logicRule = logicRule,
 )
 
 fun GameRuleSettingUiModel.SelectedHande.Companion.fake(

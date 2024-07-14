@@ -1,6 +1,7 @@
 package com.example.usecaseinterface.usecase
 
 import com.example.domainObject.game.rule.GameRule
+import com.example.domainObject.game.rule.GameTimeLimitRule
 
 /**
  * 将棋のビジネスロジック
@@ -9,9 +10,16 @@ import com.example.domainObject.game.rule.GameRule
 interface HomeUseCase {
 
     /**
+     * 対局の持ち時間設定を取得
+     *
+     * @return 対局の持ち時間設定
+     */
+    suspend fun getTimeLimits(): GameTimeLimitRule
+
+    /**
      * 対局ルールセット
      *
      * @param rule ルール
      */
-    fun setGameRule(rule: GameRule)
+    suspend fun setGameRule(rule: GameRule)
 }

@@ -53,7 +53,7 @@ fun TimeLimitSettingCard(
     Card(
         modifier = modifier
             .width(256.dp)
-            .shadow(8.dp, RoundedCornerShape(8.dp))
+            .shadow(8.dp, RoundedCornerShape(8.dp)),
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -244,7 +244,7 @@ fun TimeLimitSettingCardPreview() {
     Shogi2023Theme {
         TimeLimitSettingCard(
             uiModel = TimeLimitCardUiModel(
-              timeLimitRule = GameTimeLimitRule.INIT
+                timeLimitRule = GameTimeLimitRule.INIT,
             ),
             onChangeTimeLimitSecond = { _, _ -> },
             onChangeTimeLimitTotalTime = { _, _ -> },

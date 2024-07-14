@@ -7,39 +7,39 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun BaseDialog(
-  onClickConfirmButton: () -> Unit,
-  onClickDismissButton: () -> Unit,
-  confirmButtonLabel: String,
-  dismissButtonLabel: String,
-  title: String,
-  description: String,
+    onClickConfirmButton: () -> Unit,
+    onClickDismissButton: () -> Unit,
+    confirmButtonLabel: String,
+    dismissButtonLabel: String,
+    title: String,
+    description: String,
 ) {
-  AlertDialog(
-    onDismissRequest = {
-    },
-    confirmButton = {
-      TextButton(
-        onClick = {
-          onClickConfirmButton()
+    AlertDialog(
+        onDismissRequest = {
         },
-      ) {
-        Text(confirmButtonLabel)
-      }
-    },
-    dismissButton = {
-      TextButton(
-        onClick = {
-          onClickDismissButton()
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onClickConfirmButton()
+                },
+            ) {
+                Text(confirmButtonLabel)
+            }
         },
-      ) {
-        Text(dismissButtonLabel)
-      }
-    },
-    title = {
-      Text(title)
-    },
-    text = {
-      Text(description)
-    },
-  )
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onClickDismissButton()
+                },
+            ) {
+                Text(dismissButtonLabel)
+            }
+        },
+        title = {
+            Text(title)
+        },
+        text = {
+            Text(description)
+        },
+    )
 }

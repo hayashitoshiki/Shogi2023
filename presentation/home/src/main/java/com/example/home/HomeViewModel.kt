@@ -1,5 +1,6 @@
 package com.example.home
 
+import androidx.lifecycle.viewModelScope
 import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.rule.BoardHandeRule
 import com.example.domainObject.game.rule.BoardRule
@@ -12,13 +13,27 @@ import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
 import com.example.test.uilogic.BaseContract
 import com.example.test.uilogic.BaseViewModel
+import com.example.usecaseinterface.usecase.HomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCase: com.example.usecaseinterface.usecase.HomeUseCase,
+    private val useCase: HomeUseCase,
 ) : BaseViewModel<HomeViewModel.UiState, HomeViewModel.Effect>() {
+
+    init {
+        viewModelScope.launch {
+            val timeLimitCardUiModel = TimeLimitCardUiModel(useCase.getTimeLimits())
+            setState {
+                copy(
+                    timeLimitCard = timeLimitCardUiModel,
+                )
+            }
+        }
+    }
 
     override fun initState(): UiState {
         return UiState(
@@ -115,7 +130,7 @@ class HomeViewModel @Inject constructor(
                             it.copy(
                                 logicRule = it.logicRule.copy(
                                     firstCheckEnd = firstCheckEnd,
-                                )
+                                ),
                             )
                         }
 
@@ -169,7 +184,7 @@ class HomeViewModel @Inject constructor(
             copy(
                 timeLimitCard = timeLimitCard.copy(
                     timeLimitRule = timeLimitRule,
-                )
+                ),
             )
         }
     }
@@ -177,41 +192,41 @@ class HomeViewModel @Inject constructor(
     fun onGameStartClick() {
         val logicRule: GameLogicRule
         val boardRule: BoardRule
-            when (val setting = state.value.ruleItems[state.value.showRuleItemIndex]) {
-                is GameRuleSettingUiModel.Custom -> {
-                    logicRule = setting.logicRule
-                    boardRule = BoardRule(boardHandeRule = setting.boardHandeRule)
-                }
-                is GameRuleSettingUiModel.NonCustom.Normal -> {
-                    val (blackHande, whiteHande) = when (setting.selectedHande.turn) {
-                        Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
-                        Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
-                    }
-                    logicRule = GameLogicRule.DEFAULT
-                    boardRule = BoardRule(
-                        boardHandeRule = BoardHandeRule(
-                            blackHande = blackHande,
-                            whiteHande = whiteHande,
-                        )
-                    )
-                }
-                is GameRuleSettingUiModel.NonCustom -> {
-                    val (blackHande, whiteHande) = when (setting.selectedHande.turn) {
-                        Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
-                        Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
-                    }
-                    logicRule = GameLogicRule(
-                        tryRule = GameLogicRule.Rule.TryRule.DEFAULT,
-                        firstCheckEnd = GameLogicRule.Rule.FirstCheckEndRule.set(true),
-                    )
-                    boardRule = BoardRule(
-                        boardHandeRule = BoardHandeRule(
-                            blackHande = blackHande,
-                            whiteHande = whiteHande,
-                        )
-                    )
-                }
+        when (val setting = state.value.ruleItems[state.value.showRuleItemIndex]) {
+            is GameRuleSettingUiModel.Custom -> {
+                logicRule = setting.logicRule
+                boardRule = BoardRule(boardHandeRule = setting.boardHandeRule)
             }
+            is GameRuleSettingUiModel.NonCustom.Normal -> {
+                val (blackHande, whiteHande) = when (setting.selectedHande.turn) {
+                    Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
+                    Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
+                }
+                logicRule = GameLogicRule.DEFAULT
+                boardRule = BoardRule(
+                    boardHandeRule = BoardHandeRule(
+                        blackHande = blackHande,
+                        whiteHande = whiteHande,
+                    ),
+                )
+            }
+            is GameRuleSettingUiModel.NonCustom -> {
+                val (blackHande, whiteHande) = when (setting.selectedHande.turn) {
+                    Turn.Normal.Black -> setting.selectedHande.hande to Hande.NON
+                    Turn.Normal.White -> Hande.NON to setting.selectedHande.hande
+                }
+                logicRule = GameLogicRule(
+                    tryRule = GameLogicRule.Rule.TryRule.DEFAULT,
+                    firstCheckEnd = GameLogicRule.Rule.FirstCheckEndRule.set(true),
+                )
+                boardRule = BoardRule(
+                    boardHandeRule = BoardHandeRule(
+                        blackHande = blackHande,
+                        whiteHande = whiteHande,
+                    ),
+                )
+            }
+        }
         val timeLimitRule = state.value.timeLimitCard.timeLimitRule
         val gameRule = GameRule(
             boardRule = boardRule,
@@ -219,8 +234,10 @@ class HomeViewModel @Inject constructor(
             timeLimitRule = timeLimitRule,
         )
 
-        useCase.setGameRule(gameRule)
-        setEffect { Effect.GameStart }
+        viewModelScope.launch {
+            async { useCase.setGameRule(gameRule) }.await()
+            setEffect { Effect.GameStart }
+        }
     }
 
     fun changePage(pageIndex: Int) {

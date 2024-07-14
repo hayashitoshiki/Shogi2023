@@ -8,7 +8,7 @@ package com.example.domainObject.game.game
 @JvmInline
 value class Seconds private constructor(private val value: Long) {
     init {
-        require(value >= 0) { "Time must be non-negative value = $value" }
+        require(value >= 0L) { "Time must be non-negative value = $value" }
     }
 
     /**
