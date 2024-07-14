@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":domain:domain-object"))
     implementation(project(":domain:repository"))
     implementation(project(":data:repository"))
+    implementation(project(":data:local"))
 }
 
 kapt {
