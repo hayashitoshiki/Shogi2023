@@ -15,6 +15,7 @@ import com.example.testDomainObject.game.fake
 import com.example.testDomainObject.rule.fake
 import com.example.testusecase.usecase.FakeHomeUseCase
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, HomeViewModel.Effect>() {
@@ -163,7 +164,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
 
     @Test
     fun 持ち時間切れ負け設定変更_先手秒読み() {
-        val seconds = Seconds.fake(600)
+        val seconds = Seconds.fake(60000)
         val turn = Turn.Normal.Black
         val resultUiState = initUiState.copy(
             timeLimitCard = initUiState.timeLimitCard.copy(
@@ -422,7 +423,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
     }
 
     @Test
-    fun 将棋開始_普通の将棋_１ページ目() {
+    fun 将棋開始_普通の将棋_１ページ目() = runBlocking {
         val pageIndex = 0
         val resultUiState = initUiState.copy(
             showRuleItemIndex = pageIndex,
@@ -556,7 +557,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(homeUseCase.calSsetGameRuleCount, 1),
+                UseCaseAsserts({ homeUseCase.getCalSetGameRuleCount() }, 1),
             ),
             state = resultUiState,
             effects = listOf(),

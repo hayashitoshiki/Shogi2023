@@ -65,7 +65,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(gameUseCase.callGameInitCount, 1),
+                UseCaseAsserts({ gameUseCase.getCallGameInitCount() }, 1),
             ),
             state = initUiState,
             effects = listOf(),
@@ -118,7 +118,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(gameUseCase.callUseStandPieceCount, 1),
+                UseCaseAsserts({ gameUseCase.getCallUseStandPieceCount() }, 1),
             ),
             state = uiStateResult,
             effects = listOf(),
@@ -183,7 +183,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 1),
+                UseCaseAsserts({ gameUseCase.getCallUseBoardPieceCount() }, 1),
             ),
             state = uiStateResult1,
             effects = listOf(),
@@ -219,8 +219,8 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 1),
-                UseCaseAsserts(gameUseCase.callMovePieceCount, 1),
+                UseCaseAsserts({ gameUseCase.getCallUseBoardPieceCount() }, 1),
+                UseCaseAsserts({ gameUseCase.getCallMovePieceCount() }, 1),
             ),
             state = uiStateResult2,
             effects = listOf(),
@@ -242,7 +242,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 2),
+                UseCaseAsserts({ gameUseCase.getCallUseBoardPieceCount() }, 2),
             ),
             state = initUiState.copy(
                 board = caseGameInitLogicResult.board,
@@ -287,8 +287,8 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(gameUseCase.callUseStandPieceCount, 1),
-                UseCaseAsserts(gameUseCase.callPutStandPieceCount, 1),
+                UseCaseAsserts({ gameUseCase.getCallUseStandPieceCount() }, 1),
+                UseCaseAsserts({ gameUseCase.getCallPutStandPieceCount() }, 1),
             ),
             state = initUiState.copy(
                 board = case4PutStandPieceLogicResult.board,
@@ -324,8 +324,8 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts(gameUseCase.callUseStandPieceCount, 1),
-                UseCaseAsserts(gameUseCase.callUseBoardPieceCount, 1),
+                UseCaseAsserts({ gameUseCase.getCallUseStandPieceCount() }, 1),
+                UseCaseAsserts({ gameUseCase.getCallUseBoardPieceCount() }, 1),
             ),
             state = initUiState.copy(
                 board = caseGameInitLogicResult.board,

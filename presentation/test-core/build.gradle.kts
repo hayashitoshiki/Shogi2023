@@ -30,5 +30,14 @@ android {
 }
 
 dependencies {
+  // Test
+  implementation(libs.junit)
+  implementation(libs.androidx.test.junit)
+  implementation(libs.compose.ui.tooling)
+  implementation(libs.compose.ui.test.manifest)
+  implementation(libs.androidx.test.espresso)
+  implementation(libs.coroutines.test)
+  implementation(libs.turbine)
+
   implementation(project(":presentation:core"))
 }

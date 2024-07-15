@@ -47,7 +47,7 @@ abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect>, UiState
     protected fun result(useCaseAsserts: List<UseCaseAsserts<*>>, state: UiState, effects: List<Effect>) {
         uiResult(state, effects)
         useCaseAsserts.forEach { useCaseAssert ->
-            assertEquals(useCaseAssert.expected, useCaseAssert.actual)
+            assertEquals(useCaseAssert.expected(), useCaseAssert.actual)
         }
     }
 
@@ -79,7 +79,9 @@ abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect>, UiState
      */
     protected fun viewModelAction(useCaseSet: () -> Unit, action: viewModel.() -> Unit) {
         useCaseSet()
-        setUpViewModel()
+        runTest {
+            setUpViewModel()
+        }
         action(viewModel)
     }
 
@@ -90,7 +92,7 @@ abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect>, UiState
      * @param actual 実際の値
      */
     protected data class UseCaseAsserts<T>(
-        val expected: T,
+        val expected: () -> T,
         val actual: T,
     )
 }

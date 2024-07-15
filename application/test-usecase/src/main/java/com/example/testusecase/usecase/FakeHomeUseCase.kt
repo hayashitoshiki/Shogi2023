@@ -7,10 +7,11 @@ import com.example.usecaseinterface.usecase.HomeUseCase
 
 class FakeHomeUseCase : HomeUseCase {
 
-    var calSetGameRuleCount = 0
-        private set
+    private var calSetGameRuleCount = 0
     var calGetTimeLimitsCount = 0
         private set
+
+    fun getCalSetGameRuleCount() : Int = calSetGameRuleCount
 
     var setGameRuleLogic: (GameRule) -> Unit = { }
     var getTimeLimitsLogic: () -> GameTimeLimitRule = { GameTimeLimitRule.fake() }

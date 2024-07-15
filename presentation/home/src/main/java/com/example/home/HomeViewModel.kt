@@ -161,26 +161,26 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun updateTimeLimitRule(turn: Turn, totalTime: Seconds, seconds: Seconds) {
-        setState {
-            val timeLimitRule = when (turn) {
-                Turn.Normal.Black -> {
-                    timeLimitCard.timeLimitRule.copy(
-                        blackTimeLimitRule = timeLimitCard.timeLimitRule.blackTimeLimitRule.copy(
-                            totalTime = totalTime,
-                            byoyomi = seconds,
-                        ),
-                    )
-                }
-                Turn.Normal.White -> {
-                    timeLimitCard.timeLimitRule.copy(
-                        whiteTimeLimitRule = timeLimitCard.timeLimitRule.whiteTimeLimitRule.copy(
-                            totalTime = totalTime,
-                            byoyomi = seconds,
-                        ),
-                    )
-                }
+    private fun updateTimeLimitRule(turn: Turn, totalTime: Seconds, byoyomi: Seconds) {
+        val timeLimitRule = when (turn) {
+            Turn.Normal.Black -> {
+                state.value.timeLimitCard.timeLimitRule.copy(
+                    blackTimeLimitRule = state.value.timeLimitCard.timeLimitRule.blackTimeLimitRule.copy(
+                        totalTime = totalTime,
+                        byoyomi = byoyomi,
+                    ),
+                )
             }
+            Turn.Normal.White -> {
+                state.value.timeLimitCard.timeLimitRule.copy(
+                    whiteTimeLimitRule = state.value.timeLimitCard.timeLimitRule.whiteTimeLimitRule.copy(
+                        totalTime = totalTime,
+                        byoyomi = byoyomi,
+                    ),
+                )
+            }
+        }
+        setState {
             copy(
                 timeLimitCard = timeLimitCard.copy(
                     timeLimitRule = timeLimitRule,

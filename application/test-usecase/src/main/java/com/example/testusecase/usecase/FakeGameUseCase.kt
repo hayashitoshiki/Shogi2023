@@ -18,29 +18,29 @@ import kotlinx.coroutines.flow.StateFlow
 
 class FakeGameUseCase : GameUseCase {
 
-    var callObserveUpdateTimeLimitCount = 0
-        private set
-    var callGameStartCount = 0
-        private set
-    var callGameEndCount = 0
-        private set
-    var callGameInitCount = 0
-        private set
-    var callMovePieceCount = 0
-        private set
-    var callPutStandPieceCount = 0
-        private set
-    var callUseBoardPieceCount = 0
-        private set
-    var callUseStandPieceCount = 0
-        private set
-    var callSetEvolutionCount = 0
-        private set
+    private var callObserveUpdateTimeLimitCount = 0
+    private var callGameStartCount = 0
+    private var callGameEndCount = 0
+    private var callGameInitCount = 0
+    private var callMovePieceCount = 0
+    private var callPutStandPieceCount = 0
+    private var callUseBoardPieceCount = 0
+    private var callUseStandPieceCount = 0
+    private var callSetEvolutionCount = 0
+
+    fun getCallObserveUpdateTimeLimitCount() : Int = callObserveUpdateTimeLimitCount
+    fun getCallGameStartCount() : Int = callGameStartCount
+    fun getCallGameEndCount() : Int = callGameEndCount
+    fun getCallGameInitCount() : Int = callGameInitCount
+    fun getCallMovePieceCount() : Int = callMovePieceCount
+    fun getCallPutStandPieceCount() : Int = callPutStandPieceCount
+    fun getCallUseBoardPieceCount() : Int = callUseBoardPieceCount
+    fun getCallUseStandPieceCount() : Int = callUseStandPieceCount
+    fun getCallSetEvolutionCount() : Int = callSetEvolutionCount
 
     var observeUpdateTimeLimitLogic: () -> StateFlow<TimeLimitsUseCaseModel> = {
         MutableStateFlow(TimeLimitsUseCaseModel.fake())
     }
-
     var gameStartLogic: () -> GameInitResult = { GameInitResult.fake() }
     var gameEndLogic: () -> GameInitResult = { GameInitResult.fake() }
     var gameInitLogic: () -> GameInitResult = { GameInitResult.fake() }
