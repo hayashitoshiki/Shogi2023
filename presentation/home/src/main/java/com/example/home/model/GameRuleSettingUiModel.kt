@@ -18,7 +18,7 @@ sealed interface GameRuleSettingUiModel {
     sealed interface NonCustom : GameRuleSettingUiModel {
 
         /**
-         *  駒落ち
+         *  選択している駒落ち設定
          */
         val selectedHande: SelectedHande
 
@@ -54,7 +54,8 @@ sealed interface GameRuleSettingUiModel {
     /**
      * カスタム将棋
      *
-     * @property playersRule 駒落ち
+     * @property boardHandeRule 盤上設定
+     * @property logicRule 駒落ちルール
      */
     data class Custom(
         val boardHandeRule: BoardHandeRule,

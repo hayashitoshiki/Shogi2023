@@ -251,6 +251,7 @@ class HomeViewModel @Inject constructor(
     /**
      * 画面状態
      *
+     * @property timeLimitCard 持ち時間設定カード
      * @property ruleItems 設定カード一覧
      * @property showRuleItemIndex 表示されている設定Card
      */
