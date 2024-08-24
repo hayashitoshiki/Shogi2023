@@ -29,6 +29,7 @@ import com.example.testrepository.FakeLogRepository
 import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
+import com.example.usecaseinterface.usecase.GameUseCase
 import kotlinx.coroutines.test.TestScope
 import org.junit.Assert
 import org.junit.Before
@@ -40,7 +41,7 @@ import org.junit.Test
  */
 class GameUseCaseTest {
 
-    private lateinit var gameUseCase: com.example.usecaseinterface.usecase.GameUseCase
+    private lateinit var gameUseCase: GameUseCase
     private lateinit var logRepository: FakeLogRepository
     private lateinit var gameRuleRepository: FakeGameRuleRepository
     private lateinit var gameRepository: FakeBoardRepository
@@ -121,6 +122,7 @@ class GameUseCaseTest {
     fun 成り判定結果反映() {
         // expected
         data class Param(
+            val testCaseTitle: String,
             val board: Board,
             val ruleIsFirstCheckEnd: Boolean,
             val isDraw: Boolean,
@@ -141,8 +143,8 @@ class GameUseCaseTest {
         val case7_8Position = Position(5, 2)
 
         val params = listOf(
-            // 成り_詰み
             Param(
+                testCaseTitle = "成り_詰み",
                 ruleIsFirstCheckEnd = false,
                 isDraw = false,
                 isEvolution = true,
@@ -161,8 +163,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成り_王手_王手将棋
             Param(
+                testCaseTitle = "成り_王手_王手将棋",
                 ruleIsFirstCheckEnd = true,
                 isDraw = false,
                 isEvolution = true,
@@ -181,8 +183,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成り_王手_本将棋
             Param(
+                testCaseTitle = "成り_王手_本将棋",
                 ruleIsFirstCheckEnd = false,
                 isDraw = false,
                 isEvolution = true,
@@ -201,8 +203,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成り_千日手
             Param(
+                testCaseTitle = "成り_千日手",
                 ruleIsFirstCheckEnd = false,
                 isDraw = true,
                 isEvolution = true,
@@ -221,8 +223,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成り_のみ
             Param(
+                testCaseTitle = "成り_のみ",
                 ruleIsFirstCheckEnd = false,
                 isDraw = false,
                 isEvolution = true,
@@ -241,8 +243,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成り_詰み
             Param(
+                testCaseTitle = "成らない_詰み",
                 ruleIsFirstCheckEnd = false,
                 isDraw = false,
                 isEvolution = true,
@@ -261,8 +263,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成らない_王手_王手将棋
             Param(
+                testCaseTitle = "成らない_王手_王手将棋",
                 ruleIsFirstCheckEnd = true,
                 isDraw = false,
                 isEvolution = false,
@@ -281,8 +283,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成らない_王手_本将棋
             Param(
+                testCaseTitle = "成らない_王手_本将棋",
                 ruleIsFirstCheckEnd = false,
                 isDraw = false,
                 isEvolution = false,
@@ -301,8 +303,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成らない_千日手
             Param(
+                testCaseTitle = "成らない_千日手",
                 ruleIsFirstCheckEnd = false,
                 isDraw = true,
                 isEvolution = false,
@@ -321,8 +323,8 @@ class GameUseCaseTest {
                     nextTurn = Turn.Normal.White,
                 ),
             ),
-            // 成らない_のみ
             Param(
+                testCaseTitle = "成らない_のみ",
                 ruleIsFirstCheckEnd = false,
                 isDraw = false,
                 isEvolution = false,
@@ -368,7 +370,7 @@ class GameUseCaseTest {
                 isEvolution = param.isEvolution,
             )
             // result
-            Assert.assertEquals(expected, param.result)
+            Assert.assertEquals(param.testCaseTitle, expected, param.result)
         }
     }
 
@@ -498,6 +500,7 @@ class GameUseCaseTest {
     @Test
     fun 持ち駒を打つ() {
         data class Param(
+            val testCaseTitle: String,
             val position: Position,
             val board: Board,
             val rule: GameRule,
@@ -549,8 +552,8 @@ class GameUseCaseTest {
             it.update(case5Position, CellStatus.Fill.FromPiece(Piece.Surface.Kin, myTurn))
         }
         val params = listOf(
-            // case1
             Param(
+                testCaseTitle = "何もなし",
                 position = case1Position,
                 board = case1Board,
                 rule = case1Rule,
@@ -561,8 +564,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case2
             Param(
+                testCaseTitle = "千日手",
                 position = case2Position,
                 board = case2Board,
                 rule = case2Rule,
@@ -573,8 +576,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case3
             Param(
+                testCaseTitle = "王手_王手将棋じゃない",
                 position = case3Position,
                 board = case3Board,
                 rule = case3Rule,
@@ -585,8 +588,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case4
             Param(
+                testCaseTitle = "王手_王手将棋",
                 position = case4Position,
                 board = case4Board,
                 rule = case4Rule,
@@ -597,8 +600,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case5
             Param(
+                testCaseTitle = "詰み",
                 position = case5Position,
                 board = case5Board,
                 rule = case5Rule,
@@ -638,7 +641,7 @@ class GameUseCaseTest {
             )
 
             // result
-            Assert.assertEquals(expected, param.result)
+            Assert.assertEquals(param.testCaseTitle, expected, param.result)
         }
     }
 
@@ -670,6 +673,7 @@ class GameUseCaseTest {
     @Test
     fun 盤上の駒を動かす() {
         data class Param(
+            val testCaseTitle: String,
             val movePosition: Position,
             val holdPosition: Position,
             val board: Board,
@@ -772,8 +776,8 @@ class GameUseCaseTest {
         }
 
         val params = listOf(
-            // case1
             Param(
+                testCaseTitle = "何もなし",
                 movePosition = case1MovePosition,
                 holdPosition = case1HoldPosition,
                 board = case1Board,
@@ -785,8 +789,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case2
             Param(
+                testCaseTitle = "千日手",
                 movePosition = case2MovePosition,
                 holdPosition = case2HoldPosition,
                 board = case2Board,
@@ -798,8 +802,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case3
             Param(
+                testCaseTitle = "王手_王手将棋じゃない",
                 movePosition = case3MovePosition,
                 holdPosition = case3HoldPosition,
                 board = case3Board,
@@ -811,8 +815,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case4
             Param(
+                testCaseTitle = "王手_王手将棋",
                 movePosition = case4MovePosition,
                 holdPosition = case4HoldPosition,
                 board = case4Board,
@@ -824,8 +828,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case5
             Param(
+                testCaseTitle = "詰み",
                 movePosition = case5MovePosition,
                 holdPosition = case5HoldPosition,
                 board = case5Board,
@@ -837,8 +841,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case6
             Param(
+                testCaseTitle = "駒を取る",
                 movePosition = case6MovePosition,
                 holdPosition = case6HoldPosition,
                 board = case6Board,
@@ -850,8 +854,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case7
             Param(
+                testCaseTitle = "強制的に成る",
                 movePosition = case7MovePosition,
                 holdPosition = case7HoldPosition,
                 board = case7Board,
@@ -863,8 +867,8 @@ class GameUseCaseTest {
                     nextTurn = nextTurn,
                 ),
             ),
-            // case8
             Param(
+                testCaseTitle = "成れる",
                 movePosition = case8MovePosition,
                 holdPosition = case8HoldPosition,
                 board = case8Board,
@@ -876,8 +880,8 @@ class GameUseCaseTest {
                     nextTurn = case8NextTurn,
                 ),
             ),
-            // case9
             Param(
+                testCaseTitle = "トライルール",
                 movePosition = case9MovePosition,
                 holdPosition = case9HoldPosition,
                 board = case9Board,
