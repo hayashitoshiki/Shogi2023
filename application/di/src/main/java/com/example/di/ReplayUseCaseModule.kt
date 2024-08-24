@@ -1,6 +1,7 @@
 package com.example.di
 
 import com.example.usecase.ReplayUseCaseImpl
+import com.example.usecaseinterface.usecase.ReplayUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +14,5 @@ abstract class ReplayUseCaseModule {
     @Binds
     abstract fun bindAGameUseCaseModule(
         replayUseCase: ReplayUseCaseImpl,
-    ): com.example.usecaseinterface.usecase.ReplayUseCase
+    ): ReplayUseCase
 }

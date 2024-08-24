@@ -4,10 +4,10 @@ import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.GameTimeLimitRule
 
 /**
- * 将棋のビジネスロジック
+ * 将棋の設定に関するビジネスロジック
  *
  */
-interface HomeUseCase {
+interface GameSettingUseCase {
 
     /**
      * 対局の持ち時間設定を取得

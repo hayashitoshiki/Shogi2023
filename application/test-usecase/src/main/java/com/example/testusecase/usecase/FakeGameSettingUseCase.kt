@@ -3,9 +3,9 @@ package com.example.testusecase.usecase
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.GameTimeLimitRule
 import com.example.testDomainObject.rule.fake
-import com.example.usecaseinterface.usecase.HomeUseCase
+import com.example.usecaseinterface.usecase.GameSettingUseCase
 
-class FakeHomeUseCase : HomeUseCase {
+class FakeGameSettingUseCase : GameSettingUseCase {
 
     private var calSetGameRuleCount = 0
     var calGetTimeLimitsCount = 0

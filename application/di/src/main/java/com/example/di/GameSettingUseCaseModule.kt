@@ -1,6 +1,7 @@
 package com.example.di
 
-import com.example.usecase.HomeUseCaseImpl
+import com.example.usecase.GameSettingUseCaseImpl
+import com.example.usecaseinterface.usecase.GameSettingUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -8,10 +9,10 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class HomeUseCaseModule {
+abstract class GameSettingUseCaseModule {
 
     @Binds
     abstract fun bindAGameUseCaseModule(
-        homeUseCase: HomeUseCaseImpl,
-    ): com.example.usecaseinterface.usecase.HomeUseCase
+        homeUseCase: GameSettingUseCaseImpl,
+    ): GameSettingUseCase
 }

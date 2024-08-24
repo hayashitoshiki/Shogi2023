@@ -13,14 +13,14 @@ import com.example.home.model.TimeLimitCardUiModel
 import com.example.test.core.ViewModelTest
 import com.example.testDomainObject.game.fake
 import com.example.testDomainObject.rule.fake
-import com.example.testusecase.usecase.FakeHomeUseCase
+import com.example.testusecase.usecase.FakeGameSettingUseCase
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, HomeViewModel.Effect>() {
 
-    private lateinit var homeUseCase: FakeHomeUseCase
+    private lateinit var homeUseCase: FakeGameSettingUseCase
 
     override val initUiState = HomeViewModel.UiState(
         timeLimitCard = TimeLimitCardUiModel.INIT,
@@ -29,7 +29,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
     )
 
     override fun setUpUseCase() {
-        homeUseCase = FakeHomeUseCase()
+        homeUseCase = FakeGameSettingUseCase()
     }
 
     override fun setUpViewModel() {

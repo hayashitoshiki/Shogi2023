@@ -13,7 +13,7 @@ import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
 import com.example.test.uilogic.BaseContract
 import com.example.test.uilogic.BaseViewModel
-import com.example.usecaseinterface.usecase.HomeUseCase
+import com.example.usecaseinterface.usecase.GameSettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val useCase: HomeUseCase,
+    private val useCase: GameSettingUseCase,
 ) : BaseViewModel<HomeViewModel.UiState, HomeViewModel.Effect>() {
 
     init {
