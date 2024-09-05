@@ -1,6 +1,7 @@
 package com.example.repository
 
 import com.example.domainObject.game.log.GameRecode
+import java.time.LocalDateTime
 
 /**
  * 対局ログ用Repository
@@ -19,5 +20,5 @@ interface GameRecodeRepository {
    *
    * @return 棋譜
    */
-  fun get(): GameRecode
+  fun get(id: LocalDateTime): GameRecode?
 }
