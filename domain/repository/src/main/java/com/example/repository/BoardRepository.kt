@@ -5,22 +5,22 @@ import com.example.domainObject.game.board.Cell
 import com.example.domainObject.game.board.Position
 
 /**
- * ゲーム中しか用いない一時保持用のRepository
+ * 盤面用Repository
  *
  */
 interface BoardRepository {
 
     /**
-     * 盤面保存
+     * 保存
      *
-     * @param board 保存する盤面
+     * @param board 盤面
      */
     fun set(board: Board)
 
     /**
-     * 保存してある場面リストの取得
+     * 取得
      *
-     * @return 保持している盤面リスト
+     * @return 盤面
      */
     fun get(): Map<Map<Position, Cell>, Int>
 }

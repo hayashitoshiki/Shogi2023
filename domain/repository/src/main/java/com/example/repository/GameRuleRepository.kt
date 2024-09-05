@@ -2,19 +2,22 @@ package com.example.repository
 
 import com.example.domainObject.game.rule.GameRule
 
+/**
+ * 対局ルール用Repository
+ */
 interface GameRuleRepository {
 
     /**
-     * ルールの一時保存
+     * 保存
      *
-     * @param rule 保持するルール
+     * @param rule 対局ルール
      */
     fun set(rule: GameRule)
 
     /**
-     * ルール読み込み
+     * 取得
      *
-     * @return 一時保持したルール
+     * @return 対局ルール
      */
     fun get(): GameRule
 }
