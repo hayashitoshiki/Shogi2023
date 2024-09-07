@@ -1,6 +1,6 @@
 package com.example.game.util.model
 
-import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Position
 
 /**

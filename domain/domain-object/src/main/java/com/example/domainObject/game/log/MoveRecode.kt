@@ -1,6 +1,5 @@
 package com.example.domainObject.game.log
 
-import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn

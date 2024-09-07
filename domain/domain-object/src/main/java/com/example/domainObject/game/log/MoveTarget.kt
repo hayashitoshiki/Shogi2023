@@ -1,4 +1,4 @@
-package com.example.domainObject.game
+package com.example.domainObject.game.log
 
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.piece.Piece

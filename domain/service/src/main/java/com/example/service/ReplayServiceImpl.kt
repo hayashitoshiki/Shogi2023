@@ -3,7 +3,7 @@ package com.example.service
 import com.example.domainLogic.piece.degeneracy
 import com.example.domainLogic.piece.evolution
 import com.example.domainLogic.rule.getOpponentTurn
-import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Stand

@@ -1,6 +1,6 @@
 package com.example.game.util.mapper
 
-import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.log.MoveTarget
 import com.example.game.util.model.ReadyMoveInfoUiModel
 import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 

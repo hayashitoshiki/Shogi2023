@@ -2,7 +2,7 @@ package com.example.usecase
 
 import com.example.domainLogic.board.searchMoveBy
 import com.example.domainLogic.board.setUp
-import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Position

@@ -1,7 +1,7 @@
 package com.example.game.feature.game
 
 import androidx.lifecycle.viewModelScope
-import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand

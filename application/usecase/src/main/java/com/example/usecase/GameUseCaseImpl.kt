@@ -7,7 +7,7 @@ import com.example.domainLogic.board.updatePieceEvolution
 import com.example.domainLogic.rule.changeNextTurn
 import com.example.domainLogic.rule.getBeforeTurn
 import com.example.domainLogic.rule.getOpponentTurn
-import com.example.domainObject.game.MoveTarget
+import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.EvolutionCheckState
 import com.example.domainObject.game.board.Position
