@@ -22,7 +22,7 @@ import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.R
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun StandBox(

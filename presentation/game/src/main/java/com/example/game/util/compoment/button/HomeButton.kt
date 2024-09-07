@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.game.R
 import com.example.game.util.compoment.dialog.HomeButtonConfirmDialog
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun HomeButton(modifier: Modifier = Modifier, onClick: () -> Unit) {

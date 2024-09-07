@@ -35,7 +35,7 @@ import com.example.game.util.extension.stringRes
 import com.example.home.R
 import com.example.home.ext.stringRes
 import com.example.home.model.GameRuleSettingUiModel
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun CustomShogiSettingCard(

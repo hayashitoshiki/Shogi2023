@@ -9,7 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.game.R
 import com.example.game.feature.game.GameViewModel
 import com.example.game.util.extension.stringRes
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun GameEndDialog(

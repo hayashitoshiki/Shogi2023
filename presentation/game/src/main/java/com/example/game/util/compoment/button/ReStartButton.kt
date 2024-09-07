@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.game.R
 import com.example.game.util.compoment.dialog.RestartButtonConfirmDialog
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun ReStartButton(modifier: Modifier = Modifier, onClick: () -> Unit) {

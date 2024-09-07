@@ -1,4 +1,4 @@
-package com.example.test.uilogic
+package com.example.core.uilogic
 
 /**
  * Screen(UI描画）とViewModel(UIロジック）とのコンタクト定義

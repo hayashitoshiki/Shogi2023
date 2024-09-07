@@ -22,7 +22,7 @@ import com.example.domainObject.game.board.Cell
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Position
 import com.example.game.R
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun BoardBox(

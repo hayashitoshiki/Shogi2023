@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.domainObject.game.rule.Turn
 import com.example.game.R
 import com.example.game.util.compoment.dialog.LoseButtonConfirmDialog
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun LoseButton(modifier: Modifier = Modifier, enable: Boolean, turn: Turn, onClick: (Turn) -> Unit) {

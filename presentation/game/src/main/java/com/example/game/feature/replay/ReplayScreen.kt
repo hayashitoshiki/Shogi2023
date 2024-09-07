@@ -18,7 +18,7 @@ import androidx.navigation.NavHostController
 import com.example.game.util.compoment.GameBox
 import com.example.game.util.compoment.button.HomeButton
 import com.example.game.util.compoment.button.ReStartButton
-import com.example.test.navigation.NavigationScreens
+import com.example.core.navigation.NavigationScreens
 
 @Composable
 fun ReplayScreen(
@@ -41,8 +41,8 @@ fun ReplayScreen(
         ) {
             HomeButton(
                 onClick = {
-                    navController.navigate(NavigationScreens.HOMET_SCREEN.route) {
-                        popUpTo(NavigationScreens.HOMET_SCREEN.route) {
+                    navController.navigate(NavigationScreens.HOME_SCREEN.route) {
+                        popUpTo(NavigationScreens.HOME_SCREEN.route) {
                             inclusive = true
                         }
                     }

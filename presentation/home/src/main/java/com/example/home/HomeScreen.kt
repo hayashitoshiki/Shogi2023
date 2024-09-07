@@ -31,8 +31,8 @@ import com.example.home.compoment.card.FirstCheckShogiSettingCard
 import com.example.home.compoment.card.NormalShogiSettingCard
 import com.example.home.compoment.card.TimeLimitSettingCard
 import com.example.home.model.GameRuleSettingUiModel
-import com.example.test.navigation.NavigationScreens
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.navigation.NavigationScreens
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun HomeScreen(
@@ -51,7 +51,7 @@ fun HomeScreen(
     }
     navigateGameScreen.value?.apply {
         navController.navigate(NavigationScreens.GAME_SCREEN.route) {
-            popUpTo(NavigationScreens.HOMET_SCREEN.route) {
+            popUpTo(NavigationScreens.HOME_SCREEN.route) {
                 saveState = true
             }
             launchSingleTop = true

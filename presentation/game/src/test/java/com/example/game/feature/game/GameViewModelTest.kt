@@ -8,7 +8,7 @@ import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.model.ReadyMoveInfoUiModel
-import com.example.test.core.ViewModelTest
+import com.example.core.core.ViewModelTest
 import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.board.`fake●5一玉○5二香○5三金`
 import com.example.testDomainObject.board.fake詰まない

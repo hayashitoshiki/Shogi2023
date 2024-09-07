@@ -8,7 +8,7 @@ import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.Turn
 import com.example.home.R
 import com.example.home.model.GameRuleSettingUiModel
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun FirstCheckShogiSettingCard(

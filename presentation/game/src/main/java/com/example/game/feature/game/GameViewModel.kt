@@ -11,8 +11,8 @@ import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
-import com.example.test.uilogic.BaseContract
-import com.example.test.uilogic.BaseViewModel
+import com.example.core.uilogic.BaseContract
+import com.example.core.uilogic.BaseViewModel
 import com.example.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull

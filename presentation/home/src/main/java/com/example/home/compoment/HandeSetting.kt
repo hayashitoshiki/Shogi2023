@@ -24,7 +24,7 @@ import com.example.domainObject.game.rule.Turn
 import com.example.home.ext.stringRes
 import com.example.home.ext.turnImageRes
 import com.example.home.model.GameRuleSettingUiModel
-import com.example.test.theme.Shogi2023Theme
+import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun HandeSettingBox(

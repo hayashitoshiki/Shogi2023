@@ -10,7 +10,7 @@ import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
-import com.example.test.core.ViewModelTest
+import com.example.core.core.ViewModelTest
 import com.example.testDomainObject.game.fake
 import com.example.testDomainObject.rule.fake
 import com.example.testusecase.usecase.FakeGameSettingUseCase

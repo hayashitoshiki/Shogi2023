@@ -17,7 +17,7 @@ import com.example.game.util.compoment.GameBox
 import com.example.game.util.compoment.button.LoseButton
 import com.example.game.util.compoment.dialog.EvolutionConfirmDialog
 import com.example.game.util.compoment.dialog.GameEndDialog
-import com.example.test.navigation.NavigationScreens
+import com.example.core.navigation.NavigationScreens
 
 @Composable
 fun GameScreen(

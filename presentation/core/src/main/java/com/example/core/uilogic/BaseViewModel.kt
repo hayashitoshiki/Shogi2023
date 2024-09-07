@@ -1,4 +1,4 @@
-package com.example.test.uilogic
+package com.example.core.uilogic
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State

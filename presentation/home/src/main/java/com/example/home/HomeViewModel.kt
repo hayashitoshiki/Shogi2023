@@ -11,8 +11,8 @@ import com.example.domainObject.game.rule.PlayerTimeLimitRule
 import com.example.domainObject.game.rule.Turn
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.home.model.TimeLimitCardUiModel
-import com.example.test.uilogic.BaseContract
-import com.example.test.uilogic.BaseViewModel
+import com.example.core.uilogic.BaseContract
+import com.example.core.uilogic.BaseViewModel
 import com.example.usecaseinterface.usecase.GameSettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async

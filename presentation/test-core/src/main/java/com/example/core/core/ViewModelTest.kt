@@ -1,9 +1,9 @@
-package com.example.test.core
+package com.example.core.core
 
 import androidx.lifecycle.ViewModel
 import app.cash.turbine.test
-import com.example.test.uilogic.BaseContract
-import com.example.test.uilogic.BaseViewModel
+import com.example.core.uilogic.BaseContract
+import com.example.core.uilogic.BaseViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

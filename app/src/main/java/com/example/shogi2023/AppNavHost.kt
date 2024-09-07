@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import com.example.game.feature.game.GameScreen
 import com.example.game.feature.replay.ReplayScreen
 import com.example.home.HomeScreen
-import com.example.test.navigation.NavigationScreens
+import com.example.core.navigation.NavigationScreens
 
 /**
  * NavigationHost 画面遷移定義
@@ -21,9 +21,9 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavigationScreens.HOMET_SCREEN.route,
+        startDestination = NavigationScreens.HOME_SCREEN.route,
     ) {
-        composable(route = NavigationScreens.HOMET_SCREEN.route) {
+        composable(route = NavigationScreens.HOME_SCREEN.route) {
             HomeScreen(
                 navController = navController,
                 viewModel = hiltViewModel(),
