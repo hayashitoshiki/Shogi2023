@@ -24,8 +24,8 @@ import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.rule.fake
 import com.example.testDomainObject.rule.fakeFromLogicRuleFirstCheckEnd
 import com.example.testrepository.FakeBoardRepository
+import com.example.testrepository.FakeGameRecodeRepository
 import com.example.testrepository.FakeGameRuleRepository
-import com.example.testrepository.FakeLogRepository
 import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
@@ -42,7 +42,7 @@ import org.junit.Test
 class GameUseCaseTest {
 
     private lateinit var gameUseCase: GameUseCase
-    private lateinit var logRepository: FakeLogRepository
+    private lateinit var gameRecodeRepository: FakeGameRecodeRepository
     private lateinit var gameRuleRepository: FakeGameRuleRepository
     private lateinit var gameRepository: FakeBoardRepository
     private val gameService = GameServiceImpl()
@@ -51,10 +51,10 @@ class GameUseCaseTest {
     fun setUp() {
         val coroutineScope = TestScope()
         gameRuleRepository = FakeGameRuleRepository()
-        logRepository = FakeLogRepository()
+        gameRecodeRepository = FakeGameRecodeRepository()
         gameRepository = FakeBoardRepository()
         gameUseCase = GameUseCaseImpl(
-            logRepository = logRepository,
+            gameRecodeRepository = gameRecodeRepository,
             gameRuleRepository = gameRuleRepository,
             boardRepository = gameRepository,
             gameService = gameService,
@@ -99,7 +99,7 @@ class GameUseCaseTest {
 
         // result
         Assert.assertEquals(expected, result)
-        Assert.assertEquals(logRepository.callCreateGameLogCount, 1)
+        Assert.assertEquals(gameRecodeRepository.callSetCount, 1)
     }
 
     /**

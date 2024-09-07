@@ -3,18 +3,18 @@ package com.example.service
 import com.example.domainLogic.piece.degeneracy
 import com.example.domainLogic.piece.evolution
 import com.example.domainLogic.rule.getOpponentTurn
-import com.example.domainObject.game.Log
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.log.MoveRecode
 import com.example.domainObject.game.piece.Piece
 import com.example.serviceinterface.ReplayService
 import javax.inject.Inject
 
 class ReplayServiceImpl @Inject constructor() : ReplayService {
 
-    override fun goNext(board: Board, stand: Stand, log: Log): Pair<Board, Stand> {
+    override fun goNext(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand> {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
                 board.getPieceOrNullByPosition(moveTarget.position)?.let { cellStatus ->
@@ -43,7 +43,7 @@ class ReplayServiceImpl @Inject constructor() : ReplayService {
         return board to stand
     }
 
-    override fun goBack(board: Board, stand: Stand, log: Log): Pair<Board, Stand> {
+    override fun goBack(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand> {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
                 board.getPieceOrNullByPosition(log.afterPosition)?.let { movedCellStatus ->

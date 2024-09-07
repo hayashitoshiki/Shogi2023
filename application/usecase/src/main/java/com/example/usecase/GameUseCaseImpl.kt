@@ -7,7 +7,6 @@ import com.example.domainLogic.board.updatePieceEvolution
 import com.example.domainLogic.rule.changeNextTurn
 import com.example.domainLogic.rule.getBeforeTurn
 import com.example.domainLogic.rule.getOpponentTurn
-import com.example.domainObject.game.Log
 import com.example.domainObject.game.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.EvolutionCheckState
@@ -15,11 +14,15 @@ import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.game.TimeLimit
+import com.example.domainObject.game.log.GameRecode
+import com.example.domainObject.game.log.GameResult
+import com.example.domainObject.game.log.MoveRecode
 import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
 import com.example.repository.BoardRepository
+import com.example.repository.GameRecodeRepository
 import com.example.repository.GameRuleRepository
-import com.example.repository.LogRepository
 import com.example.serviceinterface.GameService
 import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
@@ -41,7 +44,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 class GameUseCaseImpl @Inject constructor(
-    private val logRepository: LogRepository,
+    private val gameRecodeRepository: GameRecodeRepository,
     private val gameRuleRepository: GameRuleRepository,
     private val boardRepository: BoardRepository,
     private val gameService: GameService,
@@ -179,13 +182,12 @@ class GameUseCaseImpl @Inject constructor(
         val whiteStand = Stand.setUp()
         val blackTimeLimit = TimeLimit(timeLimitRule.blackTimeLimitRule)
         val whiteTimeLimit = TimeLimit(timeLimitRule.whiteTimeLimitRule)
-        val now = LocalDateTime.now()
+        createGameRecode(rule)
         mutableTimeLimitsUseCaseModelStateFlow.value =
             TimeLimitsUseCaseModel(
                 blackTimeLimit = blackTimeLimit,
                 whiteTimeLimit = whiteTimeLimit,
             )
-        logRepository.createGameLog(now)
 
         return GameInitResult(
             board = board,
@@ -195,6 +197,16 @@ class GameUseCaseImpl @Inject constructor(
             whiteTimeLimit = whiteTimeLimit,
             turn = Turn.Normal.Black,
         )
+    }
+
+    private fun createGameRecode(rule: GameRule) {
+        val gameRecode = GameRecode(
+            date = LocalDateTime.now(),
+            result = GameResult.Playing,
+            rule = rule,
+            moveRecodes = emptyList(),
+        )
+        gameRecodeRepository.set(gameRecode)
     }
 
     override fun movePiece(
@@ -248,8 +260,7 @@ class GameUseCaseImpl @Inject constructor(
     ): SetEvolutionResult {
         if (isEvolution) {
             board.updatePieceEvolution(position)
-            val key = logRepository.getLatestKey()
-            logRepository.fixLogByEvolution(key)
+            updateMoveRecodeEvolution()
         }
         val rule = gameRuleRepository.get()
         val isWin = gameService.checkGameSet(board, stand, turn, rule)
@@ -281,6 +292,17 @@ class GameUseCaseImpl @Inject constructor(
         return NextResult.Hint(
             hintPositionList = hintPositionList,
         )
+    }
+
+    private fun updateMoveRecodeEvolution() {
+        val gameRecode = gameRecodeRepository.getLast()
+            ?.takeIf { it.moveRecodes.isNotEmpty() }
+            ?: return
+        val updatedMoveRecodes = gameRecode.moveRecodes
+            .toMutableList()
+            .apply { this[lastIndex] = last().copy(isEvolution = true) }
+        val newGameRecode = gameRecode.copy(moveRecodes = updatedMoveRecodes)
+        gameRecodeRepository.set(newGameRecode)
     }
 
     private fun setMove(
@@ -380,15 +402,16 @@ class GameUseCaseImpl @Inject constructor(
         isEvolution: Boolean,
         takePiece: Piece?,
     ) {
-        val log = Log(
+        val moveRecode = MoveRecode(
             turn = turn,
             moveTarget = moveTarget,
             afterPosition = afterPosition,
             isEvolution = isEvolution,
             takePiece = takePiece,
         )
-        val data = logRepository.getLatestKey()
-
-        logRepository.addLog(data, log)
+        val gameRecode = gameRecodeRepository.getLast()
+            ?.let { it.copy(moveRecodes = it.moveRecodes + moveRecode) }
+            ?: return
+        gameRecodeRepository.set(gameRecode)
     }
 }

@@ -18,4 +18,9 @@ sealed interface GameResult {
    * 引き分け
    */
   data object Draw : GameResult
+
+  /**
+   * 対局中
+   */
+  data object Playing: GameResult
 }

@@ -1,8 +1,8 @@
 package com.example.serviceinterface
 
-import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.log.MoveRecode
 
 /**
  * 将棋の棋譜再生に関するドメインロジック
@@ -18,7 +18,7 @@ interface ReplayService {
      * @param log 棋譜
      * @return １手進んだ状態
      */
-    fun goNext(board: Board, stand: Stand, log: Log): Pair<Board, Stand>
+    fun goNext(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand>
 
     /**
      * １手戻る
@@ -28,5 +28,5 @@ interface ReplayService {
      * @param log 棋譜
      * @return １手戻った状態
      */
-    fun goBack(board: Board, stand: Stand, log: Log): Pair<Board, Stand>
+    fun goBack(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand>
 }

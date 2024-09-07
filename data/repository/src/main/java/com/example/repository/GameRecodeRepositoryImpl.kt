@@ -2,8 +2,9 @@ package com.example.repository
 
 import com.example.domainObject.game.log.GameRecode
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class GameRecodeRepositoryImpl: GameRecodeRepository {
+class GameRecodeRepositoryImpl @Inject constructor() : GameRecodeRepository {
 
   private val cash: MutableMap<LocalDateTime, GameRecode> = mutableMapOf()
 
@@ -13,5 +14,9 @@ class GameRecodeRepositoryImpl: GameRecodeRepository {
 
   override fun get(id: LocalDateTime): GameRecode? {
     return cash[id]
+  }
+
+  override fun getLast(): GameRecode? {
+    return cash.maxByOrNull { it.key }?.value
   }
 }

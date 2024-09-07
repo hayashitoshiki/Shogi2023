@@ -1,9 +1,9 @@
 package com.example.usecaseinterface.model.result
 
-import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
+import com.example.domainObject.game.log.MoveRecode
 
 /**
  * ゲーム初期化時の返却物
@@ -19,5 +19,5 @@ data class ReplayInitResult(
     val whiteStand: Stand,
     val blackTimeLimit: TimeLimit,
     val whiteTimeLimit: TimeLimit,
-    val log: List<Log>?,
+    val log: List<MoveRecode>?,
 )

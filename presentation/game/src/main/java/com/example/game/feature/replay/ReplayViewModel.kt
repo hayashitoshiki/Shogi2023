@@ -1,10 +1,10 @@
 package com.example.game.feature.replay
 
 import androidx.lifecycle.ViewModel
-import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
+import com.example.domainObject.game.log.MoveRecode
 import com.example.domainObject.game.rule.Turn
 import com.example.usecaseinterface.usecase.ReplayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -97,7 +97,7 @@ class ReplayViewModel @Inject constructor(
         val whiteStand: Stand,
         val blackTimeLimit: TimeLimit,
         val whiteTimeLimit: TimeLimit,
-        val log: List<Log>,
+        val log: List<MoveRecode>,
         val logNextIndex: Int,
     )
 }

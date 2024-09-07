@@ -21,4 +21,11 @@ interface GameRecodeRepository {
    * @return 棋譜
    */
   fun get(id: LocalDateTime): GameRecode?
+
+  /**
+   * 最新の棋譜を取得
+   *
+   * @return 棋譜
+   */
+  fun getLast(): GameRecode?
 }

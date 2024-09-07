@@ -1,8 +1,8 @@
 package com.example.usecaseinterface.usecase
 
-import com.example.domainObject.game.Log
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.log.MoveRecode
 import com.example.usecaseinterface.model.result.ReplayGoBackResult
 import com.example.usecaseinterface.model.result.ReplayGoNextResult
 import com.example.usecaseinterface.model.result.ReplayInitResult
@@ -28,7 +28,7 @@ interface ReplayUseCase {
      * @param log 読み込む棋譜
      * @return 進めた局面
      */
-    fun goNext(board: Board, stand: Stand, log: Log): ReplayGoNextResult
+    fun goNext(board: Board, stand: Stand, log: MoveRecode): ReplayGoNextResult
 
     /**
      * 指定した棋譜を読み込み、局面を戻す
@@ -38,5 +38,5 @@ interface ReplayUseCase {
      * @param log 読み込む棋譜
      * @return 戻した局面
      */
-    fun goBack(board: Board, stand: Stand, log: Log): ReplayGoBackResult
+    fun goBack(board: Board, stand: Stand, log: MoveRecode): ReplayGoBackResult
 }
