@@ -19,4 +19,6 @@ data class MoveRecode(
   val afterPosition: Position,
   val isEvolution: Boolean,
   val takePiece: Piece?,
-)
+) {
+  companion object
+}

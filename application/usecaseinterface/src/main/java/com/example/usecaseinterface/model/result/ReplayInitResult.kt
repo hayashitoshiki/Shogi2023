@@ -20,4 +20,6 @@ data class ReplayInitResult(
     val blackTimeLimit: TimeLimit,
     val whiteTimeLimit: TimeLimit,
     val log: List<MoveRecode>?,
-)
+) {
+    companion object
+}

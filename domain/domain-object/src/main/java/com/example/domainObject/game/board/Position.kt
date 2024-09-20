@@ -6,4 +6,6 @@ package com.example.domainObject.game.board
  * @property row 横
  * @property column 縦
  */
-data class Position(val row: Int, val column: Int)
+data class Position(val row: Int, val column: Int) {
+  companion object
+}

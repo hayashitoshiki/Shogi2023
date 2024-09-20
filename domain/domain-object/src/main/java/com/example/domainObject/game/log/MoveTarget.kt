@@ -16,7 +16,9 @@ sealed interface MoveTarget {
      */
     data class Board(
         val position: Position,
-    ) : MoveTarget
+    ) : MoveTarget {
+        companion object
+    }
 
     /**
      * 持ち駒台上の駒
@@ -25,5 +27,7 @@ sealed interface MoveTarget {
      */
     data class Stand(
         val piece: Piece,
-    ) : MoveTarget
+    ) : MoveTarget {
+        companion object
+    }
 }

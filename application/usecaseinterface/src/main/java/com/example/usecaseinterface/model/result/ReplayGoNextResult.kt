@@ -12,4 +12,6 @@ import com.example.domainObject.game.board.Stand
 data class ReplayGoNextResult(
     val board: Board,
     val stand: Stand,
-)
+) {
+    companion object
+}
