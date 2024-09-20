@@ -1,6 +1,7 @@
 package com.example.game.feature.replay
 
-import androidx.lifecycle.ViewModel
+import com.example.core.uilogic.BaseContract
+import com.example.core.uilogic.BaseViewModel
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
@@ -8,18 +9,15 @@ import com.example.domainObject.game.log.MoveRecode
 import com.example.domainObject.game.rule.Turn
 import com.example.usecaseinterface.usecase.ReplayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class ReplayViewModel @Inject constructor(
     private val useCase: ReplayUseCase,
-) : ViewModel() {
+) : BaseViewModel<ReplayViewModel.UiState, ReplayViewModel.Effect>() {
 
-    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(
-        UiState(
+    override fun initState(): UiState {
+        return  UiState(
             board = Board(),
             blackStand = Stand(),
             whiteStand = Stand(),
@@ -27,59 +25,64 @@ class ReplayViewModel @Inject constructor(
             blackTimeLimit = TimeLimit.INIT,
             whiteTimeLimit = TimeLimit.INIT,
             logNextIndex = 0,
-        ),
-    )
-    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+        )
+    }
 
     init {
         initBard()
     }
 
-    fun initBard() {
+    private fun initBard() {
         val result = useCase.replayInit()
-        _uiState.value = UiState(
-            board = result.board,
-            blackStand = result.blackStand,
-            whiteStand = result.whiteStand,
-            blackTimeLimit = result.blackTimeLimit,
-            whiteTimeLimit = result.whiteTimeLimit,
-            log = result.log ?: emptyList(),
-            logNextIndex = 0,
-        )
+        setState {
+            UiState(
+                board = result.board,
+                blackStand = result.blackStand,
+                whiteStand = result.whiteStand,
+                blackTimeLimit = result.blackTimeLimit,
+                whiteTimeLimit = result.whiteTimeLimit,
+                log = result.log ?: emptyList(),
+                logNextIndex = 0,
+            )
+        }
     }
 
-    fun tagLeft() {
-        val logIndex = uiState.value.logNextIndex - 1
+    fun tapLeft() {
+        val logIndex = state.value.logNextIndex - 1
         if (logIndex < 0) return
-        val log = uiState.value.log[logIndex]
+        val log = state.value.log[logIndex]
         val stand = when (log.turn) {
-            Turn.Normal.Black -> uiState.value.blackStand
-            Turn.Normal.White -> uiState.value.whiteStand
+            Turn.Normal.Black -> state.value.blackStand
+            Turn.Normal.White -> state.value.whiteStand
         }
-        val result = useCase.goBack(uiState.value.board, stand, log)
-        _uiState.value = uiState.value.copy(
-            board = result.board,
-            logNextIndex = logIndex,
-            blackStand = if (log.turn == Turn.Normal.Black) result.stand else uiState.value.blackStand,
-            whiteStand = if (log.turn == Turn.Normal.White) result.stand else uiState.value.whiteStand,
-        )
+        val result = useCase.goBack(state.value.board, stand, log)
+        setState {
+            copy(
+                board = result.board,
+                logNextIndex = logIndex,
+                blackStand = if (log.turn == Turn.Normal.Black) result.stand else state.value.blackStand,
+                whiteStand = if (log.turn == Turn.Normal.White) result.stand else state.value.whiteStand,
+            )
+        }
     }
 
-    fun tagRight() {
-        val logIndex = uiState.value.logNextIndex
-        if (uiState.value.log.size <= logIndex) return
-        val log = uiState.value.log[logIndex]
+    fun tapRight() {
+        val logIndex = state.value.logNextIndex
+        if (state.value.log.size <= logIndex) return
+        val log = state.value.log[logIndex]
         val stand = when (log.turn) {
-            Turn.Normal.Black -> uiState.value.blackStand
-            Turn.Normal.White -> uiState.value.whiteStand
+            Turn.Normal.Black -> state.value.blackStand
+            Turn.Normal.White -> state.value.whiteStand
         }
-        val result = useCase.goNext(uiState.value.board, stand, log)
-        _uiState.value = uiState.value.copy(
-            board = result.board,
-            logNextIndex = logIndex + 1,
-            blackStand = if (log.turn == Turn.Normal.Black) result.stand else uiState.value.blackStand,
-            whiteStand = if (log.turn == Turn.Normal.White) result.stand else uiState.value.whiteStand,
-        )
+        val result = useCase.goNext(state.value.board, stand, log)
+        setState {
+            copy(
+                board = result.board,
+                logNextIndex = logIndex + 1,
+                blackStand = if (log.turn == Turn.Normal.Black) result.stand else state.value.blackStand,
+                whiteStand = if (log.turn == Turn.Normal.White) result.stand else state.value.whiteStand,
+            )
+        }
     }
 
     /**
@@ -99,5 +102,7 @@ class ReplayViewModel @Inject constructor(
         val whiteTimeLimit: TimeLimit,
         val log: List<MoveRecode>,
         val logNextIndex: Int,
-    )
+    ): BaseContract.State
+
+    sealed interface Effect : BaseContract.Effect
 }

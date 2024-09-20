@@ -26,7 +26,7 @@ fun ReplayScreen(
     navController: NavHostController,
     viewModel: ReplayViewModel,
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.state
     val backHandlingEnabled by remember { mutableStateOf(true) }
     BackHandler(backHandlingEnabled) { }
 
@@ -77,13 +77,13 @@ fun ReplayScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .clickable { viewModel.tagLeft() },
+                        .clickable { viewModel.tapLeft() },
                 )
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .clickable { viewModel.tagRight() },
+                        .clickable { viewModel.tapRight() },
                 )
             }
         }
