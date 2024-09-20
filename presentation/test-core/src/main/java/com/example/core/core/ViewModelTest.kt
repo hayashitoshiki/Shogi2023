@@ -44,10 +44,10 @@ abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect>, UiState
      * @param state Stateの期待値
      * @param effects Effectの期待値
      */
-    protected fun result(useCaseAsserts: List<UseCaseAsserts<*>>, state: UiState, effects: List<Effect>) {
-        uiResult(state, effects)
+    protected fun result(case: String = "", useCaseAsserts: List<UseCaseAsserts<*>>, state: UiState, effects: List<Effect>) {
+        uiResult(case, state, effects)
         useCaseAsserts.forEach { useCaseAssert ->
-            assertEquals(useCaseAssert.expected(), useCaseAssert.actual)
+            assertEquals(case, useCaseAssert.expected(), useCaseAssert.actual)
         }
     }
 
@@ -57,16 +57,16 @@ abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect>, UiState
      * @param state Stateの期待値
      * @param effects Effectの期待値
      */
-    private fun uiResult(state: UiState, effects: List<Effect>) = runTest {
+    private fun uiResult(case: String, state: UiState, effects: List<Effect>) = runTest {
         val resultState = viewModel.state.value
 
         // 比較
-        Assert.assertEquals(resultState, state)
+        Assert.assertEquals(case, resultState, state)
         // Effect
         effects.forEach { effect ->
             viewModel.effect.test {
                 val item = awaitItem()
-                assertEquals(effect, item)
+                assertEquals(case, effect, item)
             }
         }
     }
