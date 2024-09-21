@@ -14,19 +14,22 @@ interface ReplayService {
      * １手進む
      *
      * @param board 将棋盤
-     * @param stand 駒
+     * @param blackStand 先手の持ち駒
+     * @param whiteStand 後手の持ち駒
      * @param log 棋譜
      * @return １手進んだ状態
      */
-    fun goNext(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand>
+    fun goNext(board: Board, blackStand: Stand, whiteStand: Stand, log: MoveRecode): Triple<Board, Stand, Stand>
 
     /**
      * １手戻る
      *
      * @param board 将棋盤
-     * @param stand 駒
+     * @param blackStand 先手の持ち駒
+     * @param whiteStand 後手の持ち駒
      * @param log 棋譜
      * @return １手戻った状態
      */
-    fun goBack(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand>
+    fun goBack(board: Board, blackStand: Stand, whiteStand: Stand, log: MoveRecode): Triple<Board, Stand, Stand>
 }
+

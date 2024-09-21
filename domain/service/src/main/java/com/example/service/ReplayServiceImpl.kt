@@ -9,12 +9,13 @@ import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.log.MoveRecode
 import com.example.domainObject.game.piece.Piece
+import com.example.domainObject.game.rule.Turn
 import com.example.serviceinterface.ReplayService
 import javax.inject.Inject
 
 class ReplayServiceImpl @Inject constructor() : ReplayService {
 
-    override fun goNext(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand> {
+    override fun goNext(board: Board, blackStand: Stand, whiteStand: Stand, log: MoveRecode): Triple<Board, Stand, Stand> {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
                 board.getPieceOrNullByPosition(moveTarget.position)?.let { cellStatus ->
@@ -31,19 +32,30 @@ class ReplayServiceImpl @Inject constructor() : ReplayService {
             }
 
             is MoveTarget.Stand -> {
-                stand.remove(moveTarget.piece)
+                when(log.turn) {
+                    Turn.Normal.Black -> blackStand.remove(moveTarget.piece)
+                    Turn.Normal.White -> whiteStand.remove(moveTarget.piece)
+                }
+
                 board.update(
                     log.afterPosition,
                     CellStatus.Fill.FromPiece(moveTarget.piece, log.turn),
                 )
             }
         }
-        standPieceUpdate(stand, log.takePiece, true)
+        when(log.turn) {
+            Turn.Normal.Black -> {
+                standPieceUpdate(blackStand, log.takePiece, true)
+            }
+            Turn.Normal.White -> {
+                standPieceUpdate(whiteStand, log.takePiece, true)
+            }
+        }
 
-        return board to stand
+        return Triple(board, blackStand, whiteStand)
     }
 
-    override fun goBack(board: Board, stand: Stand, log: MoveRecode): Pair<Board, Stand> {
+    override fun goBack(board: Board, blackStand: Stand, whiteStand: Stand, log: MoveRecode): Triple<Board, Stand, Stand> {
         when (val moveTarget = log.moveTarget) {
             is MoveTarget.Board -> {
                 board.getPieceOrNullByPosition(log.afterPosition)?.let { movedCellStatus ->
@@ -65,13 +77,23 @@ class ReplayServiceImpl @Inject constructor() : ReplayService {
             }
 
             is MoveTarget.Stand -> {
-                stand.add(moveTarget.piece)
+                when(log.turn) {
+                    Turn.Normal.Black -> blackStand.add(moveTarget.piece)
+                    Turn.Normal.White -> whiteStand.add(moveTarget.piece)
+                }
                 board.update(log.afterPosition, CellStatus.Empty)
             }
         }
-        standPieceUpdate(stand, log.takePiece, false)
+        when(log.turn) {
+            Turn.Normal.Black -> {
+                standPieceUpdate(blackStand, log.takePiece, false)
+            }
+            Turn.Normal.White -> {
+                standPieceUpdate(whiteStand, log.takePiece, false)
+            }
+        }
 
-        return board to stand
+        return Triple(board, blackStand, whiteStand)
     }
 
     private fun standPieceUpdate(stand: Stand, takePiece: Piece?, isAdd: Boolean) {
