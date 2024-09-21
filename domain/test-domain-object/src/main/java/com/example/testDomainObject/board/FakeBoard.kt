@@ -6,6 +6,16 @@ import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
 
+fun Board.Companion.fake(
+    cellList: List<Pair<Position, CellStatus>> = emptyList(),
+): Board {
+    return Board().also { board ->
+        cellList.forEach { (position, cellStatus) ->
+            board.update(position, cellStatus)
+        }
+    }
+}
+
 /**
  * 下記の局面を返す
  *
