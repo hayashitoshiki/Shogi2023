@@ -1,11 +1,8 @@
 package com.example.usecaseinterface.usecase
 
-import com.example.domainObject.game.board.Board
-import com.example.domainObject.game.board.Stand
-import com.example.domainObject.game.log.MoveRecode
-import com.example.usecaseinterface.model.result.ReplayGoBackResult
-import com.example.usecaseinterface.model.result.ReplayGoNextResult
+import com.example.usecaseinterface.model.ReplayLoadMoveRecodeParam
 import com.example.usecaseinterface.model.result.ReplayInitResult
+import com.example.usecaseinterface.model.result.ReplayLoadMoveRecodeResult
 
 /**
  * 将棋のビジネスロジック
@@ -23,20 +20,16 @@ interface ReplayUseCase {
     /**
      * 指定した棋譜を読み込み、局面を進める
      *
-     * @param board 将棋盤
-     * @param stand 持ち駒
-     * @param log 読み込む棋譜
+     * @param param 盤面を進める際のパラメータ
      * @return 進めた局面
      */
-    fun goNext(board: Board, stand: Stand, log: MoveRecode): ReplayGoNextResult
+    fun goNext(param: ReplayLoadMoveRecodeParam): ReplayLoadMoveRecodeResult
 
     /**
      * 指定した棋譜を読み込み、局面を戻す
      *
-     * @param board 将棋盤
-     * @param stand 持ち駒
-     * @param log 読み込む棋譜
+     * @param param 盤面を戻す際のパラメータ
      * @return 戻した局面
      */
-    fun goBack(board: Board, stand: Stand, log: MoveRecode): ReplayGoBackResult
+    fun goBack(param: ReplayLoadMoveRecodeParam): ReplayLoadMoveRecodeResult
 }

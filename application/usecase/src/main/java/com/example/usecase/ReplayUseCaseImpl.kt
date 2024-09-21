@@ -4,13 +4,12 @@ import com.example.domainLogic.board.setUp
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
-import com.example.domainObject.game.log.MoveRecode
 import com.example.repository.GameRecodeRepository
 import com.example.repository.GameRuleRepository
 import com.example.serviceinterface.ReplayService
-import com.example.usecaseinterface.model.result.ReplayGoBackResult
-import com.example.usecaseinterface.model.result.ReplayGoNextResult
+import com.example.usecaseinterface.model.ReplayLoadMoveRecodeParam
 import com.example.usecaseinterface.model.result.ReplayInitResult
+import com.example.usecaseinterface.model.result.ReplayLoadMoveRecodeResult
 import com.example.usecaseinterface.usecase.ReplayUseCase
 import javax.inject.Inject
 
@@ -39,19 +38,37 @@ class ReplayUseCaseImpl @Inject constructor(
         )
     }
 
-    override fun goNext(board: Board, stand: Stand, log: MoveRecode): ReplayGoNextResult {
-        val result = replayService.goNext(board, stand, log)
-        return ReplayGoNextResult(
+    override fun goNext(param: ReplayLoadMoveRecodeParam): ReplayLoadMoveRecodeResult {
+        val index = param.index + 1
+        val log = param.log.getOrNull(index) ?: return ReplayLoadMoveRecodeResult(
+            board = param.board,
+            blackStand = param.blackStand,
+            whiteStand = param.whiteStand,
+            index = param.index
+        )
+        val result = replayService.goNext(param.board, param.blackStand, param.whiteStand, log)
+        return ReplayLoadMoveRecodeResult(
             board = result.first,
-            stand = result.second,
+            blackStand = result.second,
+            whiteStand = result.third,
+            index = index
         )
     }
 
-    override fun goBack(board: Board, stand: Stand, log: MoveRecode): ReplayGoBackResult {
-        val result = replayService.goBack(board, stand, log)
-        return ReplayGoBackResult(
+    override fun goBack(param: ReplayLoadMoveRecodeParam): ReplayLoadMoveRecodeResult {
+        val index = param.index
+        val log = param.log.getOrNull(index) ?: return ReplayLoadMoveRecodeResult(
+            board = param.board,
+            blackStand = param.blackStand,
+            whiteStand = param.whiteStand,
+            index = param.index
+        )
+        val result = replayService.goBack(param.board, param.blackStand, param.whiteStand, log)
+        return ReplayLoadMoveRecodeResult(
             board = result.first,
-            stand = result.second,
+            blackStand = result.second,
+            whiteStand = result.third,
+            index = index - 1,
         )
     }
 }
