@@ -6,7 +6,8 @@ import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.log.MoveRecode
-import com.example.domainObject.game.rule.Turn
+import com.example.usecaseinterface.model.ReplayLoadMoveRecodeParam
+import com.example.usecaseinterface.model.result.ReplayLoadMoveRecodeResult
 import com.example.usecaseinterface.usecase.ReplayUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -48,39 +49,30 @@ class ReplayViewModel @Inject constructor(
     }
 
     fun tapLeft() {
-        val logIndex = state.value.logNextIndex - 1
-        if (logIndex < 0) return
-        val log = state.value.log[logIndex]
-        val stand = when (log.turn) {
-            Turn.Normal.Black -> state.value.blackStand
-            Turn.Normal.White -> state.value.whiteStand
-        }
-        val result = useCase.goBack(state.value.board, stand, log)
-        setState {
-            copy(
-                board = result.board,
-                logNextIndex = logIndex,
-                blackStand = if (log.turn == Turn.Normal.Black) result.stand else state.value.blackStand,
-                whiteStand = if (log.turn == Turn.Normal.White) result.stand else state.value.whiteStand,
-            )
-        }
+        updateBoard(useCase::goBack)
     }
 
     fun tapRight() {
-        val logIndex = state.value.logNextIndex
-        if (state.value.log.size <= logIndex) return
-        val log = state.value.log[logIndex]
-        val stand = when (log.turn) {
-            Turn.Normal.Black -> state.value.blackStand
-            Turn.Normal.White -> state.value.whiteStand
+        updateBoard(useCase::goNext)
+    }
+
+    private fun updateBoard(useCase: (param: ReplayLoadMoveRecodeParam) -> ReplayLoadMoveRecodeResult) {
+        val param = state.value.let { state ->
+            ReplayLoadMoveRecodeParam(
+                board = state.board,
+                blackStand = state.blackStand,
+                whiteStand = state.whiteStand,
+                index = state.logNextIndex,
+                log = state.log,
+            )
         }
-        val result = useCase.goNext(state.value.board, stand, log)
+        val result = useCase(param)
         setState {
             copy(
                 board = result.board,
-                logNextIndex = logIndex + 1,
-                blackStand = if (log.turn == Turn.Normal.Black) result.stand else state.value.blackStand,
-                whiteStand = if (log.turn == Turn.Normal.White) result.stand else state.value.whiteStand,
+                logNextIndex = result.index,
+                blackStand = result.blackStand,
+                whiteStand = result.whiteStand,
             )
         }
     }
