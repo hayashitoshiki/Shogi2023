@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":data:di"))
     testImplementation(project(":domain:test-repository"))
     testImplementation(project(":domain:test-domain-object"))
+    testImplementation(project(":domain:test-service"))
 }
 
 kapt {
