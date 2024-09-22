@@ -5,12 +5,14 @@ import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.game.TimeLimit
 import com.example.core.core.ViewModelTest
 import com.example.domainObject.game.log.MoveRecode
+import com.example.testDomainObject.board.fake
+import com.example.testDomainObject.board.`fake●5一玉○5三金○4三金`
+import com.example.testDomainObject.board.fake駒を取れる状態
 import com.example.testDomainObject.log.fake
 import com.example.testusecase.model.fake
 import com.example.testusecase.usecase.FakeReplayUseCase
-import com.example.usecaseinterface.model.result.ReplayGoBackResult
-import com.example.usecaseinterface.model.result.ReplayGoNextResult
 import com.example.usecaseinterface.model.result.ReplayInitResult
+import com.example.usecaseinterface.model.result.ReplayLoadMoveRecodeResult
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -71,15 +73,20 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
                 MoveRecode.fake(),
             ),
         )
-        val replayGoNextResult =  ReplayGoNextResult.fake()
+        val replayGoNextResult =  ReplayLoadMoveRecodeResult.fake(
+            board = Board.fake駒を取れる状態(),
+            blackStand = Stand.fake(fuCount = 3),
+            whiteStand = Stand.fake(kyoCount = 5),
+            index = 10,
+        )
         val resultUiState = initUiState.copy(
             board = replayGoNextResult.board,
-            blackStand = replayGoNextResult.stand,
-            whiteStand = initResult.whiteStand,
+            blackStand = replayGoNextResult.blackStand,
+            whiteStand = replayGoNextResult.whiteStand,
             blackTimeLimit = initResult.blackTimeLimit,
             whiteTimeLimit = initResult.whiteTimeLimit,
             log = initResult.log ?: emptyList(),
-            logNextIndex = 1,
+            logNextIndex = replayGoNextResult.index,
         )
 
         viewModelAction(
@@ -92,6 +99,7 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
         result(
             useCaseAsserts = listOf(
                 UseCaseAsserts({ replayUseCase.getCallGoNextCount() }, 1),
+                UseCaseAsserts({ replayUseCase.getCallGoBackCount() }, 0),
             ),
             state = resultUiState,
             effects = listOf(),
@@ -106,15 +114,20 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
                 MoveRecode.fake(),
             ),
         )
-        val replayGoBackResult =  ReplayGoBackResult.fake()
+        val replayGoBackResult =  ReplayLoadMoveRecodeResult.fake(
+            board = Board.`fake●5一玉○5三金○4三金`(),
+            blackStand = Stand.fake(fuCount = 1),
+            whiteStand = Stand.fake(kyoCount = 1),
+            index = 1,
+        )
         val resultUiState = initUiState.copy(
             board = replayGoBackResult.board,
-            blackStand = replayGoBackResult.stand,
-            whiteStand = initResult.whiteStand,
+            blackStand = replayGoBackResult.blackStand,
+            whiteStand = replayGoBackResult.whiteStand,
             blackTimeLimit = initResult.blackTimeLimit,
             whiteTimeLimit = initResult.whiteTimeLimit,
             log = initResult.log ?: emptyList(),
-            logNextIndex = 0,
+            logNextIndex = replayGoBackResult.index,
         )
 
         viewModelAction(
@@ -123,13 +136,13 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
                 replayUseCase.goBackLogic = { replayGoBackResult }
             },
             action = {
-                tapRight()
                 tapLeft()
             },
         )
         result(
             useCaseAsserts = listOf(
-                UseCaseAsserts({ replayUseCase.getCallGoNextCount() }, 1),
+                UseCaseAsserts({ replayUseCase.getCallGoBackCount() }, 1),
+                UseCaseAsserts({ replayUseCase.getCallGoNextCount() }, 0),
             ),
             state = resultUiState,
             effects = listOf(),

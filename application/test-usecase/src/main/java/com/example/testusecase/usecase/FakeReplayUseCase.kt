@@ -1,12 +1,9 @@
 package com.example.testusecase.usecase
 
-import com.example.domainObject.game.board.Board
-import com.example.domainObject.game.board.Stand
-import com.example.domainObject.game.log.MoveRecode
 import com.example.testusecase.model.fake
-import com.example.usecaseinterface.model.result.ReplayGoBackResult
-import com.example.usecaseinterface.model.result.ReplayGoNextResult
+import com.example.usecaseinterface.model.ReplayLoadMoveRecodeParam
 import com.example.usecaseinterface.model.result.ReplayInitResult
+import com.example.usecaseinterface.model.result.ReplayLoadMoveRecodeResult
 import com.example.usecaseinterface.usecase.ReplayUseCase
 
 class FakeReplayUseCase : ReplayUseCase {
@@ -20,8 +17,8 @@ class FakeReplayUseCase : ReplayUseCase {
     fun getCallGoBackCount() : Int = callGoBackCount
 
     var replayInitLogic: () -> ReplayInitResult = { ReplayInitResult.fake() }
-    var goNextLogic: () -> ReplayGoNextResult = { ReplayGoNextResult.fake() }
-    var goBackLogic: () -> ReplayGoBackResult = { ReplayGoBackResult.fake() }
+    var goNextLogic: () -> ReplayLoadMoveRecodeResult = { ReplayLoadMoveRecodeResult.fake() }
+    var goBackLogic: () -> ReplayLoadMoveRecodeResult = { ReplayLoadMoveRecodeResult.fake() }
 
 
     override fun replayInit(): ReplayInitResult {
@@ -29,12 +26,12 @@ class FakeReplayUseCase : ReplayUseCase {
         return replayInitLogic()
     }
 
-    override fun goNext(board: Board, stand: Stand, log: MoveRecode): ReplayGoNextResult {
+    override fun goNext(param: ReplayLoadMoveRecodeParam): ReplayLoadMoveRecodeResult {
         callGoNextCount += 1
         return goNextLogic()
     }
 
-    override fun goBack(board: Board, stand: Stand, log: MoveRecode): ReplayGoBackResult {
+    override fun goBack(param: ReplayLoadMoveRecodeParam): ReplayLoadMoveRecodeResult {
         callGoBackCount += 1
         return goBackLogic()
     }
