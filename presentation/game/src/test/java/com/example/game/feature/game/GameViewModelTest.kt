@@ -194,14 +194,15 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         val case2TapPosition = caseUseBoardPieceLogicResult.hintPositionList.first()
         val caseMovePieceLogicResult = NextResult.Move.Only.fake(
             board = Board.fake駒を取れる状態(),
-            stand = Stand.fake(
+            blackStand = Stand.fake(
                 fuCount = 3,
             ),
             nextTurn = Turn.Normal.White,
         )
         val uiStateResult2 = initUiState.copy(
             board = caseMovePieceLogicResult.board,
-            blackStand = caseMovePieceLogicResult.stand,
+            blackStand = caseMovePieceLogicResult.blackStand,
+            whiteStand = caseMovePieceLogicResult.whiteStand,
             readyMoveInfo = null,
             turn = caseMovePieceLogicResult.nextTurn,
         )
@@ -268,7 +269,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         val case4TapPosition = case4UseStandPieceLogicResult.hintPositionList.first()
         val case4PutStandPieceLogicResult = NextResult.Move.Only.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
-            stand = Stand.fake(
+            blackStand = Stand.fake(
                 fuCount = 5,
             ),
             nextTurn = Turn.Normal.Black,
@@ -292,7 +293,8 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             ),
             state = initUiState.copy(
                 board = case4PutStandPieceLogicResult.board,
-                blackStand = case4PutStandPieceLogicResult.stand,
+                blackStand = case4PutStandPieceLogicResult.blackStand,
+                whiteStand = case4PutStandPieceLogicResult.whiteStand,
                 readyMoveInfo = null,
                 turn = case4PutStandPieceLogicResult.nextTurn,
             ),
@@ -345,7 +347,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         val case6TapPosition = Position(5, 3)
         val case6UseBoardPieceLogicResult = NextResult.Move.Win.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
-            stand = Stand.fake(
+            blackStand = Stand.fake(
                 fuCount = 5,
             ),
             nextTurn = Turn.Normal.White,
@@ -364,7 +366,8 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             useCaseAsserts = emptyList(),
             state = initUiState.copy(
                 board = case6UseBoardPieceLogicResult.board,
-                blackStand = case6UseBoardPieceLogicResult.stand,
+                blackStand = case6UseBoardPieceLogicResult.blackStand,
+                whiteStand = case6UseBoardPieceLogicResult.whiteStand,
                 readyMoveInfo = null,
                 turn = case6UseBoardPieceLogicResult.nextTurn,
             ),
@@ -377,7 +380,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         val case7TapPosition = Position(5, 3)
         val case7UseBoardPieceLogicResult = NextResult.Move.Drown.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
-            stand = Stand.fake(
+            blackStand = Stand.fake(
                 fuCount = 5,
             ),
             nextTurn = Turn.Normal.White,
@@ -396,7 +399,8 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             useCaseAsserts = emptyList(),
             state = initUiState.copy(
                 board = case7UseBoardPieceLogicResult.board,
-                blackStand = case7UseBoardPieceLogicResult.stand,
+                blackStand = case7UseBoardPieceLogicResult.blackStand,
+                whiteStand = case7UseBoardPieceLogicResult.whiteStand,
                 readyMoveInfo = null,
                 turn = case7UseBoardPieceLogicResult.nextTurn,
             ),
@@ -409,7 +413,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
         val case8TapPosition = Position(5, 3)
         val case8UseBoardPieceLogicResult = NextResult.Move.ChooseEvolution.fake(
             board = Board.`fake●5一玉○5二香○5三金`(),
-            stand = Stand.fake(
+            blackStand = Stand.fake(
                 fuCount = 5,
             ),
             nextTurn = Turn.Normal.White,
@@ -428,7 +432,8 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
             useCaseAsserts = emptyList(),
             state = initUiState.copy(
                 board = case8UseBoardPieceLogicResult.board,
-                blackStand = case8UseBoardPieceLogicResult.stand,
+                blackStand = case8UseBoardPieceLogicResult.blackStand,
+                whiteStand = case8UseBoardPieceLogicResult.whiteStand,
                 readyMoveInfo = null,
                 turn = case8UseBoardPieceLogicResult.nextTurn,
             ),
