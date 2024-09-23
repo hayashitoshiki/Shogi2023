@@ -13,6 +13,7 @@ import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
 import com.example.core.uilogic.BaseContract
 import com.example.core.uilogic.BaseViewModel
+import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
@@ -84,15 +85,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun tapStand(piece: Piece, turn: Turn) {
-        if (turn != state.value.turn) {
-            setState {
-                copy(
-                    readyMoveInfo = null,
-                )
-            }
-            return
-        }
-
+        if (turn != state.value.turn) return
         val result = useCase.useStandPiece(
             board = state.value.board,
             piece = piece,
@@ -113,22 +106,23 @@ class GameViewModel @Inject constructor(
         val turn = state.value.turn
         val holdMove = state.value.readyMoveInfo?.toUseCaseModel()
         val result = if (holdMove != null && holdMove.hintList.contains(touchAction.position)) {
-            val stand = getStandByTurn(turn)
             when (holdMove) {
-                is com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Board -> {
+                is ReadyMoveInfoUseCaseModel.Board -> {
                     useCase.movePiece(
                         board = state.value.board,
-                        stand = stand,
+                        blackStand = state.value.blackStand,
+                        whiteStand = state.value.whiteStand,
                         touchAction = touchAction,
                         turn = turn,
                         holdMove = holdMove,
                     )
                 }
 
-                is com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Stand -> {
+                is ReadyMoveInfoUseCaseModel.Stand -> {
                     useCase.putStandPiece(
                         board = state.value.board,
-                        stand = stand,
+                        blackStand = state.value.blackStand,
+                        whiteStand = state.value.whiteStand,
                         touchAction = touchAction,
                         turn = turn,
                         holdMove = holdMove,
@@ -183,11 +177,11 @@ class GameViewModel @Inject constructor(
 
     fun setEvolution(position: Position, isEvolution: Boolean) {
         val turn = state.value.turn
-        val stand = getStandByTurn(turn)
         val result = useCase.setEvolution(
             turn = turn,
             board = state.value.board,
-            stand = stand,
+            blackStand = state.value.blackStand,
+            whiteStand = state.value.whiteStand,
             position = position,
             isEvolution = isEvolution,
         )
@@ -204,32 +198,13 @@ class GameViewModel @Inject constructor(
 
     private fun setMoved(result: NextResult.Move) {
         setState {
-            when (state.value.turn) {
-                Turn.Normal.Black -> {
-                    copy(
-                        board = result.board,
-                        blackStand = result.stand,
-                        turn = result.nextTurn,
-                        readyMoveInfo = null,
-                    )
-                }
-
-                Turn.Normal.White -> {
-                    copy(
-                        board = result.board,
-                        whiteStand = result.stand,
-                        turn = result.nextTurn,
-                        readyMoveInfo = null,
-                    )
-                }
-            }
-        }
-    }
-
-    private fun getStandByTurn(turn: Turn): Stand {
-        return when (turn) {
-            Turn.Normal.Black -> state.value.blackStand
-            Turn.Normal.White -> state.value.whiteStand
+            copy(
+                board = result.board,
+                blackStand = result.blackStand,
+                whiteStand = result.whiteStand,
+                turn = result.nextTurn,
+                readyMoveInfo = null,
+            )
         }
     }
 
