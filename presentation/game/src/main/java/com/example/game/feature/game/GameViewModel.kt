@@ -18,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -169,10 +168,8 @@ class GameViewModel @Inject constructor(
 
             is NextResult.Move.ChooseEvolution -> {
                 setMoved(result)
-                viewModelScope.launch {
-                    if (touchAction !is MoveTarget.Board) return@launch
-                    setEffect { Effect.Evolution(touchAction.position) }
-                }
+                if (touchAction !is MoveTarget.Board) return
+                setEffect { Effect.Evolution(touchAction.position) }
             }
 
             is NextResult.Move.Win -> {
@@ -182,9 +179,7 @@ class GameViewModel @Inject constructor(
 
             is NextResult.Move.Drown -> {
                 setMoved(result)
-                viewModelScope.launch {
-                    setEffect { Effect.GameEnd.Draw }
-                }
+                setEffect { Effect.GameEnd.Draw }
             }
         }
     }
@@ -239,9 +234,7 @@ class GameViewModel @Inject constructor(
 
     private fun setWin(turn: Turn) {
         useCase.gameEnd()
-        viewModelScope.launch {
-            setEffect { Effect.GameEnd.Win(turn) }
-        }
+        setEffect { Effect.GameEnd.Win(turn) }
     }
 
     /**
