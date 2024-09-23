@@ -49,7 +49,8 @@ interface GameUseCase {
      * 盤上の駒を動かす
      *
      * @param board 将棋盤
-     * @param stand 持ち駒
+     * @param blackStand 先手の持ち駒
+     * @param whiteStand 後手の持ち駒
      * @param turn 手番
      * @param touchAction 打とうとしている場所
      * @param holdMove 動かそうとしている盤面の駒
@@ -57,7 +58,8 @@ interface GameUseCase {
      */
     fun movePiece(
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
         holdMove: ReadyMoveInfoUseCaseModel.Board,
@@ -67,7 +69,8 @@ interface GameUseCase {
      * 持ち駒を打つ
      *
      * @param board 将棋盤
-     * @param stand 持ち駒
+     * @param blackStand 先手の持ち駒
+     * @param whiteStand 後手の持ち駒
      * @param turn 手番
      * @param touchAction 打とうとしている場所
      * @param holdMove 打とうとしている持ち駒
@@ -75,7 +78,8 @@ interface GameUseCase {
      */
     fun putStandPiece(
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
         holdMove: ReadyMoveInfoUseCaseModel.Stand,
@@ -114,7 +118,8 @@ interface GameUseCase {
      *
      * @param turn 手番
      * @param board 将棋盤
-     * @param stand 相手の持ち駒
+     * @param blackStand 先手の持ち駒
+     * @param whiteStand 後手の持ち駒
      * @param position 駒
      * @param isEvolution 成る選択をしたか
      * @return 更新後の将棋盤
@@ -122,7 +127,8 @@ interface GameUseCase {
     fun setEvolution(
         turn: Turn,
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         position: Position,
         isEvolution: Boolean,
     ): SetEvolutionResult

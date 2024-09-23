@@ -26,12 +26,14 @@ sealed interface NextResult {
      * 駒を動かした後の盤面を返却
      *
      * @property board 将棋盤
-     * @property stand 持ち駒
+     * @property blackStand 持ち駒
+     * @property whiteStand 持ち駒
      * @property nextTurn 次の手番
      */
     sealed interface Move : NextResult {
         val board: Board
-        val stand: Stand
+        val blackStand: Stand
+        val whiteStand: Stand
         val nextTurn: Turn
 
         /**
@@ -39,7 +41,8 @@ sealed interface NextResult {
          */
         data class Only(
             override val board: Board,
-            override val stand: Stand,
+            override val blackStand: Stand,
+            override val whiteStand: Stand,
             override val nextTurn: Turn,
         ) : Move {
             companion object
@@ -50,7 +53,8 @@ sealed interface NextResult {
          */
         data class ChooseEvolution(
             override val board: Board,
-            override val stand: Stand,
+            override val blackStand: Stand,
+            override val whiteStand: Stand,
             override val nextTurn: Turn,
         ) : Move {
             companion object
@@ -61,7 +65,8 @@ sealed interface NextResult {
          */
         data class Win(
             override val board: Board,
-            override val stand: Stand,
+            override val blackStand: Stand,
+            override val whiteStand: Stand,
             override val nextTurn: Turn,
         ) : Move {
             companion object
@@ -72,7 +77,8 @@ sealed interface NextResult {
          */
         data class Drown(
             override val board: Board,
-            override val stand: Stand,
+            override val blackStand: Stand,
+            override val whiteStand: Stand,
             override val nextTurn: Turn,
         ) : Move {
             companion object

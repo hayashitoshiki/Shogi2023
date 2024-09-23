@@ -211,26 +211,28 @@ class GameUseCaseImpl @Inject constructor(
 
     override fun movePiece(
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
         holdMove: ReadyMoveInfoUseCaseModel.Board,
     ): NextResult {
         val holdPiece = holdMove.hold
         val nextPosition = touchAction.position
-        return setMove(board, stand, nextPosition, turn, holdPiece)
+        return setMove(board, blackStand, whiteStand, nextPosition, turn, holdPiece)
     }
 
     override fun putStandPiece(
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
         holdMove: ReadyMoveInfoUseCaseModel.Stand,
     ): NextResult {
         val holdPiece = holdMove.hold
         val nextPosition = touchAction.position
-        return setMove(board, stand, nextPosition, turn, holdPiece)
+        return setMove(board, blackStand, whiteStand, nextPosition, turn, holdPiece)
     }
 
     override fun useBoardPiece(
@@ -254,7 +256,8 @@ class GameUseCaseImpl @Inject constructor(
     override fun setEvolution(
         turn: Turn,
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         position: Position,
         isEvolution: Boolean,
     ): SetEvolutionResult {
@@ -263,6 +266,7 @@ class GameUseCaseImpl @Inject constructor(
             updateMoveRecodeEvolution()
         }
         val rule = gameRuleRepository.get()
+        val stand = getStandByTUrn(turn, blackStand, whiteStand)
         val isWin = gameService.checkGameSet(board, stand, turn, rule)
         val isDrown = checkDraw(board)
         val nextTurn = turn.getOpponentTurn()
@@ -307,11 +311,13 @@ class GameUseCaseImpl @Inject constructor(
 
     private fun setMove(
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         position: Position,
         turn: Turn,
         hold: MoveTarget,
     ): NextResult {
+        val stand = getStandByTUrn(turn, blackStand, whiteStand)
         val (newBoard, newStand) = when (hold) {
             is MoveTarget.Board -> {
                 gameService.movePieceByPosition(board, stand, hold.position, position)
@@ -335,6 +341,10 @@ class GameUseCaseImpl @Inject constructor(
             takePiece = takePiece,
         )
 
+        val (newBlackStand, newWhiteStand) = when(turn) {
+            Turn.Normal.Black -> newStand to whiteStand
+            Turn.Normal.White -> blackStand to newStand
+        }
         if (hold is MoveTarget.Board) {
             val cellStatus = board.getPieceOrNullByPosition(hold.position)
             val piece = cellStatus?.piece as? Piece.Surface
@@ -345,7 +355,8 @@ class GameUseCaseImpl @Inject constructor(
                     EvolutionCheckState.Choose -> {
                         return NextResult.Move.ChooseEvolution(
                             board = newBoard,
-                            stand = newStand,
+                            blackStand = newBlackStand,
+                            whiteStand = newWhiteStand,
                             nextTurn = turn,
                         )
                     }
@@ -358,21 +369,24 @@ class GameUseCaseImpl @Inject constructor(
         return if (gameService.checkGameSet(newBoard, stand, turn, rule)) {
             NextResult.Move.Win(
                 board = newBoard,
-                stand = newStand,
+                blackStand = newBlackStand,
+                whiteStand = newWhiteStand,
                 nextTurn = nextTurn,
             )
         } else {
             if (checkDraw(newBoard)) {
                 NextResult.Move.Drown(
                     board = newBoard,
-                    stand = newStand,
+                    blackStand = newBlackStand,
+                    whiteStand = newWhiteStand,
                     nextTurn = nextTurn,
                 )
             } else {
                 changeTurn(nextTurn)
                 NextResult.Move.Only(
                     board = newBoard,
-                    stand = newStand,
+                    blackStand = newBlackStand,
+                    whiteStand = newWhiteStand,
                     nextTurn = nextTurn,
                 )
             }
@@ -392,6 +406,13 @@ class GameUseCaseImpl @Inject constructor(
         } else {
             boardRepository.set(board)
             false
+        }
+    }
+
+    private fun getStandByTUrn(turn: Turn, blackStand: Stand, whiteStand: Stand): Stand {
+        return when (turn) {
+            Turn.Normal.Black -> blackStand
+            Turn.Normal.White -> whiteStand
         }
     }
 
