@@ -30,6 +30,7 @@ import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
 import com.example.usecaseinterface.usecase.GameUseCase
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.TestScope
 import org.junit.Assert
 import org.junit.Before
@@ -98,8 +99,8 @@ class GameUseCaseTest {
         val result = gameUseCase.gameInit()
 
         // result
-        Assert.assertEquals(expected, result)
-        Assert.assertEquals(gameRecodeRepository.callSetCount, 1)
+        assertEquals(expected, result)
+        assertEquals(gameRecodeRepository.callSetCount, 1)
     }
 
     /**
@@ -365,12 +366,13 @@ class GameUseCaseTest {
             val expected = gameUseCase.setEvolution(
                 turn = Turn.Normal.Black,
                 board = param.board,
-                stand = Stand(),
+                blackStand = Stand.fake(),
+                whiteStand = Stand.fake(),
                 position = param.position,
                 isEvolution = param.isEvolution,
             )
             // result
-            Assert.assertEquals(param.testCaseTitle, expected, param.result)
+            assertEquals(param.testCaseTitle, expected, param.result)
         }
     }
 
@@ -423,7 +425,7 @@ class GameUseCaseTest {
             )
 
             // result
-            Assert.assertEquals(expected, result)
+            assertEquals(expected, result)
         }
     }
 
@@ -476,7 +478,7 @@ class GameUseCaseTest {
             )
 
             // result
-            Assert.assertEquals(expected, result)
+            assertEquals(expected, result)
         }
     }
 
@@ -560,7 +562,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Only(
                     board = case1ResultBoard,
-                    stand = resultStand,
+                    blackStand = resultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -572,7 +575,8 @@ class GameUseCaseTest {
                 isDraw = true,
                 result = NextResult.Move.Drown(
                     board = case2ResultBoard,
-                    stand = resultStand,
+                    blackStand = resultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -584,7 +588,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Win(
                     board = case3ResultBoard,
-                    stand = resultStand,
+                    blackStand = resultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -596,7 +601,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Only(
                     board = case4ResultBoard,
-                    stand = resultStand,
+                    blackStand = resultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -608,7 +614,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Win(
                     board = case5ResultBoard,
-                    stand = resultStand,
+                    blackStand = resultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -636,12 +643,13 @@ class GameUseCaseTest {
                 board = param.board,
                 turn = myTurn,
                 holdMove = hold,
-                stand = stand,
+                blackStand = stand,
+                whiteStand = Stand.fake(),
                 touchAction = MoveTarget.Board(param.position),
             )
 
             // result
-            Assert.assertEquals(param.testCaseTitle, expected, param.result)
+            assertEquals(param.testCaseTitle, expected, param.result)
         }
     }
 
@@ -785,7 +793,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Only(
                     board = case1ResultBoard,
-                    stand = case1ResultStand,
+                    blackStand = case1ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -798,7 +807,8 @@ class GameUseCaseTest {
                 isDraw = true,
                 result = NextResult.Move.Drown(
                     board = case2ResultBoard,
-                    stand = case2ResultStand,
+                    blackStand = case2ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -811,7 +821,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Win(
                     board = case3ResultBoard,
-                    stand = case3ResultStand,
+                    blackStand = case3ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -824,7 +835,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Only(
                     board = case4ResultBoard,
-                    stand = case4ResultStand,
+                    blackStand = case4ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -837,7 +849,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Win(
                     board = case5ResultBoard,
-                    stand = case5ResultStand,
+                    blackStand = case5ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -850,7 +863,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Only(
                     board = case6ResultBoard,
-                    stand = case6ResultStand,
+                    blackStand = case6ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -863,7 +877,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Only(
                     board = case7ResultBoard,
-                    stand = case7ResultStand,
+                    blackStand = case7ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -876,7 +891,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.ChooseEvolution(
                     board = case8ResultBoard,
-                    stand = case8ResultStand,
+                    blackStand = case8ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = case8NextTurn,
                 ),
             ),
@@ -889,7 +905,8 @@ class GameUseCaseTest {
                 isDraw = false,
                 result = NextResult.Move.Win(
                     board = case9ResultBoard,
-                    stand = case9ResultStand,
+                    blackStand = case9ResultStand,
+                    whiteStand = Stand.fake(),
                     nextTurn = nextTurn,
                 ),
             ),
@@ -917,12 +934,13 @@ class GameUseCaseTest {
                 board = param.board,
                 turn = myTurn,
                 holdMove = hold,
-                stand = stand,
+                blackStand = stand,
+                whiteStand = Stand.fake(),
                 touchAction = MoveTarget.Board(param.movePosition),
             )
 
             // result
-            Assert.assertEquals(expected, param.result)
+            assertEquals(expected, param.result)
         }
     }
 }

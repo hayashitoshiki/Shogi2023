@@ -18,48 +18,56 @@ fun NextResult.Hint.Companion.fake(
 
 fun NextResult.Move.Only.Companion.fake(
     board: Board = Board.fake詰まない(),
-    stand: Stand = Stand.fake(),
+    blackStand: Stand = Stand.fake(),
+    whiteStand: Stand = Stand.fake(),
     nextTurn: Turn = Turn.Normal.Black,
 ): NextResult.Move.Only {
     return NextResult.Move.Only(
         board = board,
-        stand = stand,
+        blackStand = blackStand,
+        whiteStand = whiteStand,
         nextTurn = nextTurn,
     )
 }
 
 fun NextResult.Move.ChooseEvolution.Companion.fake(
     board: Board = Board.fake詰まない(),
-    stand: Stand = Stand.fake(),
+    blackStand: Stand = Stand.fake(),
+    whiteStand: Stand = Stand.fake(),
     nextTurn: Turn = Turn.Normal.Black,
 ): NextResult.Move.ChooseEvolution {
     return NextResult.Move.ChooseEvolution(
         board = board,
-        stand = stand,
+        blackStand = blackStand,
+        whiteStand = whiteStand,
         nextTurn = nextTurn,
     )
 }
 
 fun NextResult.Move.Win.Companion.fake(
     board: Board = Board.fake詰まない(),
-    stand: Stand = Stand.fake(),
+    blackStand: Stand = Stand.fake(),
+    whiteStand: Stand = Stand.fake(),
     nextTurn: Turn = Turn.Normal.Black,
 ): NextResult.Move.Win {
     return NextResult.Move.Win(
         board = board,
-        stand = stand,
+        blackStand = blackStand,
+        whiteStand = whiteStand,
         nextTurn = nextTurn,
     )
 }
 
 fun NextResult.Move.Drown.Companion.fake(
     board: Board = Board.fake詰まない(),
-    stand: Stand = Stand.fake(),
+    blackStand: Stand = Stand.fake(),
+    whiteStand: Stand = Stand.fake(),
     nextTurn: Turn = Turn.Normal.Black,
 ): NextResult.Move.Drown {
     return NextResult.Move.Drown(
         board = board,
-        stand = stand,
+        blackStand = blackStand,
+        whiteStand = whiteStand,
         nextTurn = nextTurn,
     )
 }

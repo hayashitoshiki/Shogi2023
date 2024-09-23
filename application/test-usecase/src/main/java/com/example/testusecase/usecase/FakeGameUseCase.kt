@@ -71,7 +71,8 @@ class FakeGameUseCase : GameUseCase {
 
     override fun movePiece(
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
         holdMove: ReadyMoveInfoUseCaseModel.Board,
@@ -82,7 +83,8 @@ class FakeGameUseCase : GameUseCase {
 
     override fun putStandPiece(
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         turn: Turn,
         touchAction: MoveTarget.Board,
         holdMove: ReadyMoveInfoUseCaseModel.Stand,
@@ -112,7 +114,8 @@ class FakeGameUseCase : GameUseCase {
     override fun setEvolution(
         turn: Turn,
         board: Board,
-        stand: Stand,
+        blackStand: Stand,
+        whiteStand: Stand,
         position: Position,
         isEvolution: Boolean,
     ): SetEvolutionResult {
