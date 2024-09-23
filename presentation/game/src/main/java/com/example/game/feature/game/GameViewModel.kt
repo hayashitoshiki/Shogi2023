@@ -113,10 +113,7 @@ class GameViewModel @Inject constructor(
         val turn = state.value.turn
         val holdMove = state.value.readyMoveInfo?.toUseCaseModel()
         val result = if (holdMove != null && holdMove.hintList.contains(touchAction.position)) {
-            val stand = when (state.value.turn) {
-                Turn.Normal.Black -> state.value.blackStand
-                Turn.Normal.White -> state.value.whiteStand
-            }
+            val stand = getStandByTurn(turn)
             when (holdMove) {
                 is com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel.Board -> {
                     useCase.movePiece(
@@ -186,10 +183,7 @@ class GameViewModel @Inject constructor(
 
     fun setEvolution(position: Position, isEvolution: Boolean) {
         val turn = state.value.turn
-        val stand = when (turn) {
-            Turn.Normal.Black -> state.value.whiteStand
-            Turn.Normal.White -> state.value.blackStand
-        }
+        val stand = getStandByTurn(turn)
         val result = useCase.setEvolution(
             turn = turn,
             board = state.value.board,
@@ -229,6 +223,13 @@ class GameViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun getStandByTurn(turn: Turn): Stand {
+        return when (turn) {
+            Turn.Normal.Black -> state.value.blackStand
+            Turn.Normal.White -> state.value.whiteStand
         }
     }
 
