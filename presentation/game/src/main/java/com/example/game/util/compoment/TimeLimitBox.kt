@@ -24,7 +24,7 @@ import com.example.core.theme.Shogi2023Theme
 @Composable
 fun TimeLimitBox(modifier: Modifier = Modifier, timeLimit: TimeLimit) {
     Box(modifier = modifier) {
-        SecondBox(seconds = timeLimit.remainingTime())
+        SecondBox(seconds = timeLimit.remainingTime)
     }
 }
 

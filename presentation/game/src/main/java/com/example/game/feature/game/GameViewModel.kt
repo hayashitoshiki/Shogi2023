@@ -5,7 +5,6 @@ import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
-import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
@@ -13,7 +12,9 @@ import com.example.game.util.mapper.toUseCaseModel
 import com.example.game.util.model.ReadyMoveInfoUiModel
 import com.example.core.uilogic.BaseContract
 import com.example.core.uilogic.BaseViewModel
+import com.example.domainObject.game.rule.Turn.Normal.Black.getOpponentTurn
 import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
+import com.example.usecaseinterface.model.TimeOverUseCaseModel
 import com.example.usecaseinterface.model.result.NextResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
@@ -37,17 +38,9 @@ class GameViewModel @Inject constructor(
                 )
             }
 
-            when (state.value.turn) {
-                Turn.Normal.Black -> {
-                    if (it.blackTimeLimit.remainingTime() == Seconds.ZERO) {
-                        setWin(Turn.Normal.White)
-                    }
-                }
-                Turn.Normal.White -> {
-                    if (it.whiteTimeLimit.remainingTime() == Seconds.ZERO) {
-                        setWin(Turn.Normal.Black)
-                    }
-                }
+            val timeOver = it.timeOver
+            if (timeOver is TimeOverUseCaseModel.TimeOver) {
+                setWin(timeOver.turn.getOpponentTurn())
             }
         }.launchIn(viewModelScope)
     }
@@ -95,11 +88,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun tapLoseButton(turn: Turn) {
-        val winner = when (turn) {
-            Turn.Normal.Black -> Turn.Normal.White
-            Turn.Normal.White -> Turn.Normal.Black
-        }
-        setWin(winner)
+        setWin(turn.getOpponentTurn())
     }
 
     private fun tapAction(touchAction: MoveTarget.Board) {

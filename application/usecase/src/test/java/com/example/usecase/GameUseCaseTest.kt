@@ -2,7 +2,6 @@ package com.example.usecase
 
 import com.example.domainLogic.board.searchMoveBy
 import com.example.domainLogic.board.setUp
-import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
@@ -15,6 +14,7 @@ import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.GameTimeLimitRule
 import com.example.domainObject.game.rule.PlayerTimeLimitRule
 import com.example.domainObject.game.rule.Turn
+import com.example.domainObject.game.rule.Turn.Normal.Black.getOpponentTurn
 import com.example.service.GameServiceImpl
 import com.example.testDomainObject.board.fake
 import com.example.testDomainObject.board.`fake●1一王○3三角`
@@ -31,6 +31,7 @@ import com.example.testrepository.FakeBoardRepository
 import com.example.testrepository.FakeGameRecodeRepository
 import com.example.testrepository.FakeGameRuleRepository
 import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
+import com.example.usecaseinterface.model.TimeOverUseCaseModel
 import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
@@ -170,14 +171,17 @@ class GameUseCaseTest {
         val timeLimitsUseCaseModel = TimeLimitsUseCaseModel(
             blackTimeLimit = timeLimit1,
             whiteTimeLimit = timeLimit1,
+            timeOver = TimeOverUseCaseModel.None,
         )
         val timeLimitsUseCaseModel2 = TimeLimitsUseCaseModel(
             blackTimeLimit = timeLimit2,
             whiteTimeLimit = timeLimit2,
+            timeOver = TimeOverUseCaseModel.None,
         )
         val timeLimitsUseCaseModel3 = TimeLimitsUseCaseModel(
             blackTimeLimit = timeLimit3,
             whiteTimeLimit = timeLimit3,
+            timeOver = TimeOverUseCaseModel.None,
         )
 
         data class Param(
@@ -208,6 +212,7 @@ class GameUseCaseTest {
                     blackTimeLimit = timeLimit1.copy(
                         totalTime = Seconds.ZERO,
                     ),
+                    timeOver = TimeOverUseCaseModel.TimeOver(Turn.Normal.Black),
                 ),
             ),
             Param(
@@ -242,6 +247,7 @@ class GameUseCaseTest {
                     blackTimeLimit = timeLimit2.copy(
                         byoyomi = Seconds.ZERO,
                     ),
+                    timeOver = TimeOverUseCaseModel.TimeOver(Turn.Normal.Black),
                 ),
             ),
             Param(
@@ -264,6 +270,7 @@ class GameUseCaseTest {
                     whiteTimeLimit = timeLimit1.copy(
                         totalTime = Seconds.ZERO,
                     ),
+                    timeOver = TimeOverUseCaseModel.TimeOver(Turn.Normal.White),
                 ),
             ),
             Param(
@@ -298,6 +305,7 @@ class GameUseCaseTest {
                     whiteTimeLimit = timeLimit2.copy(
                         byoyomi = Seconds.ZERO,
                     ),
+                    timeOver = TimeOverUseCaseModel.TimeOver(Turn.Normal.White),
                 ),
             ),
         )
@@ -354,10 +362,12 @@ class GameUseCaseTest {
         val timeLimitsUseCaseModel = TimeLimitsUseCaseModel(
             blackTimeLimit = timeLimit1,
             whiteTimeLimit = timeLimit1,
+            timeOver = TimeOverUseCaseModel.None,
         )
         val timeLimitsUseCaseModel2 = TimeLimitsUseCaseModel(
             blackTimeLimit = timeLimit2,
             whiteTimeLimit = timeLimit2,
+            timeOver = TimeOverUseCaseModel.None,
         )
         data class Param(
             val case: String,

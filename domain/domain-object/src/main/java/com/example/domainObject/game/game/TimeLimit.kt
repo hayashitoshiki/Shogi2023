@@ -22,23 +22,12 @@ data class TimeLimit(
 
     /**
      * 残り時間を取得
-     *
-     * @return 残り時間
      */
-    fun remainingTime(): Seconds {
-        return if (totalTime != Seconds.ZERO) {
-            totalTime
-        } else {
-            byoyomi
-        }
+    val remainingTime: Seconds = if (totalTime != Seconds.ZERO) {
+        totalTime
+    } else {
+        byoyomi
     }
-
-    /**
-     * 秒読みかどうかを判定
-     *
-     * @return 秒読みの場合true
-     */
-    fun isByoyomi(): Boolean = totalTime == Seconds.ZERO && byoyomi != Seconds.ZERO
 
     companion object {
         val INIT = TimeLimit(

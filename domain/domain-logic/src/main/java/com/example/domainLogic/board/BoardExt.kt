@@ -3,7 +3,6 @@ package com.example.domainLogic.board
 import com.example.domainLogic.piece.evolution
 import com.example.domainLogic.piece.isAvailablePut
 import com.example.domainLogic.piece.shouldEvolution
-import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.EvolutionCheckState
@@ -13,6 +12,7 @@ import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.BoardRule
 import com.example.domainObject.game.rule.Hande
 import com.example.domainObject.game.rule.Turn
+import com.example.domainObject.game.rule.Turn.Normal.Black.getOpponentTurn
 
 /**
  * 将棋盤のセットアップ

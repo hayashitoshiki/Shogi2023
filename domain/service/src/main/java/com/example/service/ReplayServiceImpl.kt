@@ -2,7 +2,6 @@ package com.example.service
 
 import com.example.domainLogic.piece.degeneracy
 import com.example.domainLogic.piece.evolution
-import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
@@ -10,6 +9,7 @@ import com.example.domainObject.game.board.Stand
 import com.example.domainObject.game.log.MoveRecode
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.Turn
+import com.example.domainObject.game.rule.Turn.Normal.Black.getOpponentTurn
 import com.example.serviceinterface.ReplayService
 import javax.inject.Inject
 

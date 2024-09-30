@@ -4,9 +4,9 @@ import com.example.domainLogic.board.checkPieceEvolution
 import com.example.domainLogic.board.searchMoveBy
 import com.example.domainLogic.board.setUp
 import com.example.domainLogic.board.updatePieceEvolution
+import com.example.domainLogic.game.isByoyomi
+import com.example.domainLogic.game.isTimeOver
 import com.example.domainLogic.rule.changeNextTurn
-import com.example.domainLogic.rule.getBeforeTurn
-import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.EvolutionCheckState
@@ -20,12 +20,14 @@ import com.example.domainObject.game.log.MoveRecode
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.GameRule
 import com.example.domainObject.game.rule.Turn
+import com.example.domainObject.game.rule.Turn.Normal.Black.getBeforeTurn
 import com.example.repository.BoardRepository
 import com.example.repository.GameRecodeRepository
 import com.example.repository.GameRuleRepository
 import com.example.serviceinterface.GameService
 import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
+import com.example.usecaseinterface.model.TimeOverUseCaseModel
 import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
@@ -105,12 +107,17 @@ class GameUseCaseImpl @Inject constructor(
         }
     }
 
-    private fun updateTimeLimit(turn: Turn, getTimeLimit: (TimeLimit) -> TimeLimit) {
-        val timeLimits = mutableTimeLimitsUseCaseModelStateFlow.value ?: return
-        val turnTimeLimit = timeLimits.getTimeLimit(turn)
-        mutableTimeLimitsUseCaseModelStateFlow.value = when (turn) {
-            Turn.Normal.Black -> timeLimits.copy(blackTimeLimit = getTimeLimit(turnTimeLimit))
-            Turn.Normal.White -> timeLimits.copy(whiteTimeLimit = getTimeLimit(turnTimeLimit))
+    private fun updateTimeLimit(turn: Turn, updateTimeLimit: (TimeLimit) -> TimeLimit) {
+        mutableTimeLimitsUseCaseModelStateFlow.value = mutableTimeLimitsUseCaseModelStateFlow.value?.let { timeLimits ->
+            val updatedLimits = when (turn) {
+                Turn.Normal.Black -> timeLimits.copy(blackTimeLimit = updateTimeLimit(timeLimits.blackTimeLimit))
+                Turn.Normal.White -> timeLimits.copy(whiteTimeLimit = updateTimeLimit(timeLimits.whiteTimeLimit))
+            }
+            if (updatedLimits.getTimeLimit(turn).isTimeOver()) {
+                updatedLimits.copy(timeOver = TimeOverUseCaseModel.TimeOver(turn))
+            } else {
+                updatedLimits
+            }
         }
     }
 
@@ -131,11 +138,11 @@ class GameUseCaseImpl @Inject constructor(
         val blackTimeLimit = TimeLimit(timeLimitRule.blackTimeLimitRule)
         val whiteTimeLimit = TimeLimit(timeLimitRule.whiteTimeLimitRule)
         createGameRecode(rule)
-        mutableTimeLimitsUseCaseModelStateFlow.value =
-            TimeLimitsUseCaseModel(
-                blackTimeLimit = blackTimeLimit,
-                whiteTimeLimit = whiteTimeLimit,
-            )
+        mutableTimeLimitsUseCaseModelStateFlow.value = TimeLimitsUseCaseModel(
+            blackTimeLimit = blackTimeLimit,
+            whiteTimeLimit = whiteTimeLimit,
+            timeOver = TimeOverUseCaseModel.None,
+        )
 
         return GameInitResult(
             board = board,
@@ -217,7 +224,7 @@ class GameUseCaseImpl @Inject constructor(
         val stand = getStandByTUrn(turn, blackStand, whiteStand)
         val isWin = gameService.checkGameSet(board, stand, turn, rule)
         val isDrown = checkDraw(board)
-        val nextTurn = turn.getOpponentTurn()
+        val nextTurn = turn.changeNextTurn()
         if (isWin) {
             stopTimer()
         } else {

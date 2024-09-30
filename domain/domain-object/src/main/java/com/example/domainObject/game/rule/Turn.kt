@@ -23,6 +23,31 @@ sealed interface Turn {
          *
          */
         data object White : Normal
+
+
+        /**
+         * 相手の手番取得
+         *
+         * @return 相手の手番
+         */
+        fun Turn.getOpponentTurn(): Turn {
+            return when (this) {
+                Black -> White
+                White -> Black
+            }
+        }
+
+        /**
+         * 相手の手番取得
+         *
+         * @return 相手の手番
+         */
+        fun Turn.getBeforeTurn(): Turn {
+            return when (this) {
+                Black -> White
+                White -> Black
+            }
+        }
     }
 
     companion object
