@@ -77,92 +77,40 @@ class GameUseCaseImpl @Inject constructor(
     private fun startTimer(turn: Turn) {
         timerJob?.cancel()
         timerJob = CoroutineScope(coroutineScope.coroutineContext).launch {
-            val localTimeLimitsUseCaseModel = mutableTimeLimitsUseCaseModelStateFlow.value ?: return@launch
-            countDownTimeLimit(
-                timeLimit = localTimeLimitsUseCaseModel,
-                getLimitTime = {
-                    when (turn) {
-                        Turn.Normal.Black -> it.blackTimeLimit.totalTime.millisecond
-                        Turn.Normal.White -> it.whiteTimeLimit.totalTime.millisecond
-                    }
-                },
-                updateTime = { timeLimits, countDownTime -> updateTotalTime(timeLimits, turn, countDownTime) },
-            )
-            countDownTimeLimit(
-                timeLimit = localTimeLimitsUseCaseModel,
-                getLimitTime = {
-                    when (turn) {
-                        Turn.Normal.Black -> it.blackTimeLimit.byoyomi.millisecond
-                        Turn.Normal.White -> it.whiteTimeLimit.byoyomi.millisecond
-                    }
-                },
-                updateTime = { it, countDownTime -> updateByoyomi(it, turn, countDownTime) },
-            )
+            val timeLimit = mutableTimeLimitsUseCaseModelStateFlow.value?.getTimeLimit(turn) ?: return@launch
+            countDownTimeLimit(timeLimit.totalTime) { countDownTime ->
+                updateTimeLimit(turn) { it.copy(totalTime = countDownTime) }
+            }
+            countDownTimeLimit(timeLimit.byoyomi) { countDownTime ->
+                updateTimeLimit(turn) { it.copy(byoyomi = countDownTime) }
+            }
         }
     }
 
-    private suspend fun countDownTimeLimit(
-        timeLimit: TimeLimitsUseCaseModel,
-        getLimitTime: (TimeLimitsUseCaseModel) -> Long,
-        updateTime: (TimeLimitsUseCaseModel, Long) -> Unit,
-    ) {
+    private suspend fun countDownTimeLimit(countDownTime: Seconds, updateTime: (Seconds) -> Unit) {
         val delayTime = 50L
-        var countDownTime = getLimitTime(timeLimit)
-        while (0 <= countDownTime) {
+        var mutableCountDownTime = countDownTime.millisecond
+        while (0 <= mutableCountDownTime) {
             delay(delayTime)
-            countDownTime -= delayTime
-            mutableTimeLimitsUseCaseModelStateFlow.value?.also {
-                updateTime(it, countDownTime)
-            }
+            mutableCountDownTime -= delayTime
+            updateTime(Seconds.setMillisecond(mutableCountDownTime))
         }
-        mutableTimeLimitsUseCaseModelStateFlow.value?.also {
-            updateTime(it, 0)
-        }
+        updateTime(Seconds.ZERO)
     }
 
     private fun updateIfNeedByoyomi(turn: Turn) {
-        mutableTimeLimitsUseCaseModelStateFlow.value?.let {
-            when (turn) {
-                Turn.Normal.Black -> {
-                    if (it.blackTimeLimit.isByoyomi()) {
-                        updateByoyomi(it, turn, it.blackTimeLimit.setting.byoyomi.millisecond)
-                    }
-                }
-                Turn.Normal.White -> {
-                    if (it.whiteTimeLimit.isByoyomi()) {
-                        updateByoyomi(it, turn, it.whiteTimeLimit.setting.byoyomi.millisecond)
-                    }
-                }
-            }
+        val timeLimit = mutableTimeLimitsUseCaseModelStateFlow.value?.getTimeLimit(turn) ?: return
+        if (timeLimit.isByoyomi()) {
+            updateTimeLimit(turn) { it.copy(byoyomi = timeLimit.setting.byoyomi) }
         }
     }
 
-    private fun updateTotalTime(timeLimits: TimeLimitsUseCaseModel, turn: Turn, countDownTime: Long) {
+    private fun updateTimeLimit(turn: Turn, getTimeLimit: (TimeLimit) -> TimeLimit) {
+        val timeLimits = mutableTimeLimitsUseCaseModelStateFlow.value ?: return
+        val turnTimeLimit = timeLimits.getTimeLimit(turn)
         mutableTimeLimitsUseCaseModelStateFlow.value = when (turn) {
-            Turn.Normal.Black -> timeLimits.copy(
-                blackTimeLimit = timeLimits.blackTimeLimit.copy(
-                    totalTime = Seconds.setMillisecond(countDownTime),
-                ),
-            )
-            Turn.Normal.White -> timeLimits.copy(
-                whiteTimeLimit = timeLimits.whiteTimeLimit.copy(
-                    totalTime = Seconds.setMillisecond(countDownTime),
-                ),
-            )
-        }
-    }
-    private fun updateByoyomi(timeLimits: TimeLimitsUseCaseModel, turn: Turn, countDownTotalTime: Long) {
-        mutableTimeLimitsUseCaseModelStateFlow.value = when (turn) {
-            Turn.Normal.Black -> timeLimits.copy(
-                blackTimeLimit = timeLimits.blackTimeLimit.copy(
-                    byoyomi = Seconds.setMillisecond(countDownTotalTime),
-                ),
-            )
-            Turn.Normal.White -> timeLimits.copy(
-                whiteTimeLimit = timeLimits.whiteTimeLimit.copy(
-                    byoyomi = Seconds.setMillisecond(countDownTotalTime),
-                ),
-            )
+            Turn.Normal.Black -> timeLimits.copy(blackTimeLimit = getTimeLimit(turnTimeLimit))
+            Turn.Normal.White -> timeLimits.copy(whiteTimeLimit = getTimeLimit(turnTimeLimit))
         }
     }
 
@@ -434,5 +382,12 @@ class GameUseCaseImpl @Inject constructor(
             ?.let { it.copy(moveRecodes = it.moveRecodes + moveRecode) }
             ?: return
         gameRecodeRepository.set(gameRecode)
+    }
+
+    private fun TimeLimitsUseCaseModel.getTimeLimit(turn: Turn): TimeLimit {
+        return when (turn) {
+            Turn.Normal.Black -> blackTimeLimit
+            Turn.Normal.White -> whiteTimeLimit
+        }
     }
 }
