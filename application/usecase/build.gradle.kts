@@ -40,6 +40,7 @@ dependencies {
     // Test
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.kotlin.reflect)
     // Hilt
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)

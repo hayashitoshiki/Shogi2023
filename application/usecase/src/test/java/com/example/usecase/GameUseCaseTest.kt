@@ -2,14 +2,18 @@ package com.example.usecase
 
 import com.example.domainLogic.board.searchMoveBy
 import com.example.domainLogic.board.setUp
+import com.example.domainLogic.rule.getOpponentTurn
 import com.example.domainObject.game.log.MoveTarget
 import com.example.domainObject.game.board.Board
 import com.example.domainObject.game.board.CellStatus
 import com.example.domainObject.game.board.Position
 import com.example.domainObject.game.board.Stand
+import com.example.domainObject.game.game.Seconds
 import com.example.domainObject.game.game.TimeLimit
 import com.example.domainObject.game.piece.Piece
 import com.example.domainObject.game.rule.GameRule
+import com.example.domainObject.game.rule.GameTimeLimitRule
+import com.example.domainObject.game.rule.PlayerTimeLimitRule
 import com.example.domainObject.game.rule.Turn
 import com.example.service.GameServiceImpl
 import com.example.testDomainObject.board.fake
@@ -26,15 +30,24 @@ import com.example.testDomainObject.rule.fakeFromLogicRuleFirstCheckEnd
 import com.example.testrepository.FakeBoardRepository
 import com.example.testrepository.FakeGameRecodeRepository
 import com.example.testrepository.FakeGameRuleRepository
+import com.example.usecaseinterface.model.TimeLimitsUseCaseModel
 import com.example.usecaseinterface.model.result.GameInitResult
 import com.example.usecaseinterface.model.result.NextResult
 import com.example.usecaseinterface.model.result.SetEvolutionResult
-import com.example.usecaseinterface.usecase.GameUseCase
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
-import org.junit.Assert
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import kotlin.reflect.full.declaredMemberFunctions
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * 将棋のビジネスロジックの仕様
@@ -42,15 +55,20 @@ import org.junit.Test
  */
 class GameUseCaseTest {
 
-    private lateinit var gameUseCase: GameUseCase
+    private lateinit var gameUseCase: GameUseCaseImpl
     private lateinit var gameRecodeRepository: FakeGameRecodeRepository
     private lateinit var gameRuleRepository: FakeGameRuleRepository
     private lateinit var gameRepository: FakeBoardRepository
     private val gameService = GameServiceImpl()
 
+    private val coroutineDispatcher = StandardTestDispatcher()
+
+    @ExperimentalCoroutinesApi
+    private val coroutineScope = TestScope(coroutineDispatcher)
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
-        val coroutineScope = TestScope()
+
         gameRuleRepository = FakeGameRuleRepository()
         gameRecodeRepository = FakeGameRecodeRepository()
         gameRepository = FakeBoardRepository()
@@ -61,6 +79,14 @@ class GameUseCaseTest {
             gameService = gameService,
             coroutineScope = coroutineScope,
         )
+        Dispatchers.setMain(coroutineDispatcher)
+    }
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     /**
@@ -101,6 +127,306 @@ class GameUseCaseTest {
         // result
         assertEquals(expected, result)
         assertEquals(gameRecodeRepository.callSetCount, 1)
+    }
+
+    /**
+     * 持ち時間関連のロジック
+     */
+    @Test
+    fun 持ち時間経過() = runTest {
+        val timeLimitRule1 = PlayerTimeLimitRule.fake(
+            totalTime = Seconds.setSeconds(2),
+            byoyomi = Seconds.ZERO,
+        )
+        val timeLimitRule2 = PlayerTimeLimitRule.fake(
+            totalTime = Seconds.ZERO,
+            byoyomi = Seconds.setSeconds(2),
+        )
+        val timeLimitRule3 = PlayerTimeLimitRule.fake(
+            totalTime = Seconds.setSeconds(1),
+            byoyomi = Seconds.setSeconds(2),
+        )
+        val rule = GameRule.fake(
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = timeLimitRule1,
+                whiteTimeLimitRule = timeLimitRule1,
+            )
+        )
+        val rule2 = GameRule.fake(
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = timeLimitRule2,
+                whiteTimeLimitRule = timeLimitRule2,
+            )
+        )
+        val rule3 = GameRule.fake(
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = timeLimitRule3,
+                whiteTimeLimitRule = timeLimitRule3,
+            )
+        )
+        val timeLimit1 = TimeLimit(rule.timeLimitRule.blackTimeLimitRule)
+        val timeLimit2 = TimeLimit(rule2.timeLimitRule.blackTimeLimitRule)
+        val timeLimit3 = TimeLimit(rule3.timeLimitRule.blackTimeLimitRule)
+        val timeLimitsUseCaseModel = TimeLimitsUseCaseModel(
+            blackTimeLimit = timeLimit1,
+            whiteTimeLimit = timeLimit1,
+        )
+        val timeLimitsUseCaseModel2 = TimeLimitsUseCaseModel(
+            blackTimeLimit = timeLimit2,
+            whiteTimeLimit = timeLimit2,
+        )
+        val timeLimitsUseCaseModel3 = TimeLimitsUseCaseModel(
+            blackTimeLimit = timeLimit3,
+            whiteTimeLimit = timeLimit3,
+        )
+
+        data class Param(
+            val case: String,
+            val isWhite: Boolean,
+            val base: GameRule,
+            val delayTime: Long,
+            val expected: TimeLimitsUseCaseModel,
+        )
+        val data = listOf(
+            Param(
+                case = "先手_全体の時間の経過",
+                isWhite = false,
+                base = rule,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel.copy(
+                    blackTimeLimit = timeLimit1.copy(
+                        totalTime = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "先手_全体の時間切れ（秒読みなし）",
+                isWhite = false,
+                base = rule,
+                delayTime = Seconds.setSeconds(2).millisecond,
+                expected = timeLimitsUseCaseModel.copy(
+                    blackTimeLimit = timeLimit1.copy(
+                        totalTime = Seconds.ZERO,
+                    ),
+                ),
+            ),
+            Param(
+                case = "先手_全体の時間切れ（秒読みあり）",
+                isWhite = false,
+                delayTime = 2000L,
+                base = rule3,
+                expected = timeLimitsUseCaseModel3.copy(
+                    blackTimeLimit = timeLimit3.copy(
+                        totalTime = Seconds.ZERO,
+                        byoyomi = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "先手_秒読みの時間の経過",
+                isWhite = false,
+                base = rule2,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel2.copy(
+                    blackTimeLimit = timeLimit2.copy(
+                        byoyomi = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "先手_秒読みの時間切れ",
+                isWhite = false,
+                delayTime = 3000L,
+                base = rule2,
+                expected = timeLimitsUseCaseModel2.copy(
+                    blackTimeLimit = timeLimit2.copy(
+                        byoyomi = Seconds.ZERO,
+                    ),
+                ),
+            ),
+            Param(
+                case = "後手_全体の時間の経過",
+                isWhite = true,
+                base = rule,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel.copy(
+                    whiteTimeLimit = timeLimit1.copy(
+                        totalTime = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "後手_全体の時間切れ（秒読みなし）",
+                isWhite = true,
+                base = rule,
+                delayTime = Seconds.setSeconds(2).millisecond,
+                expected = timeLimitsUseCaseModel.copy(
+                    whiteTimeLimit = timeLimit1.copy(
+                        totalTime = Seconds.ZERO,
+                    ),
+                ),
+            ),
+            Param(
+                case = "後手_全体の時間切れ（秒読みあり）",
+                isWhite = true,
+                delayTime = 2000L,
+                base = rule3,
+                expected = timeLimitsUseCaseModel3.copy(
+                    whiteTimeLimit = timeLimit3.copy(
+                        totalTime = Seconds.ZERO,
+                        byoyomi = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "後手_秒読みの時間の経過",
+                isWhite = true,
+                base = rule2,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel2.copy(
+                    whiteTimeLimit = timeLimit2.copy(
+                        byoyomi = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "後手_秒読みの時間切れ",
+                isWhite = true,
+                delayTime = 3000L,
+                base = rule2,
+                expected = timeLimitsUseCaseModel2.copy(
+                    whiteTimeLimit = timeLimit2.copy(
+                        byoyomi = Seconds.ZERO,
+                    ),
+                ),
+            ),
+        )
+
+        data.forEach { param ->
+            setUp()
+            // mock
+            gameRuleRepository.getLogic = { param.base }
+            // run
+            gameUseCase.gameInit()
+            gameUseCase.gameStart()
+
+
+            if (param.isWhite) {
+                val kClass = gameUseCase::class
+                val mutableTurnStateFlowProp = kClass.declaredMemberFunctions.find { it.name == "changeTurn" }
+                mutableTurnStateFlowProp!!.isAccessible = true
+                mutableTurnStateFlowProp.call(gameUseCase, Turn.Normal.White)
+            }
+
+            delay(param.delayTime)
+            val timeLimit = gameUseCase.observeUpdateTimeLimit().value
+            assertEquals(param.case, param.expected, timeLimit)
+        }
+    }
+
+    /**
+     * 持ち時間関連のロジック
+     */
+    @Test
+    fun 手番変更_持ち時間() = runTest {
+        val timeLimitRule1 = PlayerTimeLimitRule.fake(
+            totalTime = Seconds.setSeconds(2),
+            byoyomi = Seconds.ZERO,
+        )
+        val timeLimitRule2 = PlayerTimeLimitRule.fake(
+            totalTime = Seconds.ZERO,
+            byoyomi = Seconds.setSeconds(2),
+        )
+        val rule = GameRule.fake(
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = timeLimitRule1,
+                whiteTimeLimitRule = timeLimitRule1,
+            )
+        )
+        val rule2 = GameRule.fake(
+            timeLimitRule = GameTimeLimitRule.fake(
+                blackTimeLimitRule = timeLimitRule2,
+                whiteTimeLimitRule = timeLimitRule2,
+            )
+        )
+        val timeLimit1 = TimeLimit(rule.timeLimitRule.blackTimeLimitRule)
+        val timeLimit2 = TimeLimit(rule2.timeLimitRule.blackTimeLimitRule)
+        val timeLimitsUseCaseModel = TimeLimitsUseCaseModel(
+            blackTimeLimit = timeLimit1,
+            whiteTimeLimit = timeLimit1,
+        )
+        val timeLimitsUseCaseModel2 = TimeLimitsUseCaseModel(
+            blackTimeLimit = timeLimit2,
+            whiteTimeLimit = timeLimit2,
+        )
+        data class Param(
+            val case: String,
+            val isWhite: Boolean,
+            val base: GameRule,
+            val delayTime: Long,
+            val expected: TimeLimitsUseCaseModel,
+        )
+        val data = listOf(
+            Param(
+                case = "先手_持ち時間_切り替え時には戻らない",
+                isWhite = false,
+                base = rule,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel.copy(
+                    blackTimeLimit = timeLimit1.copy(
+                        totalTime = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "先手_秒読み_切り替え時には戻る",
+                isWhite = false,
+                base = rule2,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel2,
+            ),
+            Param(
+                case = "後手_持ち時間_切り替え時には戻らない",
+                isWhite = true,
+                base = rule,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel.copy(
+                    whiteTimeLimit = timeLimit1.copy(
+                        totalTime = Seconds.setSeconds(1),
+                    ),
+                ),
+            ),
+            Param(
+                case = "後手_秒読み_切り替え時には戻る",
+                isWhite = true,
+                base = rule2,
+                delayTime = 1000L,
+                expected = timeLimitsUseCaseModel2,
+            ),
+        )
+
+        data.forEach { param ->
+            setUp()
+            // mock
+            gameRuleRepository.getLogic = { param.base }
+            // run
+            gameUseCase.gameInit()
+            gameUseCase.gameStart()
+            var turn: Turn = Turn.Normal.Black
+            val kClass = gameUseCase::class
+            val mutableTurnStateFlowProp = kClass.declaredMemberFunctions.find { it.name == "changeTurn" }
+            mutableTurnStateFlowProp!!.isAccessible = true
+            if (param.isWhite) {
+                mutableTurnStateFlowProp.call(gameUseCase, Turn.Normal.White)
+                turn = Turn.Normal.White
+            }
+            delay(param.delayTime)
+            mutableTurnStateFlowProp.call(gameUseCase, turn.getOpponentTurn())
+
+            delay(20L)
+            val timeLimit = gameUseCase.observeUpdateTimeLimit().value
+            assertEquals(param.case, param.expected, timeLimit)
+        }
     }
 
     /**
