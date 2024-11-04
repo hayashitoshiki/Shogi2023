@@ -16,4 +16,9 @@ interface BaseContract {
      *
      */
     interface Effect
+
+    /**
+     * ユーザ操作
+     */
+    interface Action
 }
