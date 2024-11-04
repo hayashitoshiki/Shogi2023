@@ -18,7 +18,7 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
-class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, HomeViewModel.Effect>() {
+class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, HomeViewModel.Effect, HomeViewModel.Action>() {
 
     private lateinit var homeUseCase: FakeGameSettingUseCase
 
@@ -55,9 +55,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
 
         viewModelAction(
             useCaseSet = {},
-            action = {
-                changePieceHandeByNormalItem(selectedHande)
-            },
+            action = HomeViewModel.Action.ClickPieceHandeButtonByNormalItem(selectedHande),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -85,9 +83,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
 
         viewModelAction(
             useCaseSet = {},
-            action = {
-                changePieceHandeByFirstCheckItem(selectedHande)
-            },
+            action = HomeViewModel.Action.ClickPieceHandeButtonByFirstCheckItem(selectedHande),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -119,9 +115,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         )
         viewModelAction(
             useCaseSet = {},
-            action = {
-                changePieceHandeByCustomItem(selectedHande1)
-            },
+            action = HomeViewModel.Action.ClickPieceHandeButtonByCustomItem(selectedHande1),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -150,10 +144,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
         )
         viewModelAction(
             useCaseSet = {},
-            action = {
-                changePieceHandeByCustomItem(selectedHande1)
-                changePieceHandeByCustomItem(selectedHande2)
-            },
+            actions = listOf(
+                HomeViewModel.Action.ClickPieceHandeButtonByCustomItem(selectedHande1),
+                HomeViewModel.Action.ClickPieceHandeButtonByCustomItem(selectedHande2),
+            ),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -211,9 +205,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
     ) {
         viewModelAction(
             useCaseSet = {},
-            action = {
-                onChangeTimeLimitSecond(turn, seconds)
-            },
+            action = HomeViewModel.Action.SelectTimeLimitSecondDropdown(turn, seconds),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -271,9 +263,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
     ) {
         viewModelAction(
             useCaseSet = {},
-            action = {
-                onChangeTimeLimitTotalTime(turn, seconds)
-            },
+            action = HomeViewModel.Action.SelectTimeLimitTotalTimeDropdown(turn, seconds),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -391,9 +381,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
     ) {
         viewModelAction(
             useCaseSet = {},
-            action = {
-                onChangeFirstCheck(turn, isFirstCheck1)
-            },
+            action = HomeViewModel.Action.ClickFirstCheckButton(turn, isFirstCheck1),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -411,9 +399,7 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
 
         viewModelAction(
             useCaseSet = {},
-            action = {
-                changePage(pageIndex)
-            },
+            action = HomeViewModel.Action.ScrollRuleSettingCards(pageIndex),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -550,10 +536,10 @@ class HomeViewModelTest : ViewModelTest<HomeViewModel, HomeViewModel.UiState, Ho
                     assertEquals(it, resultGameRule)
                 }
             },
-            action = {
-                changePage(pageIndex)
-                onGameStartClick()
-            },
+            actions = listOf(
+                HomeViewModel.Action.ScrollRuleSettingCards(pageIndex),
+                HomeViewModel.Action.ClickGameStartButton,
+            ),
         )
         result(
             useCaseAsserts = listOf(
