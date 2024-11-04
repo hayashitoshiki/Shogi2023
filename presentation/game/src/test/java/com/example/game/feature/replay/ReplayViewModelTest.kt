@@ -20,7 +20,7 @@ import org.junit.Test
  * 将棋画面の仕様
  *
  */
-class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiState, ReplayViewModel.Effect>() {
+class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiState, ReplayViewModel.Effect, ReplayViewModel.Action>() {
 
     private lateinit var replayUseCase: FakeReplayUseCase
     override val initUiState = ReplayViewModel.UiState(
@@ -54,7 +54,7 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
         )
         viewModelAction(
             useCaseSet = { replayUseCase.replayInitLogic = { initResult } },
-            action = {},
+            action = null,
         )
         result(
             useCaseAsserts = listOf(
@@ -94,7 +94,7 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
                 replayUseCase.replayInitLogic = { initResult }
                 replayUseCase.goNextLogic = { replayGoNextResult }
             },
-            action = { tapRight() },
+            action = ReplayViewModel.Action.TapBoardRight,
         )
         result(
             useCaseAsserts = listOf(
@@ -135,9 +135,7 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
                 replayUseCase.replayInitLogic = { initResult }
                 replayUseCase.goBackLogic = { replayGoBackResult }
             },
-            action = {
-                tapLeft()
-            },
+            action = ReplayViewModel.Action.TapBoardLeft,
         )
         result(
             useCaseAsserts = listOf(
@@ -149,4 +147,47 @@ class ReplayViewModelTest : ViewModelTest<ReplayViewModel, ReplayViewModel.UiSta
         )
     }
 
+    @Test
+    fun `ホームボタンタップ`() = runTest {
+        val initResult = ReplayInitResult.fake()
+        val resultUiState = initUiState.copy(
+            board = initResult.board,
+            blackStand = initResult.blackStand,
+            whiteStand = initResult.whiteStand,
+            blackTimeLimit = initResult.blackTimeLimit,
+            whiteTimeLimit = initResult.whiteTimeLimit,
+            log = initResult.log ?: emptyList(),
+        )
+        viewModelAction(
+            useCaseSet = { replayUseCase.replayInitLogic = { initResult } },
+            action = ReplayViewModel.Action.ClickHomeButton,
+        )
+        result(
+            useCaseAsserts = listOf(),
+            state = resultUiState,
+            effects = listOf(ReplayViewModel.Effect.NavigateHomeScreen),
+        )
+    }
+
+    @Test
+    fun `再戦ボタンタップ`() = runTest {
+        val initResult = ReplayInitResult.fake()
+        val resultUiState = initUiState.copy(
+            board = initResult.board,
+            blackStand = initResult.blackStand,
+            whiteStand = initResult.whiteStand,
+            blackTimeLimit = initResult.blackTimeLimit,
+            whiteTimeLimit = initResult.whiteTimeLimit,
+            log = initResult.log ?: emptyList(),
+        )
+        viewModelAction(
+            useCaseSet = { replayUseCase.replayInitLogic = { initResult } },
+            action = ReplayViewModel.Action.ClickReStartButton,
+        )
+        result(
+            useCaseAsserts = listOf(),
+            state = resultUiState,
+            effects = listOf(ReplayViewModel.Effect.NavigateGameScreen),
+        )
+    }
 }
