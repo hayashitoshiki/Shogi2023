@@ -65,7 +65,7 @@ fun HomeScreen(
                 {
                     FirstCheckShogiSettingCard(
                         selected = it.selectedHande,
-                        onChange = viewModel::changePieceHandeByFirstCheckItem,
+                        onChange = { viewModel.callAction(HomeViewModel.Action.ClickPieceHandeButtonByFirstCheckItem(it)) },
                     )
                 }
             }
@@ -74,7 +74,7 @@ fun HomeScreen(
                 {
                     NormalShogiSettingCard(
                         selected = it.selectedHande,
-                        onChange = viewModel::changePieceHandeByNormalItem,
+                        onChange = { viewModel.callAction(HomeViewModel.Action.ClickPieceHandeButtonByNormalItem(it)) },
                     )
                 }
             }
@@ -83,8 +83,12 @@ fun HomeScreen(
                 {
                     CustomShogiSettingCard(
                         custom = it,
-                        onChangeFirstCheck = viewModel::onChangeFirstCheck,
-                        onChangeHande = viewModel::changePieceHandeByCustomItem,
+                        onChangeFirstCheck = { turn, isFirstCheck ->
+                            viewModel.callAction(HomeViewModel.Action.ClickFirstCheckButton(turn, isFirstCheck))
+                        },
+                        onChangeHande = {
+                            viewModel.callAction(HomeViewModel.Action.ClickPieceHandeButtonByCustomItem(it))
+                        },
                     )
                 }
             }
@@ -102,20 +106,24 @@ fun HomeScreen(
             ) {
                 TimeLimitSettingCard(
                     uiModel = gameRule.value.timeLimitCard,
-                    onChangeTimeLimitTotalTime = viewModel::onChangeTimeLimitTotalTime,
-                    onChangeTimeLimitSecond = viewModel::onChangeTimeLimitSecond,
+                    onChangeTimeLimitTotalTime = { turn, second ->
+                        viewModel.callAction(HomeViewModel.Action.SelectTimeLimitTotalTimeDropdown(turn, second))
+                    },
+                    onChangeTimeLimitSecond = { turn, second ->
+                        viewModel.callAction(HomeViewModel.Action.SelectTimeLimitSecondDropdown(turn, second))
+                    },
                 )
             }
 
             Spacer(modifier = Modifier.size(64.dp))
             RuleSettingPager(
                 tabs = tabs,
-                changePage = viewModel::changePage,
+                changePage = { viewModel.callAction(HomeViewModel.Action.ScrollRuleSettingCards(it)) },
             )
             Spacer(modifier = Modifier.size(16.dp))
             ElevatedButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = viewModel::onGameStartClick,
+                onClick = { viewModel.callAction(HomeViewModel.Action.ClickGameStartButton) },
             ) {
                 Text(text = stringResource(R.string.home_game_start_button))
             }

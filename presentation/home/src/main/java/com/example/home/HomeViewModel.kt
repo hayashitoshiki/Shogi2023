@@ -23,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val useCase: GameSettingUseCase,
-) : BaseViewModel<HomeViewModel.UiState, HomeViewModel.Effect>() {
+) : BaseViewModel<HomeViewModel.UiState, HomeViewModel.Effect, HomeViewModel.Action>() {
 
     init {
         viewModelScope.launch {
@@ -48,15 +48,27 @@ class HomeViewModel @Inject constructor(
         )
     }
 
-    fun changePieceHandeByNormalItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
+    override fun callAction(action: Action) {
+        when(action) {
+            is Action.ClickPieceHandeButtonByNormalItem -> changePieceHandeByNormalItem(action.selectedHande)
+            is Action.ClickPieceHandeButtonByFirstCheckItem -> changePieceHandeByFirstCheckItem(action.selectedHande)
+            is Action.ClickPieceHandeButtonByCustomItem -> changePieceHandeByCustomItem(action.selectedHande)
+            is Action.ClickFirstCheckButton -> onChangeFirstCheck(action.turn, action.isFirstCheck)
+            is Action.SelectTimeLimitTotalTimeDropdown -> onChangeTimeLimitTotalTime(action.turn, action.seconds)
+            is Action.SelectTimeLimitSecondDropdown -> onChangeTimeLimitSecond(action.turn, action.seconds)
+            is Action.ScrollRuleSettingCards -> changePage(action.pageIndex)
+            Action.ClickGameStartButton -> onGameStartClick()
+        }
+    }
+    private fun changePieceHandeByNormalItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
         changePieceHandeBy(selectedHande, SelectMode.Normal)
     }
 
-    fun changePieceHandeByFirstCheckItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
+    private fun changePieceHandeByFirstCheckItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
         changePieceHandeBy(selectedHande, SelectMode.FirstCheck)
     }
 
-    fun changePieceHandeByCustomItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
+    private fun changePieceHandeByCustomItem(selectedHande: GameRuleSettingUiModel.SelectedHande) {
         changePieceHandeBy(selectedHande, SelectMode.Custom)
     }
 
@@ -84,7 +96,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onChangeFirstCheck(turn: Turn, isFirstCheck: Boolean) {
+    private fun onChangeFirstCheck(turn: Turn, isFirstCheck: Boolean) {
         setState {
             copy(
                 ruleItems = ruleItems.toMutableList().map {
@@ -106,11 +118,11 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onChangeTimeLimitTotalTime(turn: Turn, seconds: Seconds) {
+    private fun onChangeTimeLimitTotalTime(turn: Turn, seconds: Seconds) {
         updateTimeLimitRule(turn) { it.copy(totalTime = seconds) }
     }
 
-    fun onChangeTimeLimitSecond(turn: Turn, seconds: Seconds) {
+    private fun onChangeTimeLimitSecond(turn: Turn, seconds: Seconds) {
         updateTimeLimitRule(turn) { it.copy(byoyomi = seconds) }
     }
 
@@ -129,7 +141,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onGameStartClick() {
+    private fun onGameStartClick() {
         val logicRule: GameLogicRule
         val boardRule: BoardRule
         when (val setting = state.value.ruleItems[state.value.showRuleItemIndex]) {
@@ -172,7 +184,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun changePage(pageIndex: Int) {
+    private fun changePage(pageIndex: Int) {
         setState {
             copy(
                 showRuleItemIndex = pageIndex,
@@ -205,5 +217,16 @@ class HomeViewModel @Inject constructor(
          * 対局開始
          */
         data object GameStart : Effect
+    }
+
+    sealed interface Action: BaseContract.Action {
+        data class ClickPieceHandeButtonByNormalItem(val selectedHande: GameRuleSettingUiModel.SelectedHande): Action
+        data class ClickPieceHandeButtonByFirstCheckItem(val selectedHande: GameRuleSettingUiModel.SelectedHande): Action
+        data class ClickPieceHandeButtonByCustomItem(val selectedHande: GameRuleSettingUiModel.SelectedHande): Action
+        data class ClickFirstCheckButton(val turn: Turn, val isFirstCheck: Boolean): Action
+        data class SelectTimeLimitTotalTimeDropdown(val turn: Turn, val seconds: Seconds): Action
+        data class SelectTimeLimitSecondDropdown(val turn: Turn, val seconds: Seconds): Action
+        data class ScrollRuleSettingCards(val pageIndex: Int): Action
+        data object ClickGameStartButton: Action
     }
 }
