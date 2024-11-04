@@ -25,7 +25,7 @@ import org.junit.Test
  * 将棋画面の仕様
  *
  */
-class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, GameViewModel.Effect>() {
+class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, GameViewModel.Effect, GameViewModel.Action>() {
 
     private lateinit var gameUseCase: FakeGameUseCase
     override val initUiState = GameViewModel.UiState(
@@ -61,7 +61,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
     fun `画面へ遷移`() = runTest {
         viewModelAction(
             useCaseSet = {},
-            action = {},
+            action = null,
         )
         result(
             useCaseAsserts = listOf(
@@ -112,9 +112,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.gameInitLogic = { caseGameInitLogicResult }
                 gameUseCase.useStandPieceLogic = { caseUseStandPieceLogicResult }
             },
-            action = {
-                tapStand(caseTapPiece, Turn.Normal.Black)
-            },
+            action = GameViewModel.Action.TapStand(caseTapPiece, Turn.Normal.Black),
         )
         result(
             useCaseAsserts = listOf(
@@ -177,9 +175,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.gameInitLogic = { caseGameInitLogicResult }
                 gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
             },
-            action = {
-                tapBoard(case1TapPosition)
-            },
+            action = GameViewModel.Action.TapBoard(case1TapPosition),
         )
         result(
             useCaseAsserts = listOf(
@@ -213,10 +209,10 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
                 gameUseCase.movePieceLogic = { caseMovePieceLogicResult }
             },
-            action = {
-                tapBoard(case1TapPosition)
-                tapBoard(case2TapPosition)
-            },
+            actions = listOf(
+                GameViewModel.Action.TapBoard(case1TapPosition),
+                GameViewModel.Action.TapBoard(case2TapPosition),
+            ),
         )
         result(
             useCaseAsserts = listOf(
@@ -236,10 +232,10 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.gameInitLogic = { caseGameInitLogicResult }
                 gameUseCase.useBoardPieceLogic = { caseUseBoardPieceLogicResult }
             },
-            action = {
-                tapBoard(case1TapPosition)
-                tapBoard(case3TapPosition)
-            },
+            actions = listOf(
+                GameViewModel.Action.TapBoard(case1TapPosition),
+                GameViewModel.Action.TapBoard(case3TapPosition),
+            ),
         )
         result(
             useCaseAsserts = listOf(
@@ -281,10 +277,10 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.useStandPieceLogic = { case4UseStandPieceLogicResult }
                 gameUseCase.putStandPieceLogic = { case4PutStandPieceLogicResult }
             },
-            action = {
-                tapStand(case4TapStandPiece, Turn.Normal.Black)
-                tapBoard(case4TapPosition)
-            },
+            actions = listOf(
+                GameViewModel.Action.TapStand(case4TapStandPiece, Turn.Normal.Black),
+                GameViewModel.Action.TapBoard(case4TapPosition),
+            ),
         )
         result(
             useCaseAsserts = listOf(
@@ -319,10 +315,10 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.useStandPieceLogic = { case5UseStandPieceLogicResult }
                 gameUseCase.useBoardPieceLogic = { case5UseBoardPieceLogicResult }
             },
-            action = {
-                tapStand(case5TapStandPiece, Turn.Normal.Black)
-                tapBoard(case5TapPosition)
-            },
+            actions = listOf(
+                GameViewModel.Action.TapStand(case5TapStandPiece, Turn.Normal.Black),
+                GameViewModel.Action.TapBoard(case5TapPosition),
+            ),
         )
         result(
             useCaseAsserts = listOf(
@@ -358,9 +354,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.gameInitLogic = { caseGameInitLogicResult }
                 gameUseCase.useBoardPieceLogic = { case6UseBoardPieceLogicResult }
             },
-            action = {
-                tapBoard(case6TapPosition)
-            },
+            action = GameViewModel.Action.TapBoard(case6TapPosition),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -372,7 +366,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 turn = case6UseBoardPieceLogicResult.nextTurn,
             ),
             effects = listOf(
-                GameViewModel.Effect.GameEnd.Win(Turn.Normal.Black),
+                GameViewModel.Effect.ShowGameEndDialog.Win(Turn.Normal.Black),
             ),
         )
 
@@ -391,9 +385,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.gameInitLogic = { caseGameInitLogicResult }
                 gameUseCase.useBoardPieceLogic = { case7UseBoardPieceLogicResult }
             },
-            action = {
-                tapBoard(case7TapPosition)
-            },
+            action = GameViewModel.Action.TapBoard(case7TapPosition),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -405,7 +397,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 turn = case7UseBoardPieceLogicResult.nextTurn,
             ),
             effects = listOf(
-                GameViewModel.Effect.GameEnd.Draw,
+                GameViewModel.Effect.ShowGameEndDialog.Draw,
             ),
         )
 
@@ -424,9 +416,7 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 gameUseCase.gameInitLogic = { caseGameInitLogicResult }
                 gameUseCase.useBoardPieceLogic = { case8UseBoardPieceLogicResult }
             },
-            action = {
-                tapBoard(case8TapPosition)
-            },
+            action = GameViewModel.Action.TapBoard(case8TapPosition),
         )
         result(
             useCaseAsserts = emptyList(),
@@ -438,9 +428,71 @@ class GameViewModelTest : ViewModelTest<GameViewModel, GameViewModel.UiState, Ga
                 turn = case8UseBoardPieceLogicResult.nextTurn,
             ),
             effects = listOf(
-                GameViewModel.Effect.Evolution(
+                GameViewModel.Effect.ShowEvolutionDialog(
                     position = case8TapPosition,
                 ),
+            ),
+        )
+    }
+
+
+    @Test
+    fun `投了ボタンたっぷ`() = runTest {
+        data class Param(
+            val inputTurn: Turn,
+            val expectedTurn: Turn
+        )
+
+        listOf(
+            Param(
+                inputTurn = Turn.Normal.Black,
+                expectedTurn = Turn.Normal.White,
+            ),
+            Param(
+                inputTurn = Turn.Normal.White,
+                expectedTurn = Turn.Normal.Black,
+            )
+        ).forEach { param ->
+            viewModelAction(
+                useCaseSet = {},
+                action = GameViewModel.Action.ClickLoseButton(param.inputTurn),
+            )
+            result(
+                useCaseAsserts = listOf(),
+                state = initUiState,
+                effects = listOf(
+                    GameViewModel.Effect.ShowGameEndDialog.Win(param.expectedTurn)
+                ),
+            )
+        }
+    }
+
+    @Test
+    fun `感想戦ボタンたっぷ`() = runTest {
+        viewModelAction(
+            useCaseSet = {},
+            action = GameViewModel.Action.ClickGameEndDialogReplayButton,
+        )
+        result(
+            useCaseAsserts = listOf(),
+            state = initUiState,
+            effects = listOf(
+                GameViewModel.Effect.NavigateReplayScreen
+            ),
+        )
+    }
+
+    @Test
+    fun `ホームボタンたっぷ`() = runTest {
+        viewModelAction(
+            useCaseSet = {},
+            action = GameViewModel.Action.ClickGameEndDialogHomeButton,
+        )
+        result(
+            useCaseAsserts = listOf(),
+            state = initUiState,
+            effects = listOf(
+                GameViewModel.Effect.NavigateHomeScreen
             ),
         )
     }
