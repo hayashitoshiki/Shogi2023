@@ -10,6 +10,12 @@ import kotlinx.coroutines.flow.Flow
 
 
 abstract class BaseScreen<viewModel: BaseViewModel<UiState, Effect, Action>, UiState : BaseContract.State, Effect : BaseContract.Effect, Action : BaseContract.Action> {
+
+    /**
+     * スクリーン定義
+     *
+     * 主にNavigationやPreviewから呼び出す時に使用
+     */
     @Composable
     fun Screen(
         modifier: Modifier = Modifier,
@@ -25,7 +31,9 @@ abstract class BaseScreen<viewModel: BaseViewModel<UiState, Effect, Action>, UiS
     }
 
     /**
+     * Effect定義
      *
+     * Effectで流れてきたものの処理を実施
      */
     @Composable
     abstract fun Effect(
@@ -36,7 +44,9 @@ abstract class BaseScreen<viewModel: BaseViewModel<UiState, Effect, Action>, UiS
     )
 
     /**
-     * 画面
+     * 画面定義
+     *
+     * UIの描画を行う
      */
     @Composable
     abstract fun View(
