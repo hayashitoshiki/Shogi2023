@@ -13,16 +13,16 @@ import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun GameEndDialog(
-    openDialog: MutableState<GameViewModel.Effect.GameEnd?>,
+    openDialog: MutableState<GameViewModel.Effect.ShowGameEndDialog?>,
     onClickNavigationHome: () -> Unit,
     onClickNavigationReplay: () -> Unit,
 ) {
     val context = LocalContext.current
     val description = when (val gameEnd = openDialog.value) {
-        GameViewModel.Effect.GameEnd.Draw -> {
+        GameViewModel.Effect.ShowGameEndDialog.Draw -> {
             context.getString(R.string.dialog_game_end_body_draw)
         }
-        is GameViewModel.Effect.GameEnd.Win -> {
+        is GameViewModel.Effect.ShowGameEndDialog.Win -> {
             val turnText = context.getString(gameEnd.turn.stringRes)
             context.getString(R.string.dialog_game_end_body_win, turnText)
         }
@@ -47,7 +47,7 @@ fun GameEndDialog(
 @Preview(showBackground = true)
 @Composable
 internal fun GameEndDialogPreview() {
-    val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.GameEnd?>(null) }
+    val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.ShowGameEndDialog?>(null) }
 
     Shogi2023Theme {
         GameEndDialog(

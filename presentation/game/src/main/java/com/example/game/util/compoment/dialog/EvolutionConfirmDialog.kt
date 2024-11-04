@@ -12,7 +12,7 @@ import com.example.core.theme.Shogi2023Theme
 
 @Composable
 fun EvolutionConfirmDialog(
-    openDialog: MutableState<GameViewModel.Effect.Evolution?>,
+    openDialog: MutableState<GameViewModel.Effect.ShowEvolutionDialog?>,
     onClick: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
@@ -35,7 +35,7 @@ fun EvolutionConfirmDialog(
 @Preview(showBackground = true)
 @Composable
 internal fun EvolutionConfirmDialogPreview() {
-    val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.Evolution?>(null) }
+    val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.ShowEvolutionDialog?>(null) }
 
     Shogi2023Theme {
         EvolutionConfirmDialog(
