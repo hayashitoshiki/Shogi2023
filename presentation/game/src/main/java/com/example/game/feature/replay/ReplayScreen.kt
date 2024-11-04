@@ -9,40 +9,44 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import com.example.core.component.BaseScreen
 import com.example.game.util.compoment.GameBox
 import com.example.game.util.compoment.button.HomeButton
 import com.example.game.util.compoment.button.ReStartButton
 import com.example.core.navigation.NavigationScreens
-import com.example.game.feature.game.GameViewModel
+import kotlinx.coroutines.flow.Flow
 
-@Composable
-fun ReplayScreen(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    viewModel: ReplayViewModel,
-) {
-    val effect = viewModel.effect
-    LaunchedEffect(true) {
-        effect.collect { effect ->
-            when (effect) {
-                ReplayViewModel.Effect.NavigateGameScreen -> {
-                    navController.navigate(NavigationScreens.GAME_SCREEN.route) {
-                        popUpTo(NavigationScreens.GAME_SCREEN.route) {
-                            inclusive = true
+object ReplayScreen: BaseScreen<ReplayViewModel, ReplayViewModel.UiState, ReplayViewModel.Effect, ReplayViewModel.Action>() {
+    @Composable
+    override fun Effect(
+        navController: NavHostController,
+        effect: Flow<ReplayViewModel.Effect>,
+        uiState: State<ReplayViewModel.UiState>,
+        action: (ReplayViewModel.Action) -> Unit,
+    ) {
+        LaunchedEffect(true) {
+            effect.collect { effect ->
+                when (effect) {
+                    ReplayViewModel.Effect.NavigateGameScreen -> {
+                        navController.navigate(NavigationScreens.GAME_SCREEN.route) {
+                            popUpTo(NavigationScreens.GAME_SCREEN.route) {
+                                inclusive = true
+                            }
                         }
                     }
-                }
-                ReplayViewModel.Effect.NavigateHomeScreen -> {
-                    navController.navigate(NavigationScreens.HOME_SCREEN.route) {
-                        popUpTo(NavigationScreens.HOME_SCREEN.route) {
-                            inclusive = true
+                    ReplayViewModel.Effect.NavigateHomeScreen -> {
+                        navController.navigate(NavigationScreens.HOME_SCREEN.route) {
+                            popUpTo(NavigationScreens.HOME_SCREEN.route) {
+                                inclusive = true
+                            }
                         }
                     }
                 }
@@ -50,53 +54,59 @@ fun ReplayScreen(
         }
     }
 
-    val uiState = viewModel.state
-    val backHandlingEnabled by remember { mutableStateOf(true) }
-    BackHandler(backHandlingEnabled) { }
-
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+    @Composable
+    override fun View(
+        modifier: Modifier,
+        uiState: State<ReplayViewModel.UiState>,
+        action: (ReplayViewModel.Action) -> Unit
     ) {
-        Row(
-            modifier = Modifier
-                .wrapContentSize()
-                .align(Alignment.TopEnd),
-        ) {
-            HomeButton(
-                onClick = { viewModel.callAction(ReplayViewModel.Action.ClickHomeButton) },
-            )
-            ReStartButton(
-                onClick = { viewModel.callAction(ReplayViewModel.Action.ClickReStartButton) },
-            )
-        }
+        val backHandlingEnabled by remember { mutableStateOf(true) }
+        BackHandler(backHandlingEnabled) { }
+
         Box(
-            modifier = modifier.wrapContentSize(),
+            modifier = modifier.fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {
-            GameBox(
-                whiteStand = uiState.value.whiteStand,
-                blackStand = uiState.value.blackStand,
-                blackTimeLimit = uiState.value.blackTimeLimit,
-                whiteTimeLimit = uiState.value.whiteTimeLimit,
-                onStandClick = { _, _ -> },
-                onBoardClick = {},
-                board = uiState.value.board,
-                hintList = emptyList(),
-            )
-            Row(modifier = Modifier.matchParentSize()) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clickable { viewModel.callAction(ReplayViewModel.Action.TapBoardLeft) },
+            Row(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.TopEnd),
+            ) {
+                HomeButton(
+                    onClick = { action(ReplayViewModel.Action.ClickHomeButton) },
                 )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clickable { viewModel.callAction(ReplayViewModel.Action.TapBoardRight) },
+                ReStartButton(
+                    onClick = { action(ReplayViewModel.Action.ClickReStartButton) },
                 )
+            }
+            Box(
+                modifier = modifier.wrapContentSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                GameBox(
+                    whiteStand = uiState.value.whiteStand,
+                    blackStand = uiState.value.blackStand,
+                    blackTimeLimit = uiState.value.blackTimeLimit,
+                    whiteTimeLimit = uiState.value.whiteTimeLimit,
+                    onStandClick = { _, _ -> },
+                    onBoardClick = {},
+                    board = uiState.value.board,
+                    hintList = emptyList(),
+                )
+                Row(modifier = Modifier.matchParentSize()) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable { action(ReplayViewModel.Action.TapBoardLeft) },
+                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .clickable { action(ReplayViewModel.Action.TapBoardRight) },
+                    )
+                }
             }
         }
     }

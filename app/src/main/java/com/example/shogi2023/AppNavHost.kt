@@ -24,19 +24,19 @@ fun AppNavHost(
         startDestination = NavigationScreens.HOME_SCREEN.route,
     ) {
         composable(route = NavigationScreens.HOME_SCREEN.route) {
-            HomeScreen(
+            HomeScreen.Screen(
                 navController = navController,
                 viewModel = hiltViewModel(),
             )
         }
         composable(route = NavigationScreens.GAME_SCREEN.route) {
-            GameScreen(
+            GameScreen.Screen(
                 navController = navController,
                 viewModel = hiltViewModel(),
             )
         }
         composable(route = NavigationScreens.REPLAY_SCREEN.route) {
-            ReplayScreen(
+            ReplayScreen.Screen(
                 navController = navController,
                 viewModel = hiltViewModel(),
             )

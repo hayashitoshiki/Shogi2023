@@ -16,8 +16,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.core.component.BaseScreen
 import com.example.home.compoment.card.CustomShogiSettingCard
 import com.example.home.compoment.card.FirstCheckShogiSettingCard
 import com.example.home.compoment.card.NormalShogiSettingCard
@@ -33,99 +33,107 @@ import com.example.home.compoment.card.TimeLimitSettingCard
 import com.example.home.model.GameRuleSettingUiModel
 import com.example.core.navigation.NavigationScreens
 import com.example.core.theme.Shogi2023Theme
+import kotlinx.coroutines.flow.Flow
 
-@Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    viewModel: HomeViewModel,
-) {
-    val gameRule = viewModel.state
-    val navigateGameScreen = remember { mutableStateOf<HomeViewModel.Effect.GameStart?>(null) }
-    LaunchedEffect(true) {
-        viewModel.effect.collect {
-            when (it) {
-                is HomeViewModel.Effect.GameStart -> navigateGameScreen.value = it
-            }
-        }
-    }
-    navigateGameScreen.value?.apply {
-        navController.navigate(NavigationScreens.GAME_SCREEN.route) {
-            popUpTo(NavigationScreens.HOME_SCREEN.route) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
-    }
-
-    val tabs: List<@Composable () -> Unit> = gameRule.value.ruleItems.map {
-        return@map when (it) {
-            is GameRuleSettingUiModel.NonCustom.FirstCheck -> {
-                {
-                    FirstCheckShogiSettingCard(
-                        selected = it.selectedHande,
-                        onChange = { viewModel.callAction(HomeViewModel.Action.ClickPieceHandeButtonByFirstCheckItem(it)) },
-                    )
-                }
-            }
-
-            is GameRuleSettingUiModel.NonCustom.Normal -> {
-                {
-                    NormalShogiSettingCard(
-                        selected = it.selectedHande,
-                        onChange = { viewModel.callAction(HomeViewModel.Action.ClickPieceHandeButtonByNormalItem(it)) },
-                    )
-                }
-            }
-
-            is GameRuleSettingUiModel.Custom -> {
-                {
-                    CustomShogiSettingCard(
-                        custom = it,
-                        onChangeFirstCheck = { turn, isFirstCheck ->
-                            viewModel.callAction(HomeViewModel.Action.ClickFirstCheckButton(turn, isFirstCheck))
-                        },
-                        onChangeHande = {
-                            viewModel.callAction(HomeViewModel.Action.ClickPieceHandeButtonByCustomItem(it))
-                        },
-                    )
-                }
-            }
-        }
-    }
-
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+object HomeScreen: BaseScreen<HomeViewModel, HomeViewModel.UiState, HomeViewModel.Effect, HomeViewModel.Action>() {
+    @Composable
+    override fun Effect(
+        navController: NavHostController,
+        effect: Flow<HomeViewModel.Effect>,
+        uiState: State<HomeViewModel.UiState>,
+        action: (HomeViewModel.Action) -> Unit,
     ) {
-        Column {
-            Box(
-                modifier = modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                TimeLimitSettingCard(
-                    uiModel = gameRule.value.timeLimitCard,
-                    onChangeTimeLimitTotalTime = { turn, second ->
-                        viewModel.callAction(HomeViewModel.Action.SelectTimeLimitTotalTimeDropdown(turn, second))
-                    },
-                    onChangeTimeLimitSecond = { turn, second ->
-                        viewModel.callAction(HomeViewModel.Action.SelectTimeLimitSecondDropdown(turn, second))
-                    },
-                )
+        LaunchedEffect(true) {
+            effect.collect {
+                when (it) {
+                    is HomeViewModel.Effect.GameStart -> {
+                        navController.navigate(NavigationScreens.GAME_SCREEN.route) {
+                            popUpTo(NavigationScreens.HOME_SCREEN.route) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
             }
+        }
+    }
 
-            Spacer(modifier = Modifier.size(64.dp))
-            RuleSettingPager(
-                tabs = tabs,
-                changePage = { viewModel.callAction(HomeViewModel.Action.ScrollRuleSettingCards(it)) },
-            )
-            Spacer(modifier = Modifier.size(16.dp))
-            ElevatedButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = { viewModel.callAction(HomeViewModel.Action.ClickGameStartButton) },
-            ) {
-                Text(text = stringResource(R.string.home_game_start_button))
+    @Composable
+    override fun View(
+        modifier: Modifier,
+        uiState: State<HomeViewModel.UiState>,
+        action: (HomeViewModel.Action) -> Unit
+    ) {
+        val tabs: List<@Composable () -> Unit> = uiState.value.ruleItems.map {
+            return@map when (it) {
+                is GameRuleSettingUiModel.NonCustom.FirstCheck -> {
+                    {
+                        FirstCheckShogiSettingCard(
+                            selected = it.selectedHande,
+                            onChange = { action(HomeViewModel.Action.ClickPieceHandeButtonByFirstCheckItem(it)) },
+                        )
+                    }
+                }
+
+                is GameRuleSettingUiModel.NonCustom.Normal -> {
+                    {
+                        NormalShogiSettingCard(
+                            selected = it.selectedHande,
+                            onChange = { action(HomeViewModel.Action.ClickPieceHandeButtonByNormalItem(it)) },
+                        )
+                    }
+                }
+
+                is GameRuleSettingUiModel.Custom -> {
+                    {
+                        CustomShogiSettingCard(
+                            custom = it,
+                            onChangeFirstCheck = { turn, isFirstCheck ->
+                                action(HomeViewModel.Action.ClickFirstCheckButton(turn, isFirstCheck))
+                            },
+                            onChangeHande = {
+                                action(HomeViewModel.Action.ClickPieceHandeButtonByCustomItem(it))
+                            },
+                        )
+                    }
+                }
+            }
+        }
+
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column {
+                Box(
+                    modifier = modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    TimeLimitSettingCard(
+                        uiModel = uiState.value.timeLimitCard,
+                        onChangeTimeLimitTotalTime = { turn, second ->
+                            action(HomeViewModel.Action.SelectTimeLimitTotalTimeDropdown(turn, second))
+                        },
+                        onChangeTimeLimitSecond = { turn, second ->
+                            action(HomeViewModel.Action.SelectTimeLimitSecondDropdown(turn, second))
+                        },
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(64.dp))
+                RuleSettingPager(
+                    tabs = tabs,
+                    changePage = { action(HomeViewModel.Action.ScrollRuleSettingCards(it)) },
+                )
+                Spacer(modifier = Modifier.size(16.dp))
+                ElevatedButton(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onClick = { action(HomeViewModel.Action.ClickGameStartButton) },
+                ) {
+                    Text(text = stringResource(R.string.home_game_start_button))
+                }
             }
         }
     }
@@ -169,7 +177,7 @@ private fun TabsContent(tabs: List<@Composable () -> Unit>, pagerState: PagerSta
 @Composable
 fun HandeSettingBoxPreview() {
     Shogi2023Theme {
-        HomeScreen(
+        HomeScreen.Screen(
             navController = rememberNavController(),
             viewModel = hiltViewModel(),
         )
