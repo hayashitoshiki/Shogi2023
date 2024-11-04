@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
  * UIロジック Base
  *
  */
-abstract class BaseViewModel<UiState : BaseContract.State, Effect : BaseContract.Effect> : ViewModel() {
+abstract class BaseViewModel<UiState : BaseContract.State, Effect : BaseContract.Effect, Action: BaseContract.Action> : ViewModel() {
 
     private val initialState: UiState by lazy { initState() }
 
@@ -45,6 +45,8 @@ abstract class BaseViewModel<UiState : BaseContract.State, Effect : BaseContract
         val newState = state.value.reducer()
         _state.value = newState
     }
+
+    abstract fun callAction(action: Action)
 
     /**
      * State初期化
