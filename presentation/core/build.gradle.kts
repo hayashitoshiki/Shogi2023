@@ -48,6 +48,8 @@ dependencies {
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.material3)
     implementation(platform(libs.compose.bom))
+    // navigation
+    implementation(libs.hilt.navigation.compose)
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.junit)
