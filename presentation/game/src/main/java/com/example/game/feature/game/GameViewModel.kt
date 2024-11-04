@@ -16,6 +16,7 @@ import com.example.domainObject.game.rule.Turn.Normal.Black.getOpponentTurn
 import com.example.usecaseinterface.model.ReadyMoveInfoUseCaseModel
 import com.example.usecaseinterface.model.TimeOverUseCaseModel
 import com.example.usecaseinterface.model.result.NextResult
+import com.example.usecaseinterface.usecase.GameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -24,13 +25,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
-    private val useCase: com.example.usecaseinterface.usecase.GameUseCase,
-) : BaseViewModel<GameViewModel.UiState, GameViewModel.Effect>() {
+    private val gameUseCase: GameUseCase,
+) : BaseViewModel<GameViewModel.UiState, GameViewModel.Effect, GameViewModel.Action>() {
 
     init {
         initBard()
-        useCase.gameStart()
-        useCase.observeUpdateTimeLimit().filterNotNull().onEach {
+        gameUseCase.gameStart()
+        gameUseCase.observeUpdateTimeLimit().filterNotNull().onEach {
             setState {
                 copy(
                     blackTimeLimit = it.blackTimeLimit,
@@ -58,7 +59,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun initBard() {
-        val result = useCase.gameInit()
+        val result = gameUseCase.gameInit()
         setState {
             UiState(
                 board = result.board,
@@ -72,14 +73,25 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun tapBoard(position: Position) {
+    override fun callAction(action: Action) {
+        when(action) {
+            is Action.TapBoard -> updateBoard(action.position)
+            is Action.TapStand -> updateStand(action.piece, action.turn)
+            is Action.ClickLoseButton -> setLose(action.turn)
+            is Action.ClickEvolutionConfirmDialogConfirmButton -> setEvolution(action.position, action.isEvolution)
+            Action.ClickGameEndDialogHomeButton -> setEffect { Effect.NavigateHomeScreen }
+            Action.ClickGameEndDialogReplayButton -> setEffect { Effect.NavigateReplayScreen }
+        }
+    }
+
+    private fun updateBoard(position: Position) {
         val touchAction = MoveTarget.Board(position)
         tapAction(touchAction)
     }
 
-    fun tapStand(piece: Piece, turn: Turn) {
+    private fun updateStand(piece: Piece, turn: Turn) {
         if (turn != state.value.turn) return
-        val result = useCase.useStandPiece(
+        val result = gameUseCase.useStandPiece(
             board = state.value.board,
             piece = piece,
             turn = turn,
@@ -87,7 +99,7 @@ class GameViewModel @Inject constructor(
         updateUiStateFromNextResult(result, MoveTarget.Stand(piece))
     }
 
-    fun tapLoseButton(turn: Turn) {
+    private fun setLose(turn: Turn) {
         setWin(turn.getOpponentTurn())
     }
 
@@ -97,7 +109,7 @@ class GameViewModel @Inject constructor(
         val result = if (holdMove != null && holdMove.hintList.contains(touchAction.position)) {
             when (holdMove) {
                 is ReadyMoveInfoUseCaseModel.Board -> {
-                    useCase.movePiece(
+                    gameUseCase.movePiece(
                         board = state.value.board,
                         blackStand = state.value.blackStand,
                         whiteStand = state.value.whiteStand,
@@ -108,7 +120,7 @@ class GameViewModel @Inject constructor(
                 }
 
                 is ReadyMoveInfoUseCaseModel.Stand -> {
-                    useCase.putStandPiece(
+                    gameUseCase.putStandPiece(
                         board = state.value.board,
                         blackStand = state.value.blackStand,
                         whiteStand = state.value.whiteStand,
@@ -119,7 +131,7 @@ class GameViewModel @Inject constructor(
                 }
             }
         } else {
-            useCase.useBoardPiece(
+            gameUseCase.useBoardPiece(
                 board = state.value.board,
                 turn = turn,
                 position = touchAction.position,
@@ -149,7 +161,7 @@ class GameViewModel @Inject constructor(
             is NextResult.Move.ChooseEvolution -> {
                 setMoved(result)
                 if (touchAction !is MoveTarget.Board) return
-                setEffect { Effect.Evolution(touchAction.position) }
+                setEffect { Effect.ShowEvolutionDialog(touchAction.position) }
             }
 
             is NextResult.Move.Win -> {
@@ -159,14 +171,14 @@ class GameViewModel @Inject constructor(
 
             is NextResult.Move.Drown -> {
                 setMoved(result)
-                setEffect { Effect.GameEnd.Draw }
+                setEffect { Effect.ShowGameEndDialog.Draw }
             }
         }
     }
 
-    fun setEvolution(position: Position, isEvolution: Boolean) {
+    private fun setEvolution(position: Position, isEvolution: Boolean) {
         val turn = state.value.turn
-        val result = useCase.setEvolution(
+        val result = gameUseCase.setEvolution(
             turn = turn,
             board = state.value.board,
             blackStand = state.value.blackStand,
@@ -198,8 +210,8 @@ class GameViewModel @Inject constructor(
     }
 
     private fun setWin(turn: Turn) {
-        useCase.gameEnd()
-        setEffect { Effect.GameEnd.Win(turn) }
+        gameUseCase.gameEnd()
+        setEffect { Effect.ShowGameEndDialog.Win(turn) }
     }
 
     /**
@@ -224,29 +236,21 @@ class GameViewModel @Inject constructor(
     ) : BaseContract.State
 
     sealed interface Effect : BaseContract.Effect {
-
-        /**
-         * ゲーム終了
-         *
-         */
-        sealed interface GameEnd : Effect {
-
-            /**
-             * 勝利
-             */
-            data class Win(val turn: Turn) : GameEnd
-
-            /**
-             * 引き分け
-             */
-            data object Draw : GameEnd
+        sealed interface ShowGameEndDialog : Effect {
+            data class Win(val turn: Turn) : ShowGameEndDialog
+            data object Draw : ShowGameEndDialog
         }
+        data class ShowEvolutionDialog(val position: Position) : Effect
+        data object NavigateHomeScreen: Effect
+        data object NavigateReplayScreen: Effect
+    }
 
-        /**
-         * 成り判定
-         *
-         * @property position 成る判定をする駒のマス
-         */
-        data class Evolution(val position: Position) : Effect
+    sealed interface Action: BaseContract.Action {
+        data class TapBoard(val position: Position): Action
+        data class TapStand(val piece: Piece, val turn: Turn): Action
+        data class ClickLoseButton(val turn: Turn): Action
+        data class ClickEvolutionConfirmDialogConfirmButton(val position: Position, val isEvolution: Boolean): Action
+        data object ClickGameEndDialogHomeButton: Action
+        data object ClickGameEndDialogReplayButton: Action
     }
 }

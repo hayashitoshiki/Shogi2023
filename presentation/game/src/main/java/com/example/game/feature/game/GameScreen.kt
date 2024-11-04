@@ -26,16 +26,26 @@ fun GameScreen(
     viewModel: GameViewModel,
 ) {
     val uiState = viewModel.state
-    val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.Evolution?>(null) }
-    val showGameEndDialog = remember { mutableStateOf<GameViewModel.Effect.GameEnd?>(null) }
+    val showEvolutionDialog = remember { mutableStateOf<GameViewModel.Effect.ShowEvolutionDialog?>(null) }
+    val showGameEndDialog = remember { mutableStateOf<GameViewModel.Effect.ShowGameEndDialog?>(null) }
     LaunchedEffect(true) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is GameViewModel.Effect.Evolution -> {
+                is GameViewModel.Effect.ShowEvolutionDialog -> {
                     showEvolutionDialog.value = effect
                 }
-                is GameViewModel.Effect.GameEnd -> {
+                is GameViewModel.Effect.ShowGameEndDialog -> {
                     showGameEndDialog.value = effect
+                }
+                GameViewModel.Effect.NavigateHomeScreen -> navController.popBackStack()
+                GameViewModel.Effect.NavigateReplayScreen -> {
+                    navController.navigate(NavigationScreens.REPLAY_SCREEN.route) {
+                        popUpTo(NavigationScreens.REPLAY_SCREEN.route) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             }
         }
@@ -43,22 +53,14 @@ fun GameScreen(
     showEvolutionDialog.value?.apply {
         EvolutionConfirmDialog(
             openDialog = showEvolutionDialog,
-            onClick = { viewModel.setEvolution(position, it) },
+            onClick = { viewModel.callAction(GameViewModel.Action.ClickEvolutionConfirmDialogConfirmButton(position, it)) },
         )
     }
     showGameEndDialog.value?.apply {
         GameEndDialog(
             openDialog = showGameEndDialog,
-            onClickNavigationHome = { navController.popBackStack() },
-            onClickNavigationReplay = {
-                navController.navigate(NavigationScreens.REPLAY_SCREEN.route) {
-                    popUpTo(NavigationScreens.REPLAY_SCREEN.route) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            },
+            onClickNavigationHome = { viewModel.callAction(GameViewModel.Action.ClickGameEndDialogHomeButton) },
+            onClickNavigationReplay = { viewModel.callAction(GameViewModel.Action.ClickGameEndDialogReplayButton) },
         )
     }
 
@@ -74,15 +76,15 @@ fun GameScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 turn = Turn.Normal.White,
                 enable = uiState.value.turn == Turn.Normal.White,
-                onClick = viewModel::tapLoseButton,
+                onClick = { viewModel.callAction(GameViewModel.Action.ClickLoseButton(it)) },
             )
             GameBox(
                 whiteStand = uiState.value.whiteStand,
                 blackStand = uiState.value.blackStand,
                 blackTimeLimit = uiState.value.blackTimeLimit,
                 whiteTimeLimit = uiState.value.whiteTimeLimit,
-                onStandClick = viewModel::tapStand,
-                onBoardClick = viewModel::tapBoard,
+                onStandClick = { piece, turn -> viewModel.callAction(GameViewModel.Action.TapStand(piece, turn)) },
+                onBoardClick = { viewModel.callAction(GameViewModel.Action.TapBoard(it)) },
                 board = uiState.value.board,
                 hintList = uiState.value.readyMoveInfo?.hintList ?: emptyList(),
             )
@@ -90,7 +92,7 @@ fun GameScreen(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 turn = Turn.Normal.Black,
                 enable = uiState.value.turn == Turn.Normal.Black,
-                onClick = viewModel::tapLoseButton,
+                onClick = { viewModel.callAction(GameViewModel.Action.ClickLoseButton(it)) },
             )
         }
     }
