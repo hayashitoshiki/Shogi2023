@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +20,7 @@ import com.example.game.util.compoment.GameBox
 import com.example.game.util.compoment.button.HomeButton
 import com.example.game.util.compoment.button.ReStartButton
 import com.example.core.navigation.NavigationScreens
+import com.example.game.feature.game.GameViewModel
 
 @Composable
 fun ReplayScreen(
@@ -26,6 +28,28 @@ fun ReplayScreen(
     navController: NavHostController,
     viewModel: ReplayViewModel,
 ) {
+    val effect = viewModel.effect
+    LaunchedEffect(true) {
+        effect.collect { effect ->
+            when (effect) {
+                ReplayViewModel.Effect.NavigateGameScreen -> {
+                    navController.navigate(NavigationScreens.GAME_SCREEN.route) {
+                        popUpTo(NavigationScreens.GAME_SCREEN.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+                ReplayViewModel.Effect.NavigateHomeScreen -> {
+                    navController.navigate(NavigationScreens.HOME_SCREEN.route) {
+                        popUpTo(NavigationScreens.HOME_SCREEN.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     val uiState = viewModel.state
     val backHandlingEnabled by remember { mutableStateOf(true) }
     BackHandler(backHandlingEnabled) { }
@@ -40,22 +64,10 @@ fun ReplayScreen(
                 .align(Alignment.TopEnd),
         ) {
             HomeButton(
-                onClick = {
-                    navController.navigate(NavigationScreens.HOME_SCREEN.route) {
-                        popUpTo(NavigationScreens.HOME_SCREEN.route) {
-                            inclusive = true
-                        }
-                    }
-                },
+                onClick = { viewModel.callAction(ReplayViewModel.Action.ClickHomeButton) },
             )
             ReStartButton(
-                onClick = {
-                    navController.navigate(NavigationScreens.GAME_SCREEN.route) {
-                        popUpTo(NavigationScreens.GAME_SCREEN.route) {
-                            inclusive = true
-                        }
-                    }
-                },
+                onClick = { viewModel.callAction(ReplayViewModel.Action.ClickReStartButton) },
             )
         }
         Box(
@@ -77,13 +89,13 @@ fun ReplayScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .clickable { viewModel.tapLeft() },
+                        .clickable { viewModel.callAction(ReplayViewModel.Action.TapBoardLeft) },
                 )
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .clickable { viewModel.tapRight() },
+                        .clickable { viewModel.callAction(ReplayViewModel.Action.TapBoardRight) },
                 )
             }
         }

@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReplayViewModel @Inject constructor(
-    private val useCase: ReplayUseCase,
-) : BaseViewModel<ReplayViewModel.UiState, ReplayViewModel.Effect>() {
+    private val replayUseCase: ReplayUseCase,
+) : BaseViewModel<ReplayViewModel.UiState, ReplayViewModel.Effect, ReplayViewModel.Action>() {
 
     override fun initState(): UiState {
         return  UiState(
@@ -34,7 +34,7 @@ class ReplayViewModel @Inject constructor(
     }
 
     private fun initBard() {
-        val result = useCase.replayInit()
+        val result = replayUseCase.replayInit()
         setState {
             UiState(
                 board = result.board,
@@ -48,12 +48,21 @@ class ReplayViewModel @Inject constructor(
         }
     }
 
-    fun tapLeft() {
-        updateBoard(useCase::goBack)
+    override fun callAction(action: Action) {
+        when(action) {
+            Action.TapBoardLeft -> tapLeft()
+            Action.TapBoardRight -> tapRight()
+            Action.ClickHomeButton -> setEffect { Effect.NavigateHomeScreen }
+            Action.ClickReStartButton -> setEffect { Effect.NavigateGameScreen }
+        }
     }
 
-    fun tapRight() {
-        updateBoard(useCase::goNext)
+    private fun tapLeft() {
+        updateBoard(replayUseCase::goBack)
+    }
+
+    private fun tapRight() {
+        updateBoard(replayUseCase::goNext)
     }
 
     private fun updateBoard(useCase: (param: ReplayLoadMoveRecodeParam) -> ReplayLoadMoveRecodeResult) {
@@ -96,5 +105,15 @@ class ReplayViewModel @Inject constructor(
         val logNextIndex: Int,
     ): BaseContract.State
 
-    sealed interface Effect : BaseContract.Effect
+    sealed interface Effect: BaseContract.Effect {
+        data object NavigateHomeScreen: Effect
+        data object NavigateGameScreen: Effect
+    }
+
+    sealed interface Action: BaseContract.Action {
+        data object TapBoardLeft: Action
+        data object TapBoardRight: Action
+        data object ClickHomeButton: Action
+        data object ClickReStartButton: Action
+    }
 }
