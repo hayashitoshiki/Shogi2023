@@ -15,7 +15,7 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 
-abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect>, UiState : BaseContract.State, Effect : BaseContract.Effect> : ViewModel() {
+abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect, Action>, UiState : BaseContract.State, Effect : BaseContract.Effect, Action: BaseContract.Action> : ViewModel() {
 
     lateinit var viewModel: viewModel
     protected abstract val initUiState: UiState
@@ -72,17 +72,34 @@ abstract class ViewModelTest<viewModel : BaseViewModel<UiState, Effect>, UiState
     }
 
     /**
+     * ViewModelアクション（複数回Actionを叩く場合）
+     *
+     * @param useCaseSet UseCaseの設定
+     * @param actions ViewModelのアクション
+     */
+    protected fun viewModelAction(useCaseSet: () -> Unit, actions: List<Action>) {
+        baseViewModelAction(useCaseSet)
+        actions.forEach { action ->
+            viewModel.callAction(action)
+        }
+    }
+
+    /**
      * ViewModelアクション
      *
      * @param useCaseSet UseCaseの設定
      * @param action ViewModelのアクション
      */
-    protected fun viewModelAction(useCaseSet: () -> Unit, action: viewModel.() -> Unit) {
+    protected fun viewModelAction(useCaseSet: () -> Unit, action: Action?) {
+        baseViewModelAction(useCaseSet)
+        action?.also { viewModel.callAction(action) }
+    }
+
+    private fun baseViewModelAction(useCaseSet: () -> Unit) {
         useCaseSet()
         runTest {
             setUpViewModel()
         }
-        action(viewModel)
     }
 
     /**
